@@ -1,0 +1,49 @@
+# Light blue color scheme
+format = """
+[╭─](bold bright-blue)$username$hostname$directory$git_branch$git_status$cmd_duration$time
+[╰─](bold bright-blue)$character"""
+
+# Prompt character: `❯` when normal, `❯❯` when root
+[character]
+success_symbol = "[❯](bold bright-blue)"
+error_symbol = "[❯❯](bold red)"
+
+# Show username always
+[username]
+format = "[$user](bold bright-blue) "
+show_always = true
+
+# Show hostname if in SSH session
+[hostname]
+ssh_only = true
+format = "on [$hostname](blue) "
+
+# Directory settings
+[directory]
+truncation_length = 3
+truncate_to_repo = false
+format = "[󰉋 $path](bright-blue)[$read_only]($read_only_style) "
+read_only = " 🔒"
+style = "bold bright-blue"
+
+# Git branch
+[git_branch]
+symbol = " "
+format = "on [$symbol$branch](bright-blue) "
+
+# Git status
+[git_status]
+format = '([ $all_status]($style))'
+style = "bold blue"
+
+# Command execution time
+[cmd_duration]
+min_time = 2000  # Show if >2s
+format = "[$duration](bold bright-blue) "
+
+# Display current time
+[time]
+disabled = false
+format = "[󰥔 $time](bright-blue) "
+time_format = "%H:%M"
+
