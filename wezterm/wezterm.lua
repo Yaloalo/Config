@@ -3,9 +3,8 @@ local config = wezterm.config_builder()
 local act = wezterm.action
 
 local themes = {
-	{ theme = "Abernathy", opacity = 0.7 },
+	{ theme = "Abernathy", opacity = 0.6 },
 	{ theme = "tokyonight_night", opacity = 1.0 },
-
 	{ theme = "Alabaster", opacity = 1.0 },
 }
 local current_theme_index = 1
