@@ -32,7 +32,7 @@ config.window_padding = {
 }
 
 -- Start program
-config.default_prog = { "/bin/bash", "--login", "-c", "eval $(starship init bash); exec bash" }
+config.default_prog = { "/usr/bin/zsh", "-l" }
 
 -- Keybindings
 config.disable_default_key_bindings = true
