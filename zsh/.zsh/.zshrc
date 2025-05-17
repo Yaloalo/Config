@@ -5,10 +5,14 @@
 export ZSH="$HOME/.config/zsh/oh-my-zsh"
 
 # 2) Use the basic theme
-ZSH_THEME="robbyrussell"
+ZSH_THEME="bira"
 
 # 3) No plugins for now
-plugins=()
+ plugins=(
+   git z fzf extract copyfile zsh-autoswitch-virtualenv zsh-completions
+   zsh-syntax-highlighting zsh-autosuggestions
+   zoxide vi-mode thefuck
+ )
 
 # 4) Load Oh My Zsh
 source $ZSH/oh-my-zsh.sh
