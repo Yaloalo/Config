@@ -48,7 +48,7 @@ return {
       -- 1) Parsers to install
       ensure_installed = {
         'bash', 'c', 'lua', 'python', 'javascript',
-        'typescript', 'html', 'css', 'markdown', 'vim', 'query',
+        'typescript', 'html', 'css', 'markdown', 'vim', 'query', 'latex',
       },
       sync_install   = false,
       auto_install   = true,
@@ -56,7 +56,7 @@ return {
       -- 2) Highlight & indent
       highlight = {
         enable                            = true,
-        additional_vim_regex_highlighting = false,
+        additional_vim_regex_highlighting = true,
       },
       indent = {
         enable  = true,

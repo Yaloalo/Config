@@ -36,7 +36,7 @@ end)
 -- ── Appearance ───────────────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrains Mono")
 config.font_size = 15
-config.color_scheme = "Catppuccin Mocha"
+config.color_scheme = "Tokyo Night"
 config.window_background_opacity = 1
 config.window_padding = {
 	left = "5pt",

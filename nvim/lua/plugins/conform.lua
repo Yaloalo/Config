@@ -13,7 +13,7 @@ return {
         desc = 'Format buffer',
       },
       {
-        '<leader>tf',
+        '<leaderuuf',
         function()
           vim.b.disable_autoformat = not vim.b.disable_autoformat
         end,

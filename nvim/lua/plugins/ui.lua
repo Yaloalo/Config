@@ -1,25 +1,17 @@
--- lua/plugins/ui.lua
+-- ~/.config/nvim/lua/plugins/ui.lua
 return {
-  -- Catppuccin theme
+  -- Tokyo Night theme
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "folke/tokyonight.nvim",
     priority = 1000,
     opts = {
-      flavour = "mocha",            -- latte, frappe, macchiato, mocha
-      integrations = {
-        treesitter       = true,
-        telescope        = true,
-        notify           = true,
-        mini             = true,
-        which_key        = true,
-        indent_blankline = { enabled = true, colored = true },
-        -- lualine omitted here, we theme it below
-      },
+      style = "night",       -- choices: storm, night, day
+      transparent = false,
+      terminal_colors = true,
     },
     config = function(_, opts)
-      require("catppuccin").setup(opts)
-      vim.cmd.colorscheme "catppuccin"
+      require("tokyonight").setup(opts)
+      vim.cmd.colorscheme("tokyonight")
     end,
   },
 
@@ -32,18 +24,18 @@ return {
     end,
   },
 
-  -- Lualine with Catppuccin theme
+  -- Lualine with Tokyo Night theme
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       local lualine = require("lualine")
-      local catpucci = require("lualine.themes.catppuccin")
+      local tokyonight = require("lualine.themes.tokyonight")
 
       lualine.setup({
         options = {
           icons_enabled        = true,
-          theme                = catpucci,
+          theme                = tokyonight,
           component_separators = { left = "", right = "" },
           section_separators   = { left = "", right = "" },
           disabled_filetypes   = { statusline = {}, winbar = {} },
@@ -66,21 +58,23 @@ return {
           lualine_y = {},
           lualine_z = {},
         },
-        tabline           = {},
-        winbar            = {},
-        inactive_winbar   = {},
-        extensions        = {},
+        tabline         = {},
+        winbar          = {},
+        inactive_winbar = {},
+        extensions      = {},
       })
     end,
   },
 
-  -- TODO comments, mini plugins, etc.
+  -- TODO comments
   {
     "folke/todo-comments.nvim",
     event = "VimEnter",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = { signs = false },
   },
+
+  -- Mini suite
   {
     "echasnovski/mini.nvim",
     config = function()

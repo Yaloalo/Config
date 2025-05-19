@@ -19,11 +19,3 @@ map('i', '<C-j>', '<Down>')
 map('i', '<C-k>', '<Up>')
 map('i', '<C-l>', '<Right>')
 
---Ranger Autocommand
--- in your lua/core/keymaps.lua (or wherever you centralize mappings):
-map(
-  'n',
-  '<Leader>r',
-  '<Cmd>Ranger<CR>',
-  { noremap = true, silent = true, desc = "Open Ranger via fm-nvim" }
-)
