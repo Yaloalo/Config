@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 
 # ~/.zshrc
 
@@ -5,17 +12,28 @@
 export ZSH="$HOME/.config/zsh/oh-my-zsh"
 
 # 2) Use the basic theme
-ZSH_THEME="bira"
+
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
 
 # 3) No plugins for now
  plugins=(
-   git z fzf extract copyfile zsh-autoswitch-virtualenv zsh-completions
+   fzf extract copyfile
    zsh-syntax-highlighting zsh-autosuggestions
    zoxide vi-mode thefuck
  )
 
 # 4) Load Oh My Zsh
 source $ZSH/oh-my-zsh.sh
+
+# Re-bind zoxide to "j" instead of "z"
+eval "$(zoxide init zsh --cmd j)"
+
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
 
 # 5) colors() function from your old ~/.bashrc
 colors() {
@@ -44,4 +62,12 @@ alias h='cd'
 alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias fgrep='fgrep --colour=auto'
-alias c='xclip -selection clipboard'
+  alias c='xclip -selection clipboard'
+alias notes='nvim ~/documents/Main'
+alias s='tree | ripgrep '
+
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.zsh/.p10k.zsh ]] || source ~/.config/zsh/.zsh/.p10k.zsh
+
+source /home/yaloalo/.config/broot/launcher/bash/br
