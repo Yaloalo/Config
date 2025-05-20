@@ -19,3 +19,8 @@ map('i', '<C-j>', '<Down>')
 map('i', '<C-k>', '<Up>')
 map('i', '<C-l>', '<Right>')
 
+-- Open notes
+vim.keymap.set('n', '<leader>n', function()
+  vim.cmd('edit ' .. vim.fn.expand('~/documents/Main'))
+end, { desc = 'Open Main folder' })
+
