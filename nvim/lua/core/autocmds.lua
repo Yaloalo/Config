@@ -10,24 +10,27 @@ api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- Auto reload nvim
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
-  group = vim.api.nvim_create_augroup("AutoReload", { clear = true }),
+api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+  group = api.nvim_create_augroup("AutoReload", { clear = true }),
   callback = function()
-    if vim.fn.mode() ~= "c" then -- don’t interrupt during command-line
+    -- only run checktime when not in cmd-line or cmd-line window
+    if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
       vim.cmd("checktime")
     end
   end,
 })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group = vim.api.nvim_create_augroup("TrimWhitespace", { clear = true }),
+-- Trim trailing whitespace on save
+api.nvim_create_autocmd("BufWritePre", {
+  group = api.nvim_create_augroup("TrimWhitespace", { clear = true }),
   pattern = { "*.c", "*.cpp", "*.py", "*.lua", "*.js" },
   callback = function()
     vim.cmd([[ %s/\s\+$//e ]])
   end,
 })
 
-vim.api.nvim_create_autocmd("VimEnter", {
+-- Fortune on start
+api.nvim_create_autocmd("VimEnter", {
   callback = function()
     if vim.fn.argc() == 0 then
       vim.schedule(function()

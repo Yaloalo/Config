@@ -28,10 +28,10 @@ end, { desc = "Open notes" })
 -- Toggle all LSP diagnostics on/off
 map("n", "<leader>lt", function()
   if diagnostics_on then
-    vim.diagnostic.disable() -- hide all
+    vim.diagnostic.disable()
     vim.notify("Diagnostics OFF", vim.log.levels.WARN)
   else
-    vim.diagnostic.enable() -- show all again
+    vim.diagnostic.enable()
     vim.notify("Diagnostics ON", vim.log.levels.INFO)
   end
   diagnostics_on = not diagnostics_on
@@ -40,5 +40,29 @@ end, { desc = "Toggle LSP Diagnostics" })
 -- Show LSP Documentation for a function
 map("n", "<leader>ld", vim.lsp.buf.hover, { desc = "LSP: Hover Documentation" })
 
--- close the current window/buffer with <leader>c
+-- Close the current window/buffer with <leader>c
 map("n", "<leader>c", "<cmd>q<CR>", { desc = "Close window" })
+
+map("n", "<leader>w", function()
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+
+  require("telescope.builtin").find_files({
+    prompt_title = "Find Directory (fd)",
+    cwd = "/",
+    find_command = { "fd", "-t", "d", "--hidden", "--no-ignore" },
+    attach_mappings = function(prompt_bufnr, map_)
+      actions.select_default:replace(function()
+        local entry = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        local dir = entry.value
+        if not dir:match("^/") then
+          dir = "/" .. dir
+        end
+        vim.cmd("cd " .. vim.fn.fnameescape(dir))
+        vim.notify("cwd → " .. vim.fn.getcwd(), vim.log.levels.INFO)
+      end)
+      return true
+    end,
+  })
+end, { desc = "Fuzzy-find directory from / and cd" })
