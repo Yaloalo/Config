@@ -3,7 +3,6 @@ return {
   {
     -- make sure you have installed this exact repo
     "nvimdev/lspsaga.nvim",
-    event = "LspAttach", -- load on LSP attach
     dependencies = {
       "nvim-tree/nvim-web-devicons",
     },

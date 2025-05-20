@@ -1,5 +1,6 @@
 -- lua/plugins/init.lua
 return {
+  require("plugins.dap"),
   require("plugins.oil"),
   require("plugins.lspsaga"),
   require("plugins.lspconfig"),

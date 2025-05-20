@@ -1,6 +1,6 @@
-local wezterm = require("wezterm")
 local io = require("io")
 local os = require("os")
+local wezterm = require("wezterm")
 local act = wezterm.action
 local config = wezterm.config_builder()
 local mux = wezterm.mux
@@ -10,27 +10,27 @@ local config = {}
 -- this registers an event that grabs the entire scrollback, writes it to
 -- a tempfile, and opens $EDITOR (vim/nvim/code --wait/etc) on it
 wezterm.on("edit-scrollback", function(window, pane)
-	-- number of rows in scrollback
-	local rows = pane:get_dimensions().scrollback_rows
-	local text = pane:get_lines_as_text(rows)
+  -- number of rows in scrollback
+  local rows = pane:get_dimensions().scrollback_rows
+  local text = pane:get_lines_as_text(rows)
 
-	-- write to temp file
-	local name = os.tmpname()
-	local f = io.open(name, "w+")
-	f:write(text)
-	f:close()
+  -- write to temp file
+  local name = os.tmpname()
+  local f = io.open(name, "w+")
+  f:write(text)
+  f:close()
 
-	-- spawn editor in a new window
-	window:perform_action(
-		act.SpawnCommandInNewWindow({
-			args = { os.getenv("EDITOR") or "vim", name },
-		}),
-		pane
-	)
+  -- spawn editor in a new window
+  window:perform_action(
+    act.SpawnCommandInNewWindow({
+      args = { os.getenv("EDITOR") or "vim", name },
+    }),
+    pane
+  )
 
-	-- cleanup after a brief pause
-	wezterm.sleep_ms(500)
-	os.remove(name)
+  -- cleanup after a brief pause
+  wezterm.sleep_ms(500)
+  os.remove(name)
 end)
 
 -- ── Appearance ───────────────────────────────────────────────────────────────
@@ -39,49 +39,49 @@ config.font_size = 15
 config.color_scheme = "Tokyo Night"
 config.window_background_opacity = 1
 config.window_padding = {
-	left = "5pt",
-	right = "5pt",
-	top = "0pt",
-	bottom = "0pt",
+  left = "0pt",
+  right = "0pt",
+  top = "0pt",
+  bottom = "0pt",
 }
--- --- Full Screen Startup ------------------------------------------------------
-wezterm.on("gui-startup", function(cmd)
-	local tab, pane, window = mux.spawn_window(cmd or {})
-	window:gui_window():toggle_maximized()
-end)
+
 -- ── Default shell ─────────────────────────────────────────────────────────────
 config.default_prog = { "/usr/bin/zsh", "-l" }
 
 -- ── Global Keybindings ────────────────────────────────────────────────────────
 config.disable_default_key_bindings = true
 config.keys = {
-	-- open scrollback in editor
-	{
-		key = "R",
-		mods = "CTRL|SHIFT",
-		action = act.EmitEvent("edit-scrollback"),
-	},
+  -- open scrollback in editor
+  {
+    key = "R",
+    mods = "CTRL|SHIFT",
+    action = act.EmitEvent("edit-scrollback"),
+  },
 
-	-- tabs & splits
-	{ key = "T", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
-	{ key = "RightArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(1) },
-	{ key = "LeftArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
-	{ key = "B", mods = "CTRL|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-	{ key = "N", mods = "CTRL|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  -- tabs & splits
+  { key = "T", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
+  { key = "RightArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(1) },
+  { key = "LeftArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+  {
+    key = "B",
+    mods = "CTRL|SHIFT",
+    action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+  },
+  { key = "N", mods = "CTRL|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
-	-- pane nav & resize
-	{ key = "H", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Left") },
-	{ key = "L", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Right") },
-	{ key = "K", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Up") },
-	{ key = "J", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Down") },
-	{ key = "H", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Left", 1 }) },
-	{ key = "L", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 1 }) },
-	{ key = "K", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Up", 1 }) },
-	{ key = "J", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Down", 1 }) },
+  -- pane nav & resize
+  { key = "H", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Left") },
+  { key = "L", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Right") },
+  { key = "K", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Up") },
+  { key = "J", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Down") },
+  { key = "H", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Left", 1 }) },
+  { key = "L", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 1 }) },
+  { key = "K", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Up", 1 }) },
+  { key = "J", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Down", 1 }) },
 
-	-- copy & paste in NORMAL mode
-	{ key = "C", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
-	{ key = "V", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
+  -- copy & paste in NORMAL mode
+  { key = "C", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
+  { key = "V", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
 }
 
 --[[ ── COPY MODE & SEARCH MODE ─────────────────────────────────────────────────

@@ -21,15 +21,12 @@ return {
       local fs_find = vim.fs.find
       local expand = vim.fn.expand
 
-      -- Where your *fallback* configs actually live:
       local fallback_root = expand("~/.config/formatters")
 
-      -- Detect any project-local config by searching upward
       local function has_project_file(names)
         return #fs_find(names, { upward = true, path = cwd(), type = "file" }) > 0
       end
 
-      -- Stylua override (unchanged)
       local stylua = {
         inherit = false,
         command = "stylua",
@@ -50,15 +47,10 @@ return {
         stdin = true,
       }
 
-      -- clang-format: project .clang-format? else fallback ~/.config/formatters/.clang-format
       local function clang_fmt(bufnr)
         local file = vim.api.nvim_buf_get_name(bufnr)
-        local style_arg
-        if has_project_file({ ".clang-format", "_clang-format" }) then
-          style_arg = "--style=file"
-        else
-          style_arg = "--style=file:" .. fallback_root .. "/.clang-format"
-        end
+        local style_arg = has_project_file({ ".clang-format", "_clang-format" }) and "--style=file"
+          or "--style=file:" .. fallback_root .. "/.clang-format"
         return {
           exe = "clang-format",
           args = { style_arg, "--assume-filename", file, "-" },
@@ -66,7 +58,6 @@ return {
         }
       end
 
-      -- Black: project pyproject.toml? else fallback ~/.config/formatters/pyproject.toml
       local function black_fmt(bufnr)
         local file = vim.api.nvim_buf_get_name(bufnr)
         local args = { "--quiet", "--fast", "--stdin-filename", file, "-" }
@@ -76,7 +67,6 @@ return {
         return { exe = "black", args = args, stdin = true }
       end
 
-      -- Prettier: project config? else fallback ~/.config/formatters/.prettierrc
       local function prettier_fmt(bufnr)
         local file = vim.api.nvim_buf_get_name(bufnr)
         local names = {
@@ -91,25 +81,21 @@ return {
         else
           return {
             exe = "prettier",
-            args = {
-              "--config",
-              fallback_root .. "/.prettierrc",
-              "--stdin-filepath",
-              file,
-            },
+            args = { "--config", fallback_root .. "/.prettierrc", "--stdin-filepath", file },
             stdin = true,
           }
         end
       end
 
-      -- Final setup — single call
       conform.setup({
         debug = true,
         notify_on_error = false,
 
-        format_on_save = function(bufnr)
+        format_on_save = function()
           return { timeout_ms = 500, lsp_format = "fallback" }
         end,
+
+        stop_after_first = true,
 
         formatters = {
           stylua = stylua,
@@ -120,15 +106,14 @@ return {
 
         formatters_by_ft = {
           lua = { "stylua" },
-          python = { black_fmt },
-          markdown = { prettier_fmt },
+          python = { "black" },
+          markdown = { "prettier" },
           sh = { "shfmt" },
-          c = { "clang_format", stop_after_first = true },
-          cpp = { "clang_format", stop_after_first = true },
+          c = { "clang_format" },
+          cpp = { "clang_format" },
         },
       })
 
-      -- :W to write without auto-format
       vim.api.nvim_create_user_command("W", "noautocmd write", {
         desc = "Save buffer without triggering Conform (or other) BufWritePre",
       })

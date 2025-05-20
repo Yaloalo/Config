@@ -40,9 +40,13 @@ end, { desc = "Toggle LSP Diagnostics" })
 -- Show LSP Documentation for a function
 map("n", "<leader>ld", vim.lsp.buf.hover, { desc = "LSP: Hover Documentation" })
 
+-- Restart all attached LSP servers
+map("n", "<leader>lr", "<cmd>LspRestart<CR>", { desc = "LSP: Restart servers" })
+
 -- Close the current window/buffer with <leader>c
 map("n", "<leader>c", "<cmd>q<CR>", { desc = "Close window" })
 
+-- Epic Root dir Search
 map("n", "<leader>w", function()
   local actions = require("telescope.actions")
   local action_state = require("telescope.actions.state")
