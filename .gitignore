@@ -1,0 +1,17 @@
+# Ignore everything
+*
+
+# But keep these directories (and all their contents)…
+!/.gitignore
+!/zsh/
+!/hypr/
+!/nvim/
+!/wezterm/
+!/zsh/**
+!/hypr/**
+!/nvim/**
+!/wezterm/**
+
+# …except the nested oh-my-zsh repo
+/zsh/oh-my-zsh/
+/zsh/oh-my-zsh/**
