@@ -12,6 +12,7 @@ return {
       require("oil").setup({
         -- Take over directory buffers (e.g. `nvim .` or `:e src/`)
         default_file_explorer = true,
+        skip_confirm_for_simple_edits = true,
         -- Show hidden files by default
         view_options = {
           show_hidden = true,

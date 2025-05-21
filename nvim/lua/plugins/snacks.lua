@@ -19,30 +19,12 @@ return {
     words = { enabled = false },
     terminal = { enabled = true },
 
-    -- ▶️ 1. Toggle module (uses default settings; customize inside if you like)
-    toggle = {
-      -- e.g. icon = { enabled = " ", disabled = " " },
-      --      color = { enabled = "green", disabled = "yellow" },
-      --      map   = vim.keymap.set,
-      --      which_key = true,
-      --      notify    = true,
-    },
+    toggle = {},
 
-    -- 🖼️ 2. Image module (default settings; customize below as needed)
-    image = {
-      -- enabled = true,
-      -- formats = { "png","jpg","gif","bmp","webp","pdf", ... },
-      -- doc = { enabled = true, inline = true, float = true, max_width = 80, max_height = 40 },
-      -- wo = { wrap = false, number = false, relativenumber = false, ... },
-      -- convert = { ... },
-      -- cache   = vim.fn.stdpath("cache") .. "/snacks/image",
-      -- debug   = { request = false, convert = false, placement = false },
-    },
+    image = {},
 
     styles = {
-      notification = {
-        -- wo = { wrap = true },
-      },
+      notification = {},
     },
   },
 

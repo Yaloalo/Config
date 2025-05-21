@@ -7,7 +7,6 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "echasnovski/mini.nvim",
     },
-    -- Pass the full default config as `opts`
     opts = {
       enabled = true,
       render_modes = { "n", "c", "t" },
@@ -342,7 +341,6 @@ return {
       },
       custom_handlers = {},
     },
-    -- In config, call setup(opts) and (re)define your toggle mapping:
     config = function(_, opts)
       require("render-markdown").setup(opts)
       vim.keymap.set(

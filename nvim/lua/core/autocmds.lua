@@ -9,17 +9,6 @@ api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- Auto reload nvim
-api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
-  group = api.nvim_create_augroup("AutoReload", { clear = true }),
-  callback = function()
-    -- only run checktime when not in cmd-line or cmd-line window
-    if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
-      vim.cmd("checktime")
-    end
-  end,
-})
-
 -- Trim trailing whitespace on save
 api.nvim_create_autocmd("BufWritePre", {
   group = api.nvim_create_augroup("TrimWhitespace", { clear = true }),

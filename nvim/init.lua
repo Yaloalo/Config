@@ -1,5 +1,3 @@
--- init.lua — only 9 lines!
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.o.expandtab = true
