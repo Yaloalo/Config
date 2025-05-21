@@ -11,6 +11,12 @@
 !/hypr/**
 !/nvim/**
 !/wezterm/**
+!/waybar
+!/waybar/**
+
+!starship.toml
+
+
 
 # …except the nested oh-my-zsh repo
 /zsh/oh-my-zsh/

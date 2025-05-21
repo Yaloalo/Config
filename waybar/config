@@ -1,0 +1,66 @@
+{
+  "layer": "top",
+
+  // ── center: Hyprland workspaces ────────────────────────────────────────
+  "modules-center": ["hyprland/workspaces"],
+
+  // ── right: network, clock, battery ────────────────────────────────────
+  "modules-right": [
+    "network",
+    "clock",
+    "battery"
+  ],
+
+  // ── network status ──────────────────────────────────────────────────────
+  "network": {
+    "tooltip": false,
+    "format-wifi": " {essid}",
+    "format-ethernet": ""
+  },
+
+  // ── clock: 24h format, date ─────────────────────────────────────────────
+  "clock": {
+    "format": "{:%H:%M %d/%m/%Y}",
+    "format-alt": "{:%A, %d %B %Y  %H:%M:%S}",
+    "tooltip-format": "{:%c}"
+  },
+
+  // ── battery state ───────────────────────────────────────────────────────
+  "battery": {
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 20
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{time} {icon}",
+    "format-icons": ["","","","",""]
+  },
+
+  // ── Hyprland workspaces ─────────────────────────────────────────────────
+  "hyprland/workspaces": {
+    // display slots 1–5 even if empty
+    "persistent-workspaces": { "*": 5 },
+    // allow clicking to switch/attach
+    "move-to-monitor": true,
+
+    // formatting for each state:
+    "format-focused": " {name}",    // active workspace
+    "format-visible": " {name}",    // visible on another monitor
+    "format": "{name}",              // empty/unfocused
+    "format-urgent": "[!]{name}[!]", // urgent hint
+
+    // optional: map numeric IDs to icons
+    "format-icons": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "active": "",
+      "default": ""
+    }
+  }
+}
