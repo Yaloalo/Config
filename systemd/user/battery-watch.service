@@ -1,0 +1,7 @@
+
+[Unit]
+Description=Battery watcher (warn <50%, alarm <20%)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/scripts/battery-watch.sh

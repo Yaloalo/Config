@@ -1,0 +1,9 @@
+
+[Unit]
+Description=Trigger bedtime reminder at 22:00 daily
+
+[Timer]
+OnCalendar=*-*-* 22:00:00
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,7 @@
+
+[Unit]
+Description=22:00 bedtime reminder
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/scripts/bedtime.sh
