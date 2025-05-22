@@ -7,7 +7,8 @@
   // ── right: network, clock, battery ────────────────────────────────────
   "modules-right": [
     "network",
-    "clock",
+"pulseaudio",
+"clock",
     "battery"
   ],
 
@@ -16,6 +17,16 @@
     "tooltip": false,
     "format-wifi": " {essid}",
     "format-ethernet": ""
+  },
+
+// --- volume -------------------------------------------------
+
+
+  "pulseaudio": {
+    "format":       " {volume}%",      // speaker icon + percentage
+    "format-muted": " mute",           // alternative when muted
+    "tooltip":      false,
+    "volume-icon-declick": true         // if you want click‐to‐mute/unmute behavior
   },
 
   // ── clock: 24h format, date ─────────────────────────────────────────────
@@ -59,10 +70,9 @@
     "4": "",   // Spotify
     "5": "",   // Chat bubble
 
-    "active":  "",  // the “you-are-here” marker
     "empty":   "",  // unused workspace
     "visible": "",  // shown on another monitor
-    "special": ""   // scratchpad
+"special": "\uE6AE"   // scratchpad (now using the Neovim glyph)
   }
 }
 }

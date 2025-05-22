@@ -1,0 +1,11 @@
+
+[Unit]
+Description=Lock Hyprland on suspend
+Before=sleep.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/hyprctl dispatch exec hyprlock
+
+[Install]
+WantedBy=sleep.target
