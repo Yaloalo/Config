@@ -35,7 +35,7 @@ end
 
 -- Tabs: simple circles + Roman numerals
 config.use_fancy_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 wezterm.on("format-tab-title", function(tab, _, _, _, _, max_width)
   local sym = tab.is_active and "◉" or "○"
   local title = sym .. to_roman(tab.tab_index + 1)
@@ -121,6 +121,11 @@ config.keys = {
   { key = "LeftArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
   -- splits & pane movement
   { key = "N", mods = "CTRL|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  {
+    key = "M",
+    mods = "CTRL|SHIFT",
+    action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+  },
   { key = "H", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Left") },
   { key = "L", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Right") },
   { key = "K", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Up") },

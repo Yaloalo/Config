@@ -13,6 +13,11 @@
 !/wezterm/**
 !/waybar
 !/waybar/**
+!/rofi/
+!/rofi/**
+!/formatters
+!/formatters/**
+
 
 !starship.toml
 

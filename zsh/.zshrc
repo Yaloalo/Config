@@ -47,7 +47,7 @@ alias h='cd'
 alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias fgrep='fgrep --colour=auto'
-alias c='xclip -selection clipboard'
+alias c='wl-copy'
 alias notes='nvim ~/documents/Main'
 alias s='tree | ripgrep'
 

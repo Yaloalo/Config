@@ -1,248 +1,271 @@
+/* ~/.config/waybar/style.css */
+
+/* Global defaults */
 * {
-	border: none;
-	border-radius: 10;
+    border: none;
+    border-radius: 10px;
     font-family: "JetbrainsMono Nerd Font";
-	font-size: 15px;
-	min-height: 10px;
+    font-size: 16px;  /* Increased font size for better visibility */
+    min-height: 12px;
 }
 
+/* Waybar window background */
 window#waybar {
-	background: transparent;
+    background: transparent;
 }
 
 window#waybar.hidden {
-	opacity: 0.2;
+    opacity: 0.5;
 }
 
+/* Module containers */
 #window {
-	margin-top: 6px;
-	padding-left: 10px;
-	padding-right: 10px;
-	border-radius: 10px;
-	transition: none;
-    color: transparent;
-	background: transparent;
+    margin-top: 6px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;  /* White text */
+    background: #1e2a38;  /* Darker blue background */
 }
 
+/* Workspaces bar */
 #tags {
-	margin-top: 6px;
-	margin-left: 12px;
-	font-size: 4px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	background: #FDECF3;
-	transition: none;
+    margin-top: 6px;
+    margin-left: 12px;
+    font-size: 18px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    background: #2c3e50;  /* Darker blue background for workspaces */
+    transition: none;
 }
 
+/* Workspace buttons */
 #tags button {
-	transition: none;
-	color: #B5E8E0;
-	background: transparent;
-	font-size: 16px;
-	border-radius: 2px;
+    transition: none;
+    color: #FFFFFF;  /* White color for the text/symbols */
+    background: #3498db;  /* Light blue background */
+    font-size: 18px;
+    border-radius: 6px;
+    padding: 6px 12px;  /* Space around the icons for better visibility */
 }
 
+/* Occupied but unfocused */
 #tags button.occupied {
-	transition: none;
-	color: #F28FAD;
-	background: transparent;
-	font-size: 4px;
+    transition: none;
+    color: #FFFFFF;  /* White text */
+    background: #2980b9;  /* Medium blue for occupied but unfocused */
+    font-size: 18px;
+    padding: 6px 12px;
 }
 
-#tags button.focused {
-	color: #ABE9B3;
-    border-top: 2px solid #ABE9B3;
-    border-bottom: 2px solid #ABE9B3;
+/* ── Active workspace outline ─────────────────────────────────────────── */
+#hyprland-workspaces button.focused {
+    background: #3498db;  /* Light blue fill for active workspace */
+    color: #FFFFFF;       /* White text */
+    font-weight: bold;
+    border: none;
+    padding: 6px 12px;    /* Increased padding for better click area */
+    border-radius: 6px;
 }
 
+/* Hover states */
 #tags button:hover {
-	transition: none;
-	box-shadow: inherit;
-	text-shadow: inherit;
-	color: #E8A2AF;
-    border-color: #E8A2AF;
+    transition: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 0 4px #B0E0E6;
+    color: #B0E0E6;   /* Light blue on hover */
+    border-color: #B0E0E6;
 }
 
 #tags button.focused:hover {
-    color: #E8A2AF;
+    color: #B0E0E6;
 }
 
+/* Specific styling for the workspace icon symbols */
+#tags button i {
+    color: #FFFFFF;  /* Ensure the icon color is white */
+}
+
+/* Network */
 #network {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #F8BBD0;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #1F3A60;  /* Dark blue background for network */
 }
 
+/* PulseAudio */
 #pulseaudio {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	transition: none;
-	color: #1A1826;
-	background: #F8C8DC;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #4169E1;  /* Royal blue background for PulseAudio */
 }
 
+/* Battery */
 #battery {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #F4B5C8;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #5A89A6;  /* Blue-ish background for battery */
 }
-
-#battery.charging, #battery.plugged {
-	color: #161320;
-    background-color: #F4B5C8;
+#battery.charging,
+#battery.plugged {
+    color: #FFFFFF;
+    background-color: #2980b9;  /* Bright blue when charging */
 }
-
 #battery.critical:not(.charging) {
-    background-color: #F4B5C8;
-    color: #161320;
+    background-color: #2c3e50; /* Dark blue for critical battery */
+    color: #FFFFFF;
     animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-direction: alternate;
 }
-
 @keyframes blink {
     to {
-        background-color: #FFCDD2;
+        background-color: #3498db;  /* Bright blue for blinking effect */
         color: #B5E8E0;
     }
 }
 
+/* Backlight */
 #backlight {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #F8D1D3;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #2980b9;  /* Bright blue background for backlight */
 }
 
+/* Clock */
 #clock {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #F4C6D0;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #3498db;  /* Light blue for clock */
 }
 
+/* Memory */
 #memory {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	margin-bottom: 0px;
-	padding-right: 10px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #EFBAD4;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #5D8AA8;  /* Light blue-ish background for memory */
 }
 
+/* CPU */
 #cpu {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	margin-bottom: 0px;
-	padding-right: 10px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #F1B5C7;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #7FB3D5;  /* Soft blue background for CPU */
 }
 
+/* Tray */
 #tray {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	margin-bottom: 0px;
-	padding-right: 10px;
-	border-radius: 10px;
-	transition: none;
-	color: #B5E8E0;
-	background: #FDECF3;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #3E5B79;  /* Dark blue background for tray */
 }
 
+/* Custom Launchers & Widgets */
 #custom-launcher {
-	font-size: 24px;
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 5px;
-	border-radius: 10px;
-	transition: none;
-    color: #89DCEB;
-    background: #F1B5C7;
+    font-size: 24px;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 5px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #1F4F8B;  /* Darker blue background */
 }
-
 #custom-power {
-	font-size: 20px;
-	margin-top: 6px;
-	margin-left: 8px;
-	margin-right: 8px;
-	padding-left: 10px;
-	padding-right: 5px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #FFCCD5;
+    font-size: 20px;
+    margin-top: 6px;
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-left: 12px;
+    padding-right: 5px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #2980b9;  /* Bright blue for power */
 }
-
 #custom-wallpaper {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #E8D0E9;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #3C8DBC;  /* Blue background for wallpaper */
 }
-
 #custom-updates {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #F4C1C8;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #1E79B3;  /* Medium blue for updates */
 }
-
 #custom-media {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 10px;
-	transition: none;
-	color: #161320;
-	background: #F9D8D8;
+    margin-top: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0px;
+    border-radius: 12px;
+    transition: none;
+    color: #FFFFFF;
+    background: #356B96;  /* Medium blue for media */
 }

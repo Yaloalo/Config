@@ -39,28 +39,30 @@
     "format-icons": ["","","","",""]
   },
 
-  // ── Hyprland workspaces ─────────────────────────────────────────────────
-  "hyprland/workspaces": {
-    // display slots 1–5 even if empty
+"hyprland/workspaces": {
+    // …keep your existing fields…
     "persistent-workspaces": { "*": 5 },
-    // allow clicking to switch/attach
     "move-to-monitor": true,
 
-    // formatting for each state:
-    "format-focused": " {name}",    // active workspace
-    "format-visible": " {name}",    // visible on another monitor
-    "format": "{name}",              // empty/unfocused
-    "format-urgent": "[!]{name}[!]", // urgent hint
+    // show the scratchpad (special) only when it contains windows
+    "show-special": true,
+    "special-visible-only": true,
 
-    // optional: map numeric IDs to icons
-    "format-icons": {
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": "",
-      "5": "",
-      "active": "",
-      "default": ""
-    }
+    // render each workspace as its icon
+    "format": "{icon}",
+
+    // map IDs and states to icons
+"format-icons": {
+    "1": "",   // Terminal
+    "2": "",   // Settings (gear)
+    "3": "",   // Chrome
+    "4": "",   // Spotify
+    "5": "",   // Chat bubble
+
+    "active":  "",  // the “you-are-here” marker
+    "empty":   "",  // unused workspace
+    "visible": "",  // shown on another monitor
+    "special": ""   // scratchpad
   }
+}
 }
