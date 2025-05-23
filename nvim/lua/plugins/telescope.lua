@@ -1,4 +1,5 @@
 return {
+
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
@@ -142,31 +143,76 @@ return {
 
   {
     "folke/which-key.nvim",
-    event = "VimEnter",
+    event = "VeryLazy",
     opts = {
-      delay = 0,
-      icons = {
-        mappings = vim.g.have_nerd_font,
-        keys = vim.g.have_nerd_font and {} or {
-          Up = "<Up>",
-          Down = "<Down>",
-          Left = "<Left>",
-          Right = "<Right>",
-          C = "<C-…>",
-          M = "<M-…>",
-          D = "<D-…>",
-          S = "<S-…>",
-          CR = "<CR>",
-          Esc = "<Esc>",
-          Space = "<Space>",
-          Tab = "<Tab>",
+      win = {
+        no_overlap = true,
+        padding = { 1, 2 },
+        border = "rounded",
+        title = true,
+        title_pos = "center",
+        zindex = 1000,
+        bo = {},
+        wo = {
+          winblend = 0, -- no blending, let Hyprland handle the blur
         },
       },
+      plugins = {
+        marks = true,
+        registers = true,
+        spelling = {
+          enabled = true,
+          suggestions = 20,
+        },
+        presets = {
+          operators = true,
+          motions = true,
+          text_objects = true,
+          windows = true,
+          nav = true,
+          z = true,
+          g = true,
+        },
+      },
+      layout = {
+        width = { min = 20 },
+        spacing = 3,
+      },
+      icons = {
+        breadcrumb = "»",
+        separator = "➜",
+        group = "+",
+        mappings = true,
+      },
+      -- ✅ Mappings spec for grouping
       spec = {
         { "<leader>s", group = "[S]earch" },
-        { "<leader>g", group = "[G]it" },
-        -- removed <leader>w mapping
+        { "<leader>d", group = "[D]ebug" },
+        { "<leader>l", group = "[L]SP" },
+        { "<leader>o", group = "[O]il" },
       },
+    },
+    config = function(_, opts)
+      require("which-key").setup(opts)
+
+      -- Transparent backgrounds for full blur in Hyprland
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+      vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+      vim.api.nvim_set_hl(0, "WhichKeyFloat", { bg = "none" })
+      vim.api.nvim_set_hl(0, "WhichKeyBorder", { bg = "none" })
+      vim.api.nvim_set_hl(0, "WhichKeyNormal", { bg = "none" })
+      vim.api.nvim_set_hl(0, "WhichKeyTitle", { bg = "none" })
+
+      -- Also make the WinBar and FloatTitle transparent (fixes that black box above)
+      vim.api.nvim_set_hl(0, "WinBar", { bg = "none" })
+      vim.api.nvim_set_hl(0, "WinBarNC", { bg = "none" })
+      vim.api.nvim_set_hl(0, "FloatTitle", { bg = "none" })
+    end,
+    spec = {
+      { "<leader>s", group = "[S]earch" },
+      { "<leader>d", group = "[D]ebug" },
+      { "<leader>l", group = "[L]SP" },
+      { "<leader>o", group = "[O]il" },
     },
   },
 }

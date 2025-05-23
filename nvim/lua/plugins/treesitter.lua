@@ -99,29 +99,4 @@ return {
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
-
-  -- treesitter-context (show current function/class at top of window)
-  {
-    "nvim-treesitter/nvim-treesitter-context",
-    event = "BufReadPost",
-    config = function()
-      require("treesitter-context").setup({
-        enable = true,
-        max_lines = 5,
-        trim_scope = "outer",
-        patterns = {
-          default = {
-            "class",
-            "function",
-            "method",
-            "for",
-            "while",
-            "if",
-            "switch",
-            "case",
-          },
-        },
-      })
-    end,
-  },
 }
