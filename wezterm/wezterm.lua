@@ -114,6 +114,9 @@ end)
 -- Keybindings
 config.disable_default_key_bindings = true
 config.keys = {
+
+  -- Clear
+
   -- scrollback
   { key = "R", mods = "CTRL|SHIFT", action = act.EmitEvent("edit-scrollback") },
   -- tabs

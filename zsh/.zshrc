@@ -50,7 +50,8 @@ alias fgrep='fgrep --colour=auto'
 alias c='wl-copy'
 alias notes='nvim ~/documents/Main'
 alias s='tree | ripgrep'
-
+alias n='nvim'
+alias f='clear'
 # ─── 5. PATH & broot hook ─────────────────────────────────────────────────────────
 export PATH="$HOME/.cargo/bin:$PATH"
 if [[ -s "$HOME/.config/broot/launcher/bash/br" ]]; then
