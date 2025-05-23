@@ -84,7 +84,7 @@ wezterm.on("edit-scrollback", function(window, pane)
   f:write(text)
   f:close()
   window:perform_action(
-    act.SpawnCommandInNewWindow({ args = { os.getenv("EDITOR") or "vim", tmp } }),
+    act.SpawnCommandInNewWindow({ args = { os.getenv("EDITOR") or "nvim", tmp } }),
     pane
   )
   wezterm.sleep_ms(500)

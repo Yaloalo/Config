@@ -9,7 +9,6 @@ return {
   require("plugins.blink"),
   require("plugins.conform"),
   require("plugins.mason"),
-  require("plugins.hardtime"),
   require("plugins.indent_line"),
   require("plugins.render-markdown"),
   require("plugins.telescope"),

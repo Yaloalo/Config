@@ -1,21 +1,24 @@
--- lua/plugins/toggleterm.lua
 return {
   "akinsho/toggleterm.nvim",
   version = "*",
   opts = {
-    -- toggle with <leader>t
-    open_mapping = [[<leader>t]],
+    -- remove this:
+    -- open_mapping = [[<leader>t]],
+
     start_in_insert = true,
-    -- use floating window
     direction = "float",
     float_opts = {
       border = "rounded",
       winblend = 0,
     },
-    -- don’t shade terminals (so your Tokyo Night bg shows)
     shade_terminals = false,
-    -- interactive Zsh (loads your aliases & Starship)
     shell = "zsh",
     shellcmdflag = "-i",
   },
+  config = function(_, opts)
+    require("toggleterm").setup(opts)
+
+    -- add a manual mapping in normal + terminal mode only
+    vim.keymap.set({ "n", "t" }, "<leader>t", "<Cmd>ToggleTerm<CR>", { desc = "Toggle Terminal" })
+  end,
 }

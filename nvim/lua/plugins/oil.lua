@@ -1,43 +1,29 @@
--- lua/plugins/oil.lua
 return {
   {
     "stevearc/oil.nvim",
     dependencies = {
-      "nvim-tree/nvim-web-devicons", -- optional icon support
+      "nvim-tree/nvim-web-devicons",
     },
-    -- load immediately so file-explorer is always ready
     lazy = false,
     config = function()
-      -- Basic Oil setup
-      require("oil").setup({
-        -- Take over directory buffers (e.g. `nvim .` or `:e src/`)
+      local oil = require("oil")
+
+      oil.setup({
         default_file_explorer = true,
         skip_confirm_for_simple_edits = true,
-        -- Show hidden files by default
+        delete_to_trash = false,
+        experimental_watch_for_changes = true,
         view_options = {
           show_hidden = true,
-          is_hidden_file = function(name, bufnr)
+          is_hidden_file = function(name, _)
             return vim.startswith(name, ".")
           end,
         },
-        -- Use default keymaps, plus parent-folder shortcut
         use_default_keymaps = true,
-        keymaps = {
-          -- Open file or directory
-          ["<CR>"] = "actions.select",
-          -- Go to parent directory
-          ["-"] = "actions.parent",
-          -- Change directory to cwd
-          ["_"] = "actions.open_cwd",
-          -- Show help
-          ["g?"] = "actions.show_help",
-        },
-        -- Buffer-local options for oil buffers
         buf_options = {
           buflisted = false,
           bufhidden = "hide",
         },
-        -- Window-local options for oil buffers
         win_options = {
           wrap = false,
           signcolumn = "no",
@@ -46,16 +32,63 @@ return {
         },
       })
 
-      -- Open Oil at initial Neovim cwd
+      -- Keymaps to open Oil
       vim.keymap.set("n", "<leader>oo", function()
-        require("oil").open(vim.fn.getcwd())
+        oil.open(vim.fn.getcwd())
       end, { desc = "󱎘 Oil Explorer (initial cwd)" })
 
-      -- Open Oil at parent directory of current file
       vim.keymap.set("n", "<leader>oc", function()
         local dir = vim.fn.expand("%:p:h")
-        require("oil").open(dir)
+        oil.open(dir)
       end, { desc = "󱎘 Oil Explorer (current file parent)" })
+
+      -- Track original lines in oil:// buffer
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "OilEnter",
+        callback = function(args)
+          local bufnr = args.buf
+          local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+          vim.b[bufnr].oil_prev_lines = vim.deepcopy(lines)
+        end,
+      })
+
+      -- Use Oil's save API instead of BufWritePre
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "OilSaved",
+        callback = function(args)
+          local bufnr = args.buf
+          local old_lines = vim.b[bufnr].oil_prev_lines or {}
+          local new_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+          local deleted = {}
+          local seen = {}
+          for _, line in ipairs(new_lines) do
+            seen[line] = true
+          end
+          for _, line in ipairs(old_lines) do
+            if not seen[line] and line ~= "" then
+              table.insert(deleted, line)
+            end
+          end
+
+          if #deleted > 0 then
+            vim.ui.select({ "Yes", "No" }, {
+              prompt = "Delete removed files from disk?",
+            }, function(choice)
+              if choice == "Yes" then
+                local cwd = oil.get_current_dir()
+                for _, filename in ipairs(deleted) do
+                  local path = cwd .. "/" .. filename
+                  if vim.fn.filereadable(path) == 1 or vim.fn.isdirectory(path) == 1 then
+                    vim.fn.delete(path, "rf")
+                    vim.notify("Deleted: " .. path, vim.log.levels.INFO)
+                  end
+                end
+              end
+            end)
+          end
+        end,
+      })
     end,
   },
 }

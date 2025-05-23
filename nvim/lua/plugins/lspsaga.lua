@@ -58,12 +58,6 @@ return {
         "<cmd>Lspsaga rename<CR>",
         vim.tbl_extend("force", opts, { desc = "Lspsaga: Rename" })
       )
-      map(
-        "t",
-        "<leader>lF",
-        "<cmd>Lspsaga term_toggle<CR>",
-        vim.tbl_extend("force", opts, { desc = "Lspsaga: Toggle Terminal" })
-      )
     end,
   },
 }

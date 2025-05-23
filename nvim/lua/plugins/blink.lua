@@ -12,16 +12,13 @@ return {
     opts = {
       keymap = {
         preset = "default",
-        -- <Tab> will accept the current popup item if menu is open,
-        -- otherwise fall back to whatever Tab did before.
         ["<Tab>"] = { "accept", "fallback_to_mappings" },
-        -- <C-y> will always accept the *first* suggestion (your ghost-text).
         ["<C-y>"] = { "select_and_accept" },
       },
 
       completion = {
         menu = {
-          auto_show = false, -- only show with <C-Space>
+          auto_show = false,
         },
         ghost_text = {
           enabled = true,
@@ -48,5 +45,14 @@ return {
         nerd_font_variant = "mono",
       },
     },
+
+    config = function(_, _)
+      -- 🔧 Remove InsertCharPre autocommand from blink.cmp to stop <20> echo
+      for _, aucmd in ipairs(vim.api.nvim_get_autocmds({ event = "InsertCharPre" })) do
+        if aucmd.command and aucmd.command:match("blink/cmp") then
+          vim.api.nvim_del_autocmd(aucmd.id)
+        end
+      end
+    end,
   },
 }

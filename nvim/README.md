@@ -1,5 +1,5 @@
 ## Purpose of this nvim config
-
+      
 This is my personal config; I have altered a lot of stuff except the basic keybindings.  
 The goal was to do everything in nvim, except debugging, which I have not been able to make work with QEMU.
 

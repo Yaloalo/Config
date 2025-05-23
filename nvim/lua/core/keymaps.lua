@@ -22,7 +22,7 @@ map("i", "<C-l>", "<Right>")
 
 -- Open notes
 map("n", "<leader>n", function()
-  vim.cmd("edit " .. vim.fn.expand("~/documents/Main"))
+  vim.cmd("edit " .. vim.fn.expand("~/notes"))
 end, { desc = "Open notes" })
 
 -- Toggle all LSP diagnostics on/off
