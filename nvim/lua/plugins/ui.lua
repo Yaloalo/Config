@@ -90,6 +90,69 @@ return {
   },
 
   {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
+    config = function()
+      require("noice").setup({
+        views = {
+          cmdline_popup = {
+            position = {
+              row = 5,
+              col = "50%",
+            },
+            size = {
+              width = 60,
+              height = "auto",
+            },
+            border = {
+              style = "rounded",
+              padding = { 0, 1 },
+            },
+            win_options = {
+              winhighlight = {
+                FloatBorder = "NoiceWhiteBorder", -- use our custom group
+                Normal = "NormalFloat",
+              },
+            },
+          },
+          popupmenu = {
+            relative = "editor",
+            position = {
+              row = 8,
+              col = "50%",
+            },
+            size = {
+              width = 60,
+              height = 10,
+            },
+            border = {
+              style = "rounded",
+              padding = { 0, 1 },
+            },
+            win_options = {
+              winhighlight = {
+                FloatBorder = "NoiceWhiteBorder",
+                Normal = "NormalFloat",
+              },
+            },
+          },
+        },
+      })
+
+      -- 🔑 Keymap for message history
+      vim.keymap.set("n", "<leader>m", function()
+        require("noice").cmd("history")
+      end, { desc = "Noice: Message History" })
+
+      -- 🎨 Define white border color
+      vim.api.nvim_set_hl(0, "NoiceWhiteBorder", { fg = "#ffffff", bg = "none" })
+    end,
+  },
+  {
     "goolord/alpha-nvim",
     dependencies = { "echasnovski/mini.icons", "nvim-lua/plenary.nvim" },
     config = function()
