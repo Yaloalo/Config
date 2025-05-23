@@ -13,14 +13,20 @@
 !/wezterm/**
 !/waybar
 !/waybar/**
-!/rofi/
-!/rofi/**
+!/wofi/
+!/wofi/**
 !/formatters
 !/formatters/**
 !/systemd
 !/scripts
 !/systemd/**
 !/scripts/**
+!/runst/
+!/runst/**
+!/gtk-3.0
+!/gtk-4.0
+!/gtk-3.0/**
+!/gtk-4.0/**
 
 !starship.toml
 

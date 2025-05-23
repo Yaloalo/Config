@@ -42,7 +42,8 @@ wezterm.on("format-tab-title", function(tab, _, _, _, _, max_width)
   return { { Text = " " .. wezterm.truncate_right(title, max_width) .. " " } }
 end)
 
--- Ensure the tab bar itself is transparent too
+-- Ensure the tab bar itself is transparent too, but with deep purple accents
+
 config.colors = {
   tab_bar = {
     -- entire tab-bar background
@@ -50,26 +51,26 @@ config.colors = {
     -- active tab
     active_tab = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#C0CAF5",
+      fg_color = "#cba6f7", -- mauve
     },
     -- inactive tabs
     inactive_tab = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#565F89",
+      fg_color = "#6c7086", -- overlay0
     },
     -- hovered inactive tab
     inactive_tab_hover = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#FFFFFF",
+      fg_color = "#7f849c", -- overlay1
     },
     -- the “+” new-tab button
     new_tab = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#98BB6C",
+      fg_color = "#9399b2", -- overlay2
     },
     new_tab_hover = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#7CB8BB",
+      fg_color = "#b4befe", -- lavender
     },
   },
 }

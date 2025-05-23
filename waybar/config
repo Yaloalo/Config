@@ -51,28 +51,23 @@
   },
 
 "hyprland/workspaces": {
-    // …keep your existing fields…
-    "persistent-workspaces": { "*": 5 },
-    "move-to-monitor": true,
-
-    // show the scratchpad (special) only when it contains windows
-    "show-special": true,
-    "special-visible-only": true,
-
-    // render each workspace as its icon
-    "format": "{icon}",
-
-    // map IDs and states to icons
-"format-icons": {
-    "1": "",   // Terminal
-    "2": "",   // Settings (gear)
-    "3": "",   // Chrome
-    "4": "",   // Spotify
-    "5": "",   // Chat bubble
-
-    "empty":   "",  // unused workspace
-    "visible": "",  // shown on another monitor
-"special": "\uE6AE"   // scratchpad (now using the Neovim glyph)
+  "all-outputs": true,
+  "persistent-workspaces": {
+    "*": [1, 2, 3, 4, 5]
+  },
+  "move-to-monitor": true,
+  "show-special": true,
+  "special-visible-only": true,
+  "format": "{icon}",
+  "format-icons": {
+    "1": "\uEBCA",   // Terminal
+    "2": "",        // Settings (gear)
+    "3": "\uE745",   // Chrome
+    "4": "",        // Spotify
+    "5": "",        // Chat bubble
+    "empty": "",    // Unused workspace
+    "visible": "",  // Workspace visible on other monitor
+    "special": "\uE6AE" // Scratchpad icon
   }
 }
 }

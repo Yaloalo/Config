@@ -1,0 +1,58 @@
+# ~/.config/runst/runst.toml
+
+# ── Global ────────────────────────────────────────────────────────────────
+# How much logging to emit (error, warn, info, debug, trace)
+log_verbosity = "info"
+
+# Show a notification on startup?
+startup_notification = false
+
+# Window geometry: <width>x<height>+<x>+<y>
+# e.g. width 300px, auto height, positioned 20px from right, 40px from top
+geometry = "300x0+20+40"
+
+# If true, shrink-wrap window to content (max = geometry)
+wrap_content = true
+
+# Pango font description for the notification text
+font = "JetBrains Mono 11"
+
+# Jinja2/Django-style template for notification content
+template = "{{ summary }}\n{{ body }}"
+
+# ── Urgency: low ─────────────────────────────────────────────────────────
+[urgency_low]
+background   = "#3B4252"   # dark grey
+foreground   = "#D8DEE9"   # light text
+timeout      = 5           # seconds
+auto_clear   = true        # estimate read-time if sender didn’t specify
+text         = "LOW"
+custom_commands = [
+  # no custom commands for low urgency
+]
+
+# ── Urgency: normal ──────────────────────────────────────────────────────
+[urgency_normal]
+background   = "#434C5E"
+foreground   = "#ECEFF4"
+timeout      = 8
+auto_clear   = true
+text         = "NOTICE"
+custom_commands = [
+  # play a short chime for mail notifications
+  { filter = '{ "app_name": "thunderbird|mailspring" }',
+    command = 'aplay /usr/share/sounds/freedesktop/stereo/message.oga' },
+]
+
+# ── Urgency: critical ────────────────────────────────────────────────────
+[urgency_critical]
+background   = "#BF616A"   # red
+foreground   = "#2E3440"   # dark text
+timeout      = 0           # 0 = never auto-close
+auto_clear   = false
+text         = "ALERT"
+custom_commands = [
+  # flash screen or play alarm on critical battery low
+  { filter = '{ "summary": "Battery Low" }',
+    command = 'aplay /usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga' },
+]

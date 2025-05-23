@@ -13,40 +13,47 @@ $python\
 $line_break\
 $character"""
 
+[username]
+style_user = "#f5e0dc"        # rosewater
+
+[hostname]
+style = "#f2cdcd"        # flamingo
+
 [directory]
-style = "blue"
+style = "#cba6f7"        # mauve
 
 [character]
-success_symbol = "[❯](purple)"
-error_symbol   = "[❯](red)"
-vimcmd_symbol  = "[❮](green)"
+# prompt symbols colored in Catppuccin shades
+success_symbol = "[❯](#cba6f7)"  # mauve
+error_symbol   = "[❯](#f38ba8)"  # red
+vimcmd_symbol  = "[❮](#a6e3a1)"  # green
 
 [git_branch]
 format = "[$branch]($style)"
-style  = "bright-black"
+style  = "#f5c2e7"        # pink
 
 [git_status]
 # Icons + ahead/behind/stash
-format    = " [$ahead_behind$stashed]($style)"
-style     = "cyan"
-conflicted= ""
-untracked = ""
-modified  = ""
-staged    = ""
-renamed   = ""
-deleted   = ""
-stashed   = "≡"
+format     = " [$ahead_behind$stashed]($style)"
+style      = "#94e2d5"    # teal
+conflicted = ""
+untracked  = ""
+modified   = ""
+staged     = ""
+renamed    = ""
+deleted    = ""
+stashed    = "≡"
 
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style  = "bright-black"
+style  = "#7f849c"        # overlay1
 
 [python]
 format = "[$virtualenv]($style) "
-style  = "bright-black"
+style  = "#f5c2e7"        # pink
 
 [time]
 disabled     = false
 time_format  = "%Y-%m-%d %H:%M:%S"
 format       = "[$time]($style) "
-style        = "bright-white"
+style        = "#cdd6f4"   # text

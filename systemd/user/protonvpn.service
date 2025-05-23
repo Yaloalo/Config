@@ -1,0 +1,16 @@
+[Unit]
+Description=ProtonVPN CLI auto-connect
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# turn on the kill-switch
+ExecStartPre=/usr/bin/protonvpn ks --on
+# connect to the fastest server + secure-connect
+ExecStart=/usr/bin/protonvpn c --fastest --sc
+# disconnect cleanly
+ExecStop=/usr/bin/protonvpn d
+
+[Install]
+WantedBy=default.target

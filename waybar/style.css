@@ -27,7 +27,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #1e2a38;
+    background: #1a002b;  /* very dark purple */
 }
 
 /* Workspaces bar (legacy #tags) */
@@ -45,7 +45,7 @@ window#waybar.hidden {
 #tags button {
     transition: box-shadow 0.2s;
     color: #FFFFFF;
-    background: #003399;
+    background: #26003e;  /* darker purple */
     font-size: 16px;
     border-radius: 50px;
     padding: 4px 10px;
@@ -53,17 +53,17 @@ window#waybar.hidden {
     box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2);
 }
 #tags button.occupied {
-    background: #002F7A;
+    background: #330051;  /* dark purple */
 }
 #tags button.focused {
-    background: #0055CC;
+    background: #400064;  /* deep purple */
     font-weight: bold;
     border: 2px solid #FFFFFF;
     padding: 4px 10px;
 }
 #tags button:hover {
-    background: #0044CC;
-    box-shadow: inset 0 -2px 6px rgba(0,0,0,0.3), 0 0 8px rgba(0,85,204,0.5);
+    background: #4d0077;  /* medium-dark purple */
+    box-shadow: inset 0 -2px 6px rgba(0,0,0,0.3), 0 0 8px rgba(77,0,119,0.5);
 }
 #tags button i {
     color: #FFFFFF;
@@ -82,23 +82,22 @@ window#waybar.hidden {
     margin: 2px 6px;
     padding: 3px 10px;
     border-radius: 10px;
-    border: 1px solid #1e2a38;
-    background: transparent;
+    border: 1px solid #330051;  /* dark purple */
+    background: #330051;         /* dark purple */
     color: #f1f1f1;
     transition: all 0.3s ease;
 }
-
 #workspaces button.active {
-    background: #6CAEFF;
+    background: #5a008a;  /* vibrant purple */
     color: #FFFFFF;
-    border: 1px solid #568BCC;
+    border: 1px solid #5a008a;
     border-radius: 14px;
     padding: 3px 10px;
     transition: all 0.3s ease;
 }
 #workspaces button:hover {
-    background: #d0ddd6;
-    color: #313244;
+    background: #400064;  /* deep purple */
+    color: #FFFFFF;
     transition: all 0.3s cubic-bezier(0.55, -0.68, 0.48, 1.682);
 }
 
@@ -111,7 +110,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #1F3A60;
+    background: #26003e;  /* darker purple */
 }
 
 /* PulseAudio */
@@ -123,7 +122,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #4169E1;
+    background: #330051;  /* dark purple */
 }
 
 /* Battery */
@@ -135,21 +134,23 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #5A89A6;
+    background: #26003e;  /* darker purple */
 }
 #battery.charging,
 #battery.plugged {
-    background-color: #2980b9;
+    background-color: #400064;  /* deep purple */
 }
-#battery.critical:not(.charging) {
-    background-color: #2c3e50;
-    animation: blink 0.5s linear infinite alternate;
-}
+
+/* blink only when critical AND not on AC (neither charging nor plugged) */
 @keyframes blink {
     to {
-        background-color: #3498db;
+        background-color: #4d0077;  /* medium-dark purple */
         color: #B5E8E0;
     }
+}
+#battery.critical:not(.charging):not(.plugged) {
+    background-color: #330051;  /* dark purple */
+    animation: blink 0.5s linear infinite alternate;
 }
 
 /* Backlight */
@@ -161,7 +162,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #2980b9;
+    background: #330051;  /* dark purple */
 }
 
 /* Clock */
@@ -173,7 +174,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #3498db;
+    background: #26003e;  /* darker purple */
 }
 
 /* Memory */
@@ -185,7 +186,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #5D8AA8;
+    background: #1a002b;  /* very dark purple */
 }
 
 /* CPU */
@@ -197,7 +198,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #7FB3D5;
+    background: #26003e;  /* darker purple */
 }
 
 /* Tray */
@@ -209,7 +210,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #3E5B79;
+    background: #330051;  /* dark purple */
 }
 
 /* Custom Launchers & Widgets */
@@ -222,7 +223,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #1F4F8B;
+    background: #400064;  /* deep purple */
 }
 #custom-power {
     margin-top: 6px;
@@ -234,7 +235,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #2980b9;
+    background: #1a002b;  /* very dark purple */
 }
 #custom-wallpaper {
     margin-top: 6px;
@@ -244,7 +245,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #3C8DBC;
+    background: #26003e;  /* darker purple */
 }
 #custom-updates {
     margin-top: 6px;
@@ -254,7 +255,7 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #1E79B3;
+    background: #330051;  /* dark purple */
 }
 #custom-media {
     margin-top: 6px;
@@ -264,5 +265,5 @@ window#waybar.hidden {
     border-radius: 8px;
     transition: none;
     color: #FFFFFF;
-    background: #356B96;
+    background: #400064;  /* deep purple */
 }

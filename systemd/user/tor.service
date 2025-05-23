@@ -1,0 +1,13 @@
+
+[Unit]
+Description=Tor daemon (over ProtonVPN)
+After=protonvpn.service
+Wants=protonvpn.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/tor
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
