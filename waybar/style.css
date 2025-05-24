@@ -3,7 +3,7 @@
 /* Global defaults */
 * {
     border: none;
-    border-radius: 8px;
+    border-radius: 0px;  /* Square edges */
     font-family: "JetbrainsMono Nerd Font";
     font-size: 12px;
     min-height: 6px;
@@ -18,265 +18,82 @@ window#waybar.hidden {
     opacity: 0.5;
 }
 
-/* Module containers */
-#window {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #1a002b;  /* very dark purple */
-}
-
-/* Workspaces bar (legacy #tags) */
-#tags {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 10px;
-    font-size: 16px;
-    border-radius: 8px;
-    background: transparent;
-    transition: none;
-}
-
-/* ----- Ford-style pill workspace buttons (#tags) ----- */
+/* General module style: square with thin light purple frame */
+#window,
+#network,
+#pulseaudio,
+#battery,
+#backlight,
+#clock,
+#memory,
+#cpu,
+#tray,
+#custom-launcher,
+#custom-power,
+#custom-wallpaper,
+#custom-updates,
+#custom-media,
+#custom-cat,
+#workspaces button,
 #tags button {
-    transition: box-shadow 0.2s;
+    margin: 4px;
+    padding: 4px 8px;
+    border-radius: 0px;               /* Square shape */
+    border: 1px solid #c084fc;        /* Thin light purple frame */
+    background: #1a002b;              /* Dark purple background */
     color: #FFFFFF;
-    background: #26003e;  /* darker purple */
-    font-size: 16px;
-    border-radius: 50px;
-    padding: 4px 10px;
-    border: none;
-    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2);
-}
-#tags button.occupied {
-    background: #330051;  /* dark purple */
-}
-#tags button.focused {
-    background: #400064;  /* deep purple */
-    font-weight: bold;
-    border: 2px solid #FFFFFF;
-    padding: 4px 10px;
-}
-#tags button:hover {
-    background: #4d0077;  /* medium-dark purple */
-    box-shadow: inset 0 -2px 6px rgba(0,0,0,0.3), 0 0 8px rgba(77,0,119,0.5);
-}
-#tags button i {
-    color: #FFFFFF;
+    transition: none;
 }
 
-/* Workspaces container (no flex/gap) */
-#workspaces {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 10px;
+/* Focused workspace button */
+#workspaces button.active {
+    background: #5a008a;
+    border: 1px solid #c084fc;
+    font-weight: bold;
+}
+
+#workspaces button:hover,
+#tags button:hover {
+    background: #4d0077;
+}
+
+/* Tags (workspaces) */
+#tags {
+    margin: 4px;
+    font-size: 16px;
+    border: none;
     background: transparent;
 }
 
-/* All workspace buttons: add horizontal margins for spacing */
-#workspaces button {
-    margin: 2px 6px;
-    padding: 3px 10px;
-    border-radius: 10px;
-    border: 1px solid #330051;  /* dark purple */
-    background: #330051;         /* dark purple */
-    color: #f1f1f1;
-    transition: all 0.3s ease;
-}
-#workspaces button.active {
-    background: #5a008a;  /* vibrant purple */
-    color: #FFFFFF;
-    border: 1px solid #5a008a;
-    border-radius: 14px;
-    padding: 3px 10px;
-    transition: all 0.3s ease;
-}
-#workspaces button:hover {
-    background: #400064;  /* deep purple */
-    color: #FFFFFF;
-    transition: all 0.3s cubic-bezier(0.55, -0.68, 0.48, 1.682);
+/* Tags individual buttons */
+#tags button {
+    background: #26003e;
 }
 
-/* Network */
-#network {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #26003e;  /* darker purple */
+#tags button.occupied {
+    background: #330051;
 }
 
-/* PulseAudio */
-#pulseaudio {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #330051;  /* dark purple */
+#tags button.focused {
+    background: #400064;
+    font-weight: bold;
+    border: 1px solid #c084fc;
 }
 
-/* Battery */
-#battery {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #26003e;  /* darker purple */
-}
+/* Battery states */
 #battery.charging,
 #battery.plugged {
-    background-color: #400064;  /* deep purple */
+    background-color: #400064;
 }
 
-/* blink only when critical AND not on AC (neither charging nor plugged) */
-@keyframes blink {
-    to {
-        background-color: #4d0077;  /* medium-dark purple */
-        color: #B5E8E0;
-    }
-}
 #battery.critical:not(.charging):not(.plugged) {
-    background-color: #330051;  /* dark purple */
+    background-color: #330051;
     animation: blink 0.5s linear infinite alternate;
 }
 
-/* Backlight */
-#backlight {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #330051;  /* dark purple */
+@keyframes blink {
+    to {
+        background-color: #4d0077;
+        color: #B5E8E0;
+    }
 }
-
-/* Clock */
-#clock {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #26003e;  /* darker purple */
-}
-
-/* Memory */
-#memory {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #1a002b;  /* very dark purple */
-}
-
-/* CPU */
-#cpu {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #26003e;  /* darker purple */
-}
-
-/* Tray */
-#tray {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #330051;  /* dark purple */
-}
-
-/* Custom Launchers & Widgets */
-#custom-launcher {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    font-size: 24px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #400064;  /* deep purple */
-}
-#custom-power {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    margin-right: 6px;
-    font-size: 20px;
-    padding: 0 8px 0 5px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #1a002b;  /* very dark purple */
-}
-#custom-wallpaper {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #26003e;  /* darker purple */
-}
-#custom-updates {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #330051;  /* dark purple */
-}
-#custom-media {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #400064;  /* deep purple */
-}
-
-
-#custom-cat {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    margin-left: 6px;
-    padding: 0 8px;
-    border-radius: 8px;
-    transition: none;
-    color: #FFFFFF;
-    background: #330051;  /* dark purple, matches main elements */
-}
-
