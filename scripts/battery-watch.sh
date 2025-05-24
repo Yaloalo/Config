@@ -1,24 +1,21 @@
-
 #!/usr/bin/env bash
 #
-# battery-watch.sh — warn at 50%, alarm at 20%
-#
+# battery-watch.sh — notify always, show percentage + state, no command-line output
 
 DEV=/org/freedesktop/UPower/devices/battery_BAT0
 
-# read state & pct
-read -r state pct <<< $(
-  upower -i "$DEV" \
-    | awk '/state:/ {s=$2} /percentage:/ {p=$2} END{print s, p}'
-)
+# Extract battery state and percentage
+state=$(upower -i "$DEV" | awk -F': +' '/state:/ {print $2}')
+pct=$(upower -i "$DEV" | awk -F': +' '/percentage:/ {print $2}' | tr -d '%')
 
-pct=${pct%\%}
+# Build message text
+message="Battery ${pct}% (${state})"
 
-# only when discharging
-[[ $state != "discharging" ]] && exit 0
-
-if   (( pct < 20 )); then
-  notify-send -u critical "Battery Critical" "${pct}% remaining"
+# Send notification based on percentage
+if (( pct < 20 )); then
+  notify-send -u critical "Battery Critical" "$message"
 elif (( pct < 50 )); then
-  notify-send -u normal   "Battery Low"      "${pct}% remaining"
+  notify-send -u normal "Battery Low" "$message"
+else
+  notify-send -u low "Battery Status" "$message"
 fi

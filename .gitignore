@@ -21,8 +21,8 @@
 !/scripts
 !/systemd/**
 !/scripts/**
-!/runst/
-!/runst/**
+!/mako/
+!/mako/**
 !/gtk-3.0
 !/gtk-4.0
 !/gtk-3.0/**
