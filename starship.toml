@@ -1,39 +1,52 @@
 # ~/.config/starship.toml
 
-# Layout: all info on first line, prompt symbol on second, with separators
+# Layout: cat icon first, all info on first line, prompt symbol on second, with separators
+
 format = """
-$username\
+󰄛 \
+ | $username\
 $hostname\
 $directory | \
 $git_branch\
 $git_state\
 $git_status\
 $python\
-| $time\
+ | $time\
 $line_break\
 $character"""
 
+
+[custom.cat]
+command = 'echo 󰄛'
+when    = true
+format  = '[$output]($style) '
+style   = "#f5c2e7"
+
+# ── Username ───────────────────────────────────
 [username]
 style_user = "#f5e0dc"        # rosewater
 
+# ── Hostname ───────────────────────────────────
 [hostname]
 style = "#f2cdcd"        # flamingo
 
+# ── Directory ──────────────────────────────────
 [directory]
 style = "#cba6f7"        # mauve
 
+# ── Character Symbols ──────────────────────────
 [character]
-# prompt symbols colored in Catppuccin shades
 success_symbol = "[❯](#cba6f7)"  # mauve
 error_symbol   = "[❯](#f38ba8)"  # red
 vimcmd_symbol  = "[❮](#a6e3a1)"  # green
 
+# ── Git Branch ─────────────────────────────────
 [git_branch]
 format = "[$branch]($style)"
 style  = "#f5c2e7"        # pink
 
+# ── Git Status ────────────────────────────────
 [git_status]
-# Icons + ahead/behind/stash
 format     = " [$ahead_behind$stashed]($style)"
 style      = "#94e2d5"    # teal
 conflicted = ""
@@ -44,16 +57,19 @@ renamed    = ""
 deleted    = ""
 stashed    = "≡"
 
+# ── Git State ─────────────────────────────────
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
 style  = "#7f849c"        # overlay1
 
+# ── Python Virtualenv ─────────────────────────
 [python]
 format = "[$virtualenv]($style) "
 style  = "#f5c2e7"        # pink
 
+# ── Time ──────────────────────────────────────
 [time]
 disabled     = false
 time_format  = "%Y-%m-%d %H:%M:%S"
 format       = "[$time]($style) "
-style        = "#cdd6f4"   # text
+style        = "#f5c2b2"   # text
