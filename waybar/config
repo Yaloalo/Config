@@ -1,42 +1,50 @@
 {
   "layer": "top",
 
-  // ── center: Hyprland workspaces ────────────────────────────────────────
+  // ── left: custom cat ──────────────────────────────────────────────────
+  "modules-left": ["custom/cat"],
+
+  // ── center: Hyprland workspaces ───────────────────────────────────────
   "modules-center": ["hyprland/workspaces"],
 
-  // ── right: network, clock, battery ────────────────────────────────────
+  // ── right: network, volume, clock, battery ────────────────────────────
   "modules-right": [
     "network",
-"pulseaudio",
-"clock",
+    "pulseaudio",
+    "clock",
     "battery"
   ],
 
-  // ── network status ──────────────────────────────────────────────────────
+  // ── custom cat module ────────────────────────────────────────────────
+  "custom/cat": {
+    "format": "󰄛",
+    "tooltip": false
+  },
+
+  // ── network status ───────────────────────────────────────────────────
   "network": {
     "tooltip": false,
     "format-wifi": " {essid}",
-    "format-ethernet": ""
+    "format-ethernet": "󰈀 {ipaddr}",
+    "format-disconnected": "󰖪 No Network"
   },
 
-// --- volume -------------------------------------------------
-
-
+  // ── volume (pulseaudio) ──────────────────────────────────────────────
   "pulseaudio": {
-    "format":       " {volume}%",      // speaker icon + percentage
-    "format-muted": " mute",           // alternative when muted
-    "tooltip":      false,
-    "volume-icon-declick": true         // if you want click‐to‐mute/unmute behavior
+    "format": " {volume}%",
+    "format-muted": " mute",
+    "tooltip": false,
+    "volume-icon-declick": true
   },
 
-  // ── clock: 24h format, date ─────────────────────────────────────────────
+  // ── clock: 24h format, date ──────────────────────────────────────────
   "clock": {
     "format": "{:%H:%M %d/%m/%Y}",
     "format-alt": "{:%A, %d %B %Y  %H:%M:%S}",
     "tooltip-format": "{:%c}"
   },
 
-  // ── battery state ───────────────────────────────────────────────────────
+  // ── battery state ────────────────────────────────────────────────────
   "battery": {
     "states": {
       "good": 95,
@@ -47,27 +55,28 @@
     "format-charging": " {capacity}%",
     "format-plugged": " {capacity}%",
     "format-alt": "{time} {icon}",
-    "format-icons": ["","","","",""]
+    "format-icons": ["", "", "", "", ""]
   },
 
-"hyprland/workspaces": {
-  "all-outputs": true,
-  "persistent-workspaces": {
-    "*": [1, 2, 3, 4, 5]
-  },
-  "move-to-monitor": true,
-  "show-special": true,
-  "special-visible-only": true,
-  "format": "{icon}",
-  "format-icons": {
-    "1": "\uEBCA",   // Terminal
-    "2": "",        // Settings (gear)
-    "3": "\uE745",   // Chrome
-    "4": "",        // Spotify
-    "5": "",        // Chat bubble
-    "empty": "",    // Unused workspace
-    "visible": "",  // Workspace visible on other monitor
-    "special": "\uE6AE" // Scratchpad icon
+  // ── Hyprland workspaces ──────────────────────────────────────────────
+  "hyprland/workspaces": {
+    "all-outputs": true,
+    "persistent-workspaces": {
+      "*": [1, 2, 3, 4, 5]
+    },
+    "move-to-monitor": true,
+    "show-special": true,
+    "special-visible-only": true,
+    "format": "{icon}",
+    "format-icons": {
+      "1": "\uEBCA",
+      "2": "",
+      "3": "\uE745",
+      "4": "",
+      "5": "",
+      "empty": "",
+      "visible": "",
+      "special": "\uE6AE"
+    }
   }
-}
 }

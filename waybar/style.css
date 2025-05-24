@@ -267,3 +267,16 @@ window#waybar.hidden {
     color: #FFFFFF;
     background: #400064;  /* deep purple */
 }
+
+
+#custom-cat {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    margin-left: 6px;
+    padding: 0 8px;
+    border-radius: 8px;
+    transition: none;
+    color: #FFFFFF;
+    background: #330051;  /* dark purple, matches main elements */
+}
+
