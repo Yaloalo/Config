@@ -1,5 +1,4 @@
 return {
-
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
@@ -23,6 +22,82 @@ return {
       local actions = require("telescope.actions")
       local action_state = require("telescope.actions.state")
 
+      -- 🔸 CUSTOM FIND FILES FUNCTION
+      local custom_find_files
+      custom_find_files = function(opts, no_ignore)
+        opts = opts or {}
+        no_ignore = vim.F.if_nil(no_ignore, false)
+        opts.attach_mappings = function(_, map)
+          map({ "n", "i" }, "<C-h>", function(prompt_bufnr)
+            local prompt = require("telescope.actions.state").get_current_line()
+            require("telescope.actions").close(prompt_bufnr)
+            no_ignore = not no_ignore
+            custom_find_files({ default_text = prompt }, no_ignore)
+          end)
+          return true
+        end
+
+        if no_ignore then
+          opts.no_ignore = true
+          opts.hidden = true
+          opts.prompt_title = "Find Files <All>"
+        else
+          opts.prompt_title = "Find Files"
+        end
+
+        require("telescope.builtin").find_files(opts)
+      end
+
+      --  VARIABLE TO STORE CHOSEN DIRECTORY
+      local chosen_dir = nil
+
+      --  FUNCTION: CHOOSE DIRECTORY
+      local function choose_directory()
+        require("telescope.builtin").find_files({
+          prompt_title = "Choose Directory",
+          cwd = vim.fn.getcwd(),
+          find_command = { "fd", "--type", "d", "--hidden", "--exclude", ".git" },
+          attach_mappings = function(prompt_bufnr, map)
+            map("i", "<CR>", function()
+              local selection = action_state.get_selected_entry()
+              if selection then
+                chosen_dir = selection.path or selection.value
+                print("󰉋  Selected directory: " .. chosen_dir)
+              else
+                print("⚠️  No directory selected")
+              end
+              actions.close(prompt_bufnr)
+            end)
+            map("n", "<CR>", function()
+              local selection = action_state.get_selected_entry()
+              if selection then
+                chosen_dir = selection.path or selection.value
+                print("󰉋  Selected directory: " .. chosen_dir)
+              else
+                print("⚠️  No directory selected")
+              end
+              actions.close(prompt_bufnr)
+            end)
+            return true
+          end,
+        })
+      end
+
+      --  FUNCTION: SEARCH INSIDE CHOSEN DIRECTORY
+      local function search_in_chosen_directory()
+        if chosen_dir == nil then
+          print("⚠️  No directory selected yet! Use <leader>sd to choose one first.")
+          return
+        end
+        require("telescope.builtin").find_files({
+          prompt_title = "Find Files (in chosen dir)",
+          cwd = chosen_dir,
+          hidden = true,
+          no_ignore = true,
+        })
+      end
+
+      --  TELESCOPE SETUP
       telescope.setup({
         defaults = {
           vimgrep_arguments = {
@@ -87,8 +162,11 @@ return {
       telescope.load_extension("ui-select")
       telescope.load_extension("file_browser")
 
-      -- standard search mappings
-      vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "  Find Files" })
+      -- 🔸 STANDARD SEARCH MAPPINGS
+      vim.keymap.set("n", "<leader>sf", function()
+        custom_find_files()
+      end, { desc = "󰝰 Custom Find Files (Toggle Ignored)" })
+
       vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "  Live Grep" })
       vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "  Telescope" })
       vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "  Help Tags" })
@@ -101,9 +179,18 @@ return {
       vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "﬘  Open Buffers" })
       vim.keymap.set("n", "<leader>so", builtin.oldfiles, { desc = "  Recent Files" })
 
-      -- file-browser at cwd
+      -- 🔸 SEARCH NOTES
+      vim.keymap.set("n", "<leader>ns", function()
+        builtin.find_files({
+          cwd = "/home/yaloalo/notes",
+          hidden = true,
+          no_ignore = true,
+        })
+      end, { desc = "  Search Notes" })
+
+      -- 🔸 FILE-BROWSER AT CWD
       vim.keymap.set("n", "<leader>sr", function()
-        require("telescope").extensions.file_browser.file_browser({
+        telescope.extensions.file_browser.file_browser({
           path = vim.fn.getcwd(),
           cwd = vim.fn.getcwd(),
           select_buffer = true,
@@ -137,7 +224,14 @@ return {
         })
       end, { desc = "󰉓 Telescope File Browser (cwd)" })
 
-      -- search whole disk for directories (uses root '/'), mapping <leader>sw
+      -- 🔸 NEW: DIRECTORY SELECTOR AND SCOPED SEARCH
+      vim.keymap.set("n", "<leader>sd", choose_directory, { desc = "󰉋 Choose Directory" })
+      vim.keymap.set(
+        "n",
+        "<leader>sx",
+        search_in_chosen_directory,
+        { desc = "󰱿 Search in Chosen Directory" }
+      )
     end,
   },
 
@@ -184,35 +278,25 @@ return {
         group = "+",
         mappings = true,
       },
-      -- ✅ Mappings spec for grouping
       spec = {
-        { "<leader>s", group = "[S]earch" },
-        { "<leader>d", group = "[D]ebug" },
-        { "<leader>l", group = "[L]SP" },
-        { "<leader>o", group = "[O]il" },
+        { "<leader>s", group = "󰈞  [S]earch" },
+        { "<leader>d", group = "  [D]ebug" },
+        { "<leader>l", group = "  [L]SP" },
+        { "<leader>o", group = "󰏆  [O]il" },
+        { "<leader>n", group = "󰎞  [N]otes" },
       },
     },
     config = function(_, opts)
       require("which-key").setup(opts)
-
-      -- Transparent backgrounds for full blur in Hyprland
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
       vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
       vim.api.nvim_set_hl(0, "WhichKeyFloat", { bg = "none" })
       vim.api.nvim_set_hl(0, "WhichKeyBorder", { bg = "none" })
       vim.api.nvim_set_hl(0, "WhichKeyNormal", { bg = "none" })
       vim.api.nvim_set_hl(0, "WhichKeyTitle", { bg = "none" })
-
-      -- Also make the WinBar and FloatTitle transparent (fixes that black box above)
       vim.api.nvim_set_hl(0, "WinBar", { bg = "none" })
       vim.api.nvim_set_hl(0, "WinBarNC", { bg = "none" })
       vim.api.nvim_set_hl(0, "FloatTitle", { bg = "none" })
     end,
-    spec = {
-      { "<leader>s", group = "[S]earch" },
-      { "<leader>d", group = "[D]ebug" },
-      { "<leader>l", group = "[L]SP" },
-      { "<leader>o", group = "[O]il" },
-    },
   },
 }

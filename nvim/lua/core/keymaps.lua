@@ -21,7 +21,7 @@ map("i", "<C-k>", "<Up>")
 map("i", "<C-l>", "<Right>")
 
 -- Open notes
-map("n", "<leader>n", function()
+map("n", "<leader>nn", function()
   vim.cmd("edit " .. vim.fn.expand("~/notes"))
 end, { desc = "Open notes" })
 

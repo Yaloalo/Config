@@ -3,7 +3,7 @@
 /* Global defaults */
 * {
     border: none;
-    border-radius: 0px;  /* Square edges */
+    border-radius: 8px;  /* Rounded edges */
     font-family: "JetbrainsMono Nerd Font";
     font-size: 12px;
     min-height: 6px;
@@ -18,7 +18,7 @@ window#waybar.hidden {
     opacity: 0.5;
 }
 
-/* General module style: square with thin light purple frame */
+/* General module style: rounded with thin light purple frame */
 #window,
 #network,
 #pulseaudio,
@@ -38,7 +38,7 @@ window#waybar.hidden {
 #tags button {
     margin: 4px;
     padding: 4px 8px;
-    border-radius: 0px;               /* Square shape */
+    border-radius: 8px;               /* Rounded shape */
     border: 1px solid #c084fc;        /* Thin light purple frame */
     background: #1a002b;              /* Dark purple background */
     color: #FFFFFF;
@@ -50,11 +50,13 @@ window#waybar.hidden {
     background: #5a008a;
     border: 1px solid #c084fc;
     font-weight: bold;
+    border-radius: 8px;
 }
 
 #workspaces button:hover,
 #tags button:hover {
     background: #4d0077;
+    border-radius: 8px;
 }
 
 /* Tags (workspaces) */
@@ -68,27 +70,32 @@ window#waybar.hidden {
 /* Tags individual buttons */
 #tags button {
     background: #26003e;
+    border-radius: 8px;
 }
 
 #tags button.occupied {
     background: #330051;
+    border-radius: 8px;
 }
 
 #tags button.focused {
     background: #400064;
     font-weight: bold;
     border: 1px solid #c084fc;
+    border-radius: 8px;
 }
 
 /* Battery states */
 #battery.charging,
 #battery.plugged {
     background-color: #400064;
+    border-radius: 8px;
 }
 
 #battery.critical:not(.charging):not(.plugged) {
     background-color: #330051;
     animation: blink 0.5s linear infinite alternate;
+    border-radius: 8px;
 }
 
 @keyframes blink {
