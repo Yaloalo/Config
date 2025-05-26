@@ -1,24 +1,23 @@
 /* ~/.config/waybar/style.css */
 
-/* Global defaults */
+/* ========== Global defaults ========== */
 * {
     border: none;
-    border-radius: 8px;  /* Rounded edges */
+    border-radius: 8px;
     font-family: "JetbrainsMono Nerd Font";
-    font-size: 12px;
+    font-size: 14px;       /* your increased size */
     min-height: 6px;
 }
 
-/* Waybar window background */
+/* ~/.config/waybar/style.css */
 window#waybar {
-    background: transparent;
+  background: none;   /* kills the panel background entirely */
+  border: none;       /* no outline */
+  margin: 0;          /* no extra spacing around the bar */
+  padding: 0;         /* no inner padding */
 }
 
-window#waybar.hidden {
-    opacity: 0.5;
-}
-
-/* General module style: rounded with thin light purple frame */
+/* ========== Module styling ========== */
 #window,
 #network,
 #pulseaudio,
@@ -38,28 +37,29 @@ window#waybar.hidden {
 #tags button {
     margin: 4px;
     padding: 4px 8px;
-    border-radius: 8px;               /* Rounded shape */
-    border: 1px solid #c084fc;        /* Thin light purple frame */
-    background: #1a002b;              /* Dark purple background */
+    border-radius: 8px;
+    border: none;           /* removed module borders */
+    background: #2e3b55;
     color: #FFFFFF;
-    transition: none;
+    transition: background 0.15s ease;
 }
 
-/* Focused workspace button */
+/* ========== Focused workspace button ========== */
 #workspaces button.active {
-    background: #5a008a;
-    border: 1px solid #c084fc;
+    background: #005fbb;
+    border: none;
     font-weight: bold;
     border-radius: 8px;
 }
 
+/* ========== Hover state ========== */
 #workspaces button:hover,
 #tags button:hover {
-    background: #4d0077;
+    background: #005fbb;
     border-radius: 8px;
 }
 
-/* Tags (workspaces) */
+/* ========== Tags (workspaces) ========== */
 #tags {
     margin: 4px;
     font-size: 16px;
@@ -67,40 +67,37 @@ window#waybar.hidden {
     background: transparent;
 }
 
-/* Tags individual buttons */
+/* ========== Tags individual buttons ========== */
 #tags button {
     background: #26003e;
     border-radius: 8px;
 }
-
 #tags button.occupied {
     background: #330051;
     border-radius: 8px;
 }
-
 #tags button.focused {
     background: #400064;
     font-weight: bold;
-    border: 1px solid #c084fc;
+    border: none;
     border-radius: 8px;
 }
 
-/* Battery states */
+/* ========== Battery states ========== */
 #battery.charging,
 #battery.plugged {
-    background-color: #400064;
+    background-color: #005fbb;
     border-radius: 8px;
 }
-
 #battery.critical:not(.charging):not(.plugged) {
-    background-color: #330051;
+    background-color: #FFFFFF;
     animation: blink 0.5s linear infinite alternate;
     border-radius: 8px;
 }
 
 @keyframes blink {
     to {
-        background-color: #4d0077;
-        color: #B5E8E0;
+        background-color: #005fbb;
+        color: #FFFFFF;
     }
 }

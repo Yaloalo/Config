@@ -162,7 +162,21 @@ return {
       telescope.load_extension("ui-select")
       telescope.load_extension("file_browser")
 
-      -- 🔸 STANDARD SEARCH MAPPINGS
+      -- 🔸 HIGHLIGHT BORDER OVERRIDES (light sky blue)
+      local border_color = "#005FBB"
+      for _, group in ipairs({
+        "TelescopeBorder",
+        "TelescopePromptBorder",
+        "TelescopeResultsBorder",
+        "TelescopePreviewBorder",
+      }) do
+        vim.api.nvim_set_hl(0, group, { fg = border_color })
+      end
+      -- generic floating windows
+      vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = border_color })
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+
+      -- Key mappings
       vim.keymap.set("n", "<leader>sf", function()
         custom_find_files()
       end, { desc = "󰝰 Custom Find Files (Toggle Ignored)" })
@@ -288,6 +302,7 @@ return {
     },
     config = function(_, opts)
       require("which-key").setup(opts)
+      -- make float backgrounds transparent
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
       vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
       vim.api.nvim_set_hl(0, "WhichKeyFloat", { bg = "none" })
@@ -297,6 +312,10 @@ return {
       vim.api.nvim_set_hl(0, "WinBar", { bg = "none" })
       vim.api.nvim_set_hl(0, "WinBarNC", { bg = "none" })
       vim.api.nvim_set_hl(0, "FloatTitle", { bg = "none" })
+
+      -- unify border color to light sky blue
+      local border_color = "#005FBB"
+      vim.api.nvim_set_hl(0, "WhichKeyBorder", { bg = "none", fg = border_color })
     end,
   },
 }

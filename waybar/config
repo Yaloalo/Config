@@ -1,27 +1,22 @@
 {
   "layer": "top",
 
-  // ── left: custom cat ──────────────────────────────────────────────────
-  "modules-left": ["custom/cat"],
+  /* ── uniform 8px gap on every side ─────────────────────────────────── */
+  "margin-top":    8,
+  "margin-right":  8,
+  "margin-bottom": 8,
+  "margin-left":   8,
 
-  // ── center: Hyprland workspaces ───────────────────────────────────────
-  "modules-center": ["hyprland/workspaces"],
-
-  // ── right: network, volume, clock, battery ────────────────────────────
-  "modules-right": [
-    "network",
-    "pulseaudio",
-    "clock",
-    "battery"
-  ],
-
-  // ── custom cat module ────────────────────────────────────────────────
+  "modules-left":  ["custom/cat"],
+  "modules-center":["hyprland/workspaces"],
+  "modules-right": ["network", "pulseaudio", "clock", "battery"],
+  /* ── custom cat module ──────────────────────────────────────────────── */
   "custom/cat": {
     "format": "󰄛",
     "tooltip": false
   },
 
-  // ── network status ───────────────────────────────────────────────────
+  /* ── network status ─────────────────────────────────────────────────── */
   "network": {
     "tooltip": false,
     "format-wifi": " {essid}",
@@ -29,7 +24,7 @@
     "format-disconnected": "󰖪 No Network"
   },
 
-  // ── volume (pulseaudio) ──────────────────────────────────────────────
+  /* ── volume (pulseaudio) ────────────────────────────────────────────── */
   "pulseaudio": {
     "format": " {volume}%",
     "format-muted": " mute",
@@ -37,14 +32,14 @@
     "volume-icon-declick": true
   },
 
-  // ── clock: 24h format, date ──────────────────────────────────────────
+  /* ── clock: 24h format, date ────────────────────────────────────────── */
   "clock": {
     "format": "{:%H:%M %d/%m/%Y}",
     "format-alt": "{:%A, %d %B %Y  %H:%M:%S}",
     "tooltip-format": "{:%c}"
   },
 
-  // ── battery state ────────────────────────────────────────────────────
+  /* ── battery state ──────────────────────────────────────────────────── */
   "battery": {
     "states": {
       "good": 95,
@@ -58,7 +53,7 @@
     "format-icons": ["", "", "", "", ""]
   },
 
-  // ── Hyprland workspaces ──────────────────────────────────────────────
+  /* ── Hyprland workspaces ────────────────────────────────────────────── */
   "hyprland/workspaces": {
     "all-outputs": true,
     "persistent-workspaces": {
@@ -70,10 +65,10 @@
     "format": "{icon}",
     "format-icons": {
       "1": "\uEBCA",
-      "2": "",
+      "2": "\uEDA4",
       "3": "\uE745",
-      "4": "",
-      "5": "",
+      "4": " ",
+      "5": "\uEB51",
       "empty": "",
       "visible": "",
       "special": "\uE6AE"

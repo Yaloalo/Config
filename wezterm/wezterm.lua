@@ -46,31 +46,26 @@ end)
 
 config.colors = {
   tab_bar = {
-    -- entire tab-bar background
     background = "rgba(0,0,0,0)",
-    -- active tab
     active_tab = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#cba6f7", -- mauve
+      fg_color = "#005fbb", -- bright blue for active
     },
-    -- inactive tabs
     inactive_tab = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#6c7086", -- overlay0
+      fg_color = "#26003e", -- dark tone for inactive
     },
-    -- hovered inactive tab
     inactive_tab_hover = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#7f849c", -- overlay1
+      fg_color = "#005fbb", -- bright blue on hover
     },
-    -- the “+” new-tab button
     new_tab = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#9399b2", -- overlay2
+      fg_color = "#26003e", -- dark tone for new-tab button
     },
     new_tab_hover = {
       bg_color = "rgba(0,0,0,0)",
-      fg_color = "#b4befe", -- lavender
+      fg_color = "#005fbb", -- bright blue hover
     },
   },
 }

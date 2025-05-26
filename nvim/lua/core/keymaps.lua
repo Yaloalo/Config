@@ -1,5 +1,3 @@
--- lua/core/keymaps.lua
-
 local map = vim.keymap.set
 
 -- track whether diagnostics are currently shown
