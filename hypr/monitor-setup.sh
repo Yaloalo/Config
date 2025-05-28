@@ -3,7 +3,7 @@
 # Toggle display modes between laptop (eDP-1) and external monitor (DP-7)
 
 # Check if external monitor DP-7 is connected (appears in hyprctl)
-CONNECTED=$(hyprctl monitors | grep "DP-7")
+CONNECTED=$(hyprctl monitors | grep "DP-1")
 
 if [[ -n "$CONNECTED" ]]; then
     # External monitor exists → check what's active

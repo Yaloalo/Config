@@ -1,6 +1,7 @@
 -- lua/plugins/init.lua
 return {
   require("plugins.toggelterm"),
+  require("plugins.neotree"),
   require("plugins.dap"),
   require("plugins.oil"),
   require("plugins.lspsaga"),

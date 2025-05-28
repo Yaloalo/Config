@@ -82,6 +82,8 @@ compinit
 # tell Starship exactly where your config lives
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 
+source "$HOME/projects/volcanite/vulkan/1.4.313.0/setup-env.sh"
+
 # …later, your existing Starship init…
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"

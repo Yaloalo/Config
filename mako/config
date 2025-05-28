@@ -8,9 +8,9 @@ padding=20
 
 # Purple border for low/default
 border-size=3
-border-color=#cba6f7
+border-color=#ffffff
 
-background-color=#0f1e40
+background-color=#1e1e2e
 text-color=#cdd6f4
 progress-color=over #313244
 
@@ -22,7 +22,7 @@ default-timeout=5000
 # Prefix every summary with Nerd Font cat icon (f011b)
 format=<b>󰄛 :</b> %s
 
-# ── Urgency: low ──────────────────────────────────────────────
+# ── Urgency: low ────────────────────────────────────────────────
 [urgency=low]
 border-color=#ffffff
 

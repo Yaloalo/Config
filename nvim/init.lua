@@ -12,4 +12,5 @@ vim.opt.termguicolors = true
 require("core.options") -- vim.opt = { … }
 require("core.keymaps") -- vim.keymap.set(…) calls
 require("core.autocmds") -- any vim.api.nvim_create_autocmd(…) groups
+
 require("core.plugins") -- bootstrap lazy.nvim & import lua/plugins/*.lua

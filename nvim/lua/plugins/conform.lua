@@ -1,7 +1,7 @@
 -- ~/.config/nvim/lua/plugins/conform.lua
 return {
   {
-    "stevearc/conform.nvim",
+"stevearc/conform.nvim",
     debug = true,
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
@@ -91,9 +91,7 @@ return {
         debug = true,
         notify_on_error = false,
 
-        format_on_save = function()
-          return { timeout_ms = 500, lsp_format = "fallback" }
-        end,
+        format_on_save = false,
 
         stop_after_first = true,
 
@@ -108,14 +106,11 @@ return {
           lua = { "stylua" },
           python = { "black" },
           markdown = { "prettier" },
+          md = { "prettier" },
           sh = { "shfmt" },
           c = { "clang_format" },
           cpp = { "clang_format" },
         },
-      })
-
-      vim.api.nvim_create_user_command("W", "noautocmd write", {
-        desc = "Save buffer without triggering Conform (or other) BufWritePre",
       })
     end,
   },
