@@ -53,6 +53,7 @@ alias notes='nvim ~/documents/Main'
 alias s='tree | ripgrep'
 alias n='nvim'
 alias f='clear'
+alias m='mpv --hwdec=vaapi --vo=gpu --gpu-context=wayland'
 # ─── 5. PATH & broot hook ─────────────────────────────────────────────────────────
 export PATH="$HOME/.cargo/bin:$PATH"
 if [[ -s "$HOME/.config/broot/launcher/bash/br" ]]; then

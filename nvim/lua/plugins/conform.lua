@@ -1,7 +1,7 @@
 -- ~/.config/nvim/lua/plugins/conform.lua
 return {
   {
-"stevearc/conform.nvim",
+    "stevearc/conform.nvim",
     debug = true,
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },

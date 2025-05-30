@@ -1,2 +1,0 @@
-#!/bin/bash
-dbus-run-session -- env GTK_THEME=catppuccin-mocha-mauve-standard+default nautilus "$@"

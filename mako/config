@@ -6,7 +6,6 @@ height=200
 margin=20
 padding=20
 
-# Purple border for low/default
 border-size=3
 border-color=#ffffff
 
@@ -16,11 +15,10 @@ progress-color=over #313244
 
 anchor=top-right
 
-# All notifications disappear after 5 seconds
 default-timeout=5000
 
-# Prefix every summary with Nerd Font cat icon (f011b)
-format=<b>󰄛 :</b> %s
+# Correct placeholder format for mako: summary and body
+format=󰄛 : %s\n%b
 
 # ── Urgency: low ────────────────────────────────────────────────
 [urgency=low]
