@@ -55,14 +55,16 @@ return {
             table.insert(file_paths, item.value)
           end
 
-          require("telescope.pickers").new({}, {
-            prompt_title = "Harpoon",
-            finder = require("telescope.finders").new_table({
-              results = file_paths,
-            }),
-            previewer = conf.file_previewer({}),
-            sorter = conf.generic_sorter({}),
-          }):find()
+          require("telescope.pickers")
+            .new({}, {
+              prompt_title = "Harpoon",
+              finder = require("telescope.finders").new_table({
+                results = file_paths,
+              }),
+              previewer = conf.file_previewer({}),
+              sorter = conf.generic_sorter({}),
+            })
+            :find()
         end
 
         toggle_telescope(harpoon:list())
@@ -81,12 +83,16 @@ return {
 
     -- 2) Remove by index: <leader>hd1, hd2, … hd9
     for i = 1, 9 do
+      local idx = i
       table.insert(keys, {
-        "<leader>hd" .. i,
+        -- map <leader>hd1 .. <leader>hd9
+        "<leader>hd" .. idx,
         function()
-          require("harpoon"):list():removeAt(i)   -- ← use removeAt(i), not remove(i) :contentReference[oaicite:0]{index=0}
+          -- call the correct API:
+          require("harpoon"):list():remove_at(idx)
         end,
-        desc = "Harpoon Remove File " .. i,
+        desc = "Harpoon Remove File " .. idx,
+        mode = "n", -- ensure it’s in normal mode
       })
     end
 
