@@ -195,12 +195,22 @@ return {
 
       -- 🔸 SEARCH NOTES
       vim.keymap.set("n", "<leader>ns", function()
-        builtin.find_files({
+        require("telescope.builtin").find_files({
           cwd = "/home/yaloalo/notes",
           hidden = true,
           no_ignore = true,
+          -- ← This find_command makes fd return both files and directories:
+          find_command = {
+            "fd",
+            "--type",
+            "f", -- include files
+            "--type",
+            "d", -- include directories
+            "--hidden", -- include dot‐files and dot‐folders
+            "--follow", -- follow symlinks
+          },
         })
-      end, { desc = "  Search Notes" })
+      end, { desc = " Search Notes (include folders)" })
 
       -- 🔸 FILE-BROWSER AT CWD
       vim.keymap.set("n", "<leader>sr", function()
