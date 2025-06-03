@@ -15,5 +15,5 @@ return {
   require("plugins.autopairs"), --Automtic closing brackets
   require("plugins.ui"), --looks nice
   require("plugins.harpoon"),
-  require("plugins.leap"),
+  require("plugins.flash"),
 }
