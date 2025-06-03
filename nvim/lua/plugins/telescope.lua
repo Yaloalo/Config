@@ -21,8 +21,26 @@ return {
       local builtin = require("telescope.builtin")
       local actions = require("telescope.actions")
       local action_state = require("telescope.actions.state")
+      local Path = require("plenary.path")
 
-      -- 🔸 CUSTOM FIND FILES FUNCTION
+      ---------------------------------------------------------------------------------------------------
+      -- 1) GLOBAL “RESPECT .GITIGNORE” TOGGLE
+      ---------------------------------------------------------------------------------------------------
+      local respect_gitignore = true
+      local function toggle_gitignore()
+        respect_gitignore = not respect_gitignore
+        if respect_gitignore then
+          vim.notify("Telescope → now respecting .gitignore", vim.log.levels.INFO)
+        else
+          vim.notify("Telescope → now showing Git-ignored items", vim.log.levels.INFO)
+        end
+      end
+      -- Map <C-h> in normal mode to toggle this flag
+      vim.keymap.set("n", "<C-h>", toggle_gitignore, { desc = "🔃 Toggle Telescope .gitignore respect" })
+
+      ---------------------------------------------------------------------------------------------------
+      -- 2) CUSTOM FIND FILES FUNCTION
+      ---------------------------------------------------------------------------------------------------
       local custom_find_files
       custom_find_files = function(opts, no_ignore)
         opts = opts or {}
@@ -48,10 +66,11 @@ return {
         require("telescope.builtin").find_files(opts)
       end
 
-      --  VARIABLE TO STORE CHOSEN DIRECTORY
+      ---------------------------------------------------------------------------------------------------
+      -- 3) DIRECTORY SELECTOR / SCOPED SEARCH
+      ---------------------------------------------------------------------------------------------------
       local chosen_dir = nil
 
-      --  FUNCTION: CHOOSE DIRECTORY
       local function choose_directory()
         require("telescope.builtin").find_files({
           prompt_title = "Choose Directory",
@@ -83,7 +102,6 @@ return {
         })
       end
 
-      --  FUNCTION: SEARCH INSIDE CHOSEN DIRECTORY
       local function search_in_chosen_directory()
         if chosen_dir == nil then
           print("⚠️  No directory selected yet! Use <leader>sd to choose one first.")
@@ -97,7 +115,9 @@ return {
         })
       end
 
-      --  TELESCOPE SETUP
+      ---------------------------------------------------------------------------------------------------
+      -- 4) TELESCOPE SETUP: add <C-o> mapping inside all pickers
+      ---------------------------------------------------------------------------------------------------
       telescope.setup({
         defaults = {
           vimgrep_arguments = {
@@ -129,10 +149,40 @@ return {
               ["<C-c>"] = actions.close,
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
+              ["<C-o>"] = function(prompt_bufnr)
+                local entry = action_state.get_selected_entry()
+                if not entry then
+                  return
+                end
+                local selected_path = entry.path or entry.value
+                actions.close(prompt_bufnr)
+                local target_dir
+                if Path:new(selected_path):is_dir() then
+                  target_dir = selected_path
+                else
+                  target_dir = vim.fn.fnamemodify(selected_path, ":h")
+                end
+                vim.cmd("Oil " .. vim.fn.fnameescape(target_dir))
+              end,
             },
             n = {
               ["q"] = actions.close,
               ["<CR>"] = actions.select_default,
+              ["<C-o>"] = function(prompt_bufnr)
+                local entry = action_state.get_selected_entry()
+                if not entry then
+                  return
+                end
+                local selected_path = entry.path or entry.value
+                actions.close(prompt_bufnr)
+                local target_dir
+                if Path:new(selected_path):is_dir() then
+                  target_dir = selected_path
+                else
+                  target_dir = vim.fn.fnamemodify(selected_path, ":h")
+                end
+                vim.cmd("Oil " .. vim.fn.fnameescape(target_dir))
+              end,
             },
           },
         },
@@ -176,43 +226,64 @@ return {
       vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = border_color })
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
-      -- Key mappings
+      ---------------------------------------------------------------------------------------------------
+      -- 5) KEY MAPPINGS: preserve existing <leader>s* but make them respect the global toggle
+      ---------------------------------------------------------------------------------------------------
+
+      -- <leader>sf → custom_find_files (unchanged)
       vim.keymap.set("n", "<leader>sf", function()
         custom_find_files()
-      end, { desc = "󰝰 Custom Find Files (Toggle Ignored)" })
+      end, { desc = "󰝰 Custom Find Files (Local Toggle)" })
 
-      vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "  Live Grep" })
+      -- <leader>sg → live_grep, now honors respect_gitignore
+      vim.keymap.set("n", "<leader>sg", function()
+        builtin.live_grep({
+          additional_args = function()
+            local args = { "--hidden" }
+            if not respect_gitignore then
+              table.insert(args, "--no-ignore")
+            end
+            return args
+          end,
+        })
+      end, { desc = "  Live Grep (Toggle .gitignore)" })
+
+      -- <leader>ss → builtin picker menu (no change)
       vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "  Telescope" })
+
+      -- <leader>sh → help_tags (no change)
       vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "  Help Tags" })
+
+      -- <leader>sn → find_files in config, now honors respect_gitignore
       vim.keymap.set("n", "<leader>sn", function()
         builtin.find_files({
           cwd = vim.fn.stdpath("config"),
           prompt_title = "~ Config ~",
+          hidden = true,
+          no_ignore = not respect_gitignore,
         })
-      end, { desc = "  Search Neovim Config" })
+      end, { desc = "  Search Neovim Config (Toggle .gitignore)" })
+
+      -- <leader>sb → buffers (no change)
       vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "﬘  Open Buffers" })
+
+      -- <leader>so → oldfiles (no change)
       vim.keymap.set("n", "<leader>so", builtin.oldfiles, { desc = "  Recent Files" })
 
-      -- 🔸 SEARCH NOTES
+      -- <leader>ns → search notes (include folders), now honors respect_gitignore
       vim.keymap.set("n", "<leader>ns", function()
-        require("telescope.builtin").find_files({
+        local base_cmd = { "fd", "--type", "f", "--type", "d", "--hidden", "--follow" }
+        if not respect_gitignore then
+          table.insert(base_cmd, "--no-ignore")
+        end
+        builtin.find_files({
           cwd = "/home/yaloalo/notes",
           hidden = true,
-          no_ignore = true,
-          -- ← This find_command makes fd return both files and directories:
-          find_command = {
-            "fd",
-            "--type",
-            "f", -- include files
-            "--type",
-            "d", -- include directories
-            "--hidden", -- include dot‐files and dot‐folders
-            "--follow", -- follow symlinks
-          },
+          find_command = base_cmd,
         })
-      end, { desc = " Search Notes (include folders)" })
+      end, { desc = " Search Notes (include folders, Toggle .gitignore)" })
 
-      -- 🔸 FILE-BROWSER AT CWD
+      -- <leader>sr → file_browser (no change)
       vim.keymap.set("n", "<leader>sr", function()
         telescope.extensions.file_browser.file_browser({
           path = vim.fn.getcwd(),
@@ -248,14 +319,9 @@ return {
         })
       end, { desc = "󰉓 Telescope File Browser (cwd)" })
 
-      -- 🔸 NEW: DIRECTORY SELECTOR AND SCOPED SEARCH
+      -- 🔸 NEW: DIRECTORY SELECTOR AND SCOPED SEARCH (unchanged)
       vim.keymap.set("n", "<leader>sd", choose_directory, { desc = "󰉋 Choose Directory" })
-      vim.keymap.set(
-        "n",
-        "<leader>sx",
-        search_in_chosen_directory,
-        { desc = "󰱿 Search in Chosen Directory" }
-      )
+      vim.keymap.set("n", "<leader>sx", search_in_chosen_directory, { desc = "󰱿 Search in Chosen Directory" })
     end,
   },
 
