@@ -12,6 +12,9 @@ return {
           show_file = true,
           folder_level = 2,
         },
+        lightbulb = {
+          enable = false, -- disable the lightbulb indicator
+        },
       })
 
       -- 2. Hide the bottom statusline and builtin “-- INSERT --” text

@@ -1,6 +1,5 @@
--- ~/.config/nvim/lua/plugins/blink.lua
+-- ~/.config/nvim/lua/plugins/cmp.lua
 return {
-  -- Core completion engine
   {
     "hrsh7th/nvim-cmp",
     version = false,
@@ -25,7 +24,42 @@ return {
           end,
         },
         mapping = {
+          -- Confirm with Ctrl-Y
           ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+
+          -- Ctrl-R: toggle completion menu
+          ["<C-r>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.close()
+            else
+              cmp.complete()
+            end
+          end, { "i", "c" }),
+
+          -- Ctrl-E: close menu if open, else fallback
+          ["<C-e>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.close()
+            else
+              fallback()
+            end
+          end, { "i", "c" }),
+
+          -- Ctrl-J/K: navigate next/previous in menu
+          ["<C-j>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            else
+              fallback()
+            end
+          end, { "i", "c" }),
+          ["<C-k>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+            else
+              fallback()
+            end
+          end, { "i", "c" }),
         },
         sources = cmp.config.sources(
           { { name = "nvim_lsp" }, { name = "luasnip" } },
@@ -36,6 +70,9 @@ return {
             winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
           }),
         },
+        experimental = {
+          ghost_text = true,  -- enable ghost text
+        },
       })
 
       -- Transparent background + blue border
@@ -44,37 +81,6 @@ return {
     end,
   },
 
-  -- Blink.cmp for ghost-text
-  {
-    "saghen/blink.cmp",
-    version = "1.*",
-    after = "nvim-cmp",
-    event = "InsertEnter",
-    opts = {
-      keymap = {
-        ["<C-y>"] = { "select_and_accept" }, -- complete with Ctrl-Y
-      },
-      completion = {
-        menu = { auto_show = false }, -- disable auto popup
-        ghost_text = {
-          enabled = true, -- always show
-          show_with_menu = true,
-          show_without_menu = true,
-          show_without_selection = true,
-        },
-      },
-      fuzzy = { implementation = "rust" },
-      signature = { enabled = false },
-    },
-    config = function(_, opts)
-      require("blink.cmp").setup(opts)
 
-      -- Highlight ghost text clearly
-      local function set_ghost_hl()
-        vim.api.nvim_set_hl(0, "BlinkCmpGhostText", { link = "Comment", default = true })
-      end
-      set_ghost_hl()
-      vim.api.nvim_create_autocmd("ColorScheme", { callback = set_ghost_hl })
-    end,
-  },
+
 }
