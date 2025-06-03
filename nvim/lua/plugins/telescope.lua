@@ -16,12 +16,12 @@ return {
       "nvim-telescope/telescope-file-browser.nvim",
     },
     config = function()
-      local telescope = require("telescope")
-      local themes = require("telescope.themes")
-      local builtin = require("telescope.builtin")
-      local actions = require("telescope.actions")
-      local action_state = require("telescope.actions.state")
-      local Path = require("plenary.path")
+      local telescope      = require("telescope")
+      local themes         = require("telescope.themes")
+      local builtin        = require("telescope.builtin")
+      local actions        = require("telescope.actions")
+      local action_state   = require("telescope.actions.state")
+      local Path           = require("plenary.path")
 
       ---------------------------------------------------------------------------------------------------
       -- 1) GLOBAL “RESPECT .GITIGNORE” TOGGLE
@@ -30,16 +30,15 @@ return {
       local function toggle_gitignore()
         respect_gitignore = not respect_gitignore
         if respect_gitignore then
-          vim.notify("Telescope → now respecting .gitignore", vim.log.levels.INFO)
+          vim.notify(".gitignore → now respected", vim.log.levels.INFO)
         else
-          vim.notify("Telescope → now showing Git-ignored items", vim.log.levels.INFO)
+          vim.notify(".gitignore → now ignored", vim.log.levels.INFO)
         end
       end
-      -- Map <C-h> in normal mode to toggle this flag
-      vim.keymap.set("n", "<C-h>", toggle_gitignore, { desc = "🔃 Toggle Telescope .gitignore respect" })
+      vim.keymap.set("n", "<C-h>", toggle_gitignore, { desc = "🔃 Toggle .gitignore in Telescope" })
 
       ---------------------------------------------------------------------------------------------------
-      -- 2) CUSTOM FIND FILES FUNCTION
+      -- 2) CUSTOM FIND FILES FUNCTION (no <All> in title)
       ---------------------------------------------------------------------------------------------------
       local custom_find_files
       custom_find_files = function(opts, no_ignore)
@@ -47,8 +46,8 @@ return {
         no_ignore = vim.F.if_nil(no_ignore, false)
         opts.attach_mappings = function(_, map)
           map({ "n", "i" }, "<C-h>", function(prompt_bufnr)
-            local prompt = require("telescope.actions.state").get_current_line()
-            require("telescope.actions").close(prompt_bufnr)
+            local prompt = action_state.get_current_line()
+            actions.close(prompt_bufnr)
             no_ignore = not no_ignore
             custom_find_files({ default_text = prompt }, no_ignore)
           end)
@@ -58,9 +57,6 @@ return {
         if no_ignore then
           opts.no_ignore = true
           opts.hidden = true
-          opts.prompt_title = "Find Files <All>"
-        else
-          opts.prompt_title = "Find Files"
         end
 
         require("telescope.builtin").find_files(opts)
@@ -72,10 +68,18 @@ return {
       local chosen_dir = nil
 
       local function choose_directory()
+        local find_cmd = { "fd", "--type", "d", "--hidden", "--follow" }
+        if respect_gitignore then
+          table.insert(find_cmd, "--exclude")
+          table.insert(find_cmd, ".git")
+        else
+          table.insert(find_cmd, "--no-ignore")
+        end
+
         require("telescope.builtin").find_files({
-          prompt_title = "Choose Directory",
-          cwd = vim.fn.getcwd(),
-          find_command = { "fd", "--type", "d", "--hidden", "--exclude", ".git" },
+          prompt_title  = "Choose Directory",
+          cwd           = vim.fn.getcwd(),
+          find_command  = find_cmd,
           attach_mappings = function(prompt_bufnr, map)
             map("i", "<CR>", function()
               local selection = action_state.get_selected_entry()
@@ -103,20 +107,21 @@ return {
       end
 
       local function search_in_chosen_directory()
-        if chosen_dir == nil then
-          print("⚠️  No directory selected yet! Use <leader>sd to choose one first.")
+        if not chosen_dir then
+          print("⚠️  No directory selected yet! Use <leader>sd first.")
           return
         end
+
         require("telescope.builtin").find_files({
-          prompt_title = "Find Files (in chosen dir)",
-          cwd = chosen_dir,
-          hidden = true,
-          no_ignore = true,
+          prompt_title = "Find in Chosen Dir",
+          cwd          = chosen_dir,
+          hidden       = true,
+          no_ignore    = not respect_gitignore,
         })
       end
 
       ---------------------------------------------------------------------------------------------------
-      -- 4) TELESCOPE SETUP: add <C-o> mapping inside all pickers
+      -- 4) TELESCOPE SETUP: <C-o> mapping for Oil
       ---------------------------------------------------------------------------------------------------
       telescope.setup({
         defaults = {
@@ -151,17 +156,12 @@ return {
               ["<C-k>"] = actions.move_selection_previous,
               ["<C-o>"] = function(prompt_bufnr)
                 local entry = action_state.get_selected_entry()
-                if not entry then
-                  return
-                end
+                if not entry then return end
                 local selected_path = entry.path or entry.value
                 actions.close(prompt_bufnr)
-                local target_dir
-                if Path:new(selected_path):is_dir() then
-                  target_dir = selected_path
-                else
-                  target_dir = vim.fn.fnamemodify(selected_path, ":h")
-                end
+                local target_dir = Path:new(selected_path):is_dir()
+                  and selected_path
+                  or vim.fn.fnamemodify(selected_path, ":h")
                 vim.cmd("Oil " .. vim.fn.fnameescape(target_dir))
               end,
             },
@@ -170,17 +170,12 @@ return {
               ["<CR>"] = actions.select_default,
               ["<C-o>"] = function(prompt_bufnr)
                 local entry = action_state.get_selected_entry()
-                if not entry then
-                  return
-                end
+                if not entry then return end
                 local selected_path = entry.path or entry.value
                 actions.close(prompt_bufnr)
-                local target_dir
-                if Path:new(selected_path):is_dir() then
-                  target_dir = selected_path
-                else
-                  target_dir = vim.fn.fnamemodify(selected_path, ":h")
-                end
+                local target_dir = Path:new(selected_path):is_dir()
+                  and selected_path
+                  or vim.fn.fnamemodify(selected_path, ":h")
                 vim.cmd("Oil " .. vim.fn.fnameescape(target_dir))
               end,
             },
@@ -188,19 +183,20 @@ return {
         },
         pickers = {
           find_files = { hidden = true, no_ignore = true },
-          live_grep = { only_sort_text = true },
+          live_grep  = { only_sort_text = true },
         },
         extensions = {
           ["ui-select"] = themes.get_dropdown({}),
           file_browser = {
-            hidden = true,
-            hijack_netrw = true,
-            cwd_to_path = true,
-            layout_strategy = "horizontal",
-            layout_config = {
+            hidden            = true,
+            hijack_netrw      = true,
+            cwd_to_path       = true,
+            respect_gitignore = respect_gitignore,
+            layout_strategy   = "horizontal",
+            layout_config     = {
               horizontal = { preview_width = 0.6 },
-              width = 0.9,
-              height = 0.8,
+              width      = 0.9,
+              height     = 0.8,
               preview_cutoff = 120,
             },
             borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
@@ -212,7 +208,7 @@ return {
       telescope.load_extension("ui-select")
       telescope.load_extension("file_browser")
 
-      -- 🔸 HIGHLIGHT BORDER OVERRIDES (light sky blue)
+      -- 🔸 BORDER COLOR OVERRIDES
       local border_color = "#005FBB"
       for _, group in ipairs({
         "TelescopeBorder",
@@ -222,20 +218,19 @@ return {
       }) do
         vim.api.nvim_set_hl(0, group, { fg = border_color })
       end
-      -- generic floating windows
       vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = border_color })
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
       ---------------------------------------------------------------------------------------------------
-      -- 5) KEY MAPPINGS: preserve existing <leader>s* but make them respect the global toggle
+      -- 5) KEY MAPPINGS: all searches respect the toggle; no <All> titles
       ---------------------------------------------------------------------------------------------------
 
-      -- <leader>sf → custom_find_files (unchanged)
+      -- <leader>sf → custom_find_files
       vim.keymap.set("n", "<leader>sf", function()
         custom_find_files()
-      end, { desc = "󰝰 Custom Find Files (Local Toggle)" })
+      end, { desc = "󰝰 Custom Find Files" })
 
-      -- <leader>sg → live_grep, now honors respect_gitignore
+      -- <leader>sg → live_grep
       vim.keymap.set("n", "<leader>sg", function()
         builtin.live_grep({
           additional_args = function()
@@ -246,56 +241,44 @@ return {
             return args
           end,
         })
-      end, { desc = "  Live Grep (Toggle .gitignore)" })
+      end, { desc = "  Live Grep" })
 
-      -- <leader>ss → builtin picker menu (no change)
-      vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "  Telescope" })
-
-      -- <leader>sh → help_tags (no change)
-      vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "  Help Tags" })
-
-      -- <leader>sn → find_files in config, now honors respect_gitignore
+      -- <leader>sn → find_files in config
       vim.keymap.set("n", "<leader>sn", function()
         builtin.find_files({
-          cwd = vim.fn.stdpath("config"),
-          prompt_title = "~ Config ~",
-          hidden = true,
+          cwd       = vim.fn.stdpath("config"),
+          hidden    = true,
           no_ignore = not respect_gitignore,
         })
-      end, { desc = "  Search Neovim Config (Toggle .gitignore)" })
+      end, { desc = "  Search Neovim Config" })
 
-      -- <leader>sb → buffers (no change)
-      vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "﬘  Open Buffers" })
-
-      -- <leader>so → oldfiles (no change)
-      vim.keymap.set("n", "<leader>so", builtin.oldfiles, { desc = "  Recent Files" })
-
-      -- <leader>ns → search notes (include folders), now honors respect_gitignore
+      -- <leader>ns → search notes (include folders)
       vim.keymap.set("n", "<leader>ns", function()
         local base_cmd = { "fd", "--type", "f", "--type", "d", "--hidden", "--follow" }
         if not respect_gitignore then
           table.insert(base_cmd, "--no-ignore")
         end
         builtin.find_files({
-          cwd = "/home/yaloalo/notes",
-          hidden = true,
+          cwd          = "/home/yaloalo/notes",
+          hidden       = true,
           find_command = base_cmd,
         })
-      end, { desc = " Search Notes (include folders, Toggle .gitignore)" })
+      end, { desc = " Search Notes (include folders)" })
 
-      -- <leader>sr → file_browser (no change)
+      -- <leader>sr → file_browser
       vim.keymap.set("n", "<leader>sr", function()
         telescope.extensions.file_browser.file_browser({
-          path = vim.fn.getcwd(),
-          cwd = vim.fn.getcwd(),
-          select_buffer = true,
-          hidden = true,
-          hijack_netrw = true,
-          layout_strategy = "horizontal",
-          layout_config = {
+          path              = vim.fn.getcwd(),
+          cwd               = vim.fn.getcwd(),
+          select_buffer     = true,
+          hidden            = true,
+          hijack_netrw      = true,
+          respect_gitignore = respect_gitignore,
+          layout_strategy   = "horizontal",
+          layout_config     = {
             horizontal = { preview_width = 0.6 },
-            width = 0.9,
-            height = 0.8,
+            width      = 0.9,
+            height     = 0.8,
             preview_cutoff = 120,
           },
           borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
@@ -317,11 +300,17 @@ return {
             return true
           end,
         })
-      end, { desc = "󰉓 Telescope File Browser (cwd)" })
+      end, { desc = "󰉓 File Browser" })
 
-      -- 🔸 NEW: DIRECTORY SELECTOR AND SCOPED SEARCH (unchanged)
-      vim.keymap.set("n", "<leader>sd", choose_directory, { desc = "󰉋 Choose Directory" })
-      vim.keymap.set("n", "<leader>sx", search_in_chosen_directory, { desc = "󰱿 Search in Chosen Directory" })
+      -- <leader>sd → choose_directory
+      vim.keymap.set("n", "<leader>sd", function()
+        choose_directory()
+      end, { desc = "󰉋 Choose Directory" })
+
+      -- <leader>sx → search_in_chosen_directory
+      vim.keymap.set("n", "<leader>sx", function()
+        search_in_chosen_directory()
+      end, { desc = "󰱿 Search in Chosen Directory" })
     end,
   },
 
@@ -338,7 +327,7 @@ return {
         zindex = 1000,
         bo = {},
         wo = {
-          winblend = 0, -- no blending, let Hyprland handle the blur
+          winblend = 0,
         },
       },
       plugins = {
@@ -378,7 +367,6 @@ return {
     },
     config = function(_, opts)
       require("which-key").setup(opts)
-      -- make float backgrounds transparent
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
       vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
       vim.api.nvim_set_hl(0, "WhichKeyFloat", { bg = "none" })
@@ -389,7 +377,6 @@ return {
       vim.api.nvim_set_hl(0, "WinBarNC", { bg = "none" })
       vim.api.nvim_set_hl(0, "FloatTitle", { bg = "none" })
 
-      -- unify border color to light sky blue
       local border_color = "#005FBB"
       vim.api.nvim_set_hl(0, "WhichKeyBorder", { bg = "none", fg = border_color })
     end,
