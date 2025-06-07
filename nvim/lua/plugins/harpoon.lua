@@ -29,6 +29,7 @@ return {
         end,
         desc = "Harpoon Quick Menu",
       },
+
     }
 
     -- Go-to mappings for 1..9

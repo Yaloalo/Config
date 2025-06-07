@@ -98,10 +98,6 @@ Not that interesting; just LSP setup stuff.
 
 A better window to see problems with the code – again, LSP stuff which we have talked about before.
 
-### [Blink](https://github.com/Saghen/blink.nvim)
-
-Blink is used for autocompletion. Ghost text is standard and can be accepted with `<C-y>`. Press `<Leader-C>` to open the suggestion window (scrollable with arrow keys); when you select an entry, just resume typing and it will be inserted automatically.
-
 ### [Conform](https://github.com/stevearc/conform.nvim)
 
 Yeah, autoformat is nice; all my format files are in `~/.config/format` so I don’t rely on defaults.
@@ -110,13 +106,9 @@ Yeah, autoformat is nice; all my format files are in `~/.config/format` so I don
 
 Yeah, obvious.
 
-### [Hardtime](https://github.com/m4xshen/hardtime.nvim)
-
-Skill issue.
 
 ### [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)
 
-Yeah, I made the same grey lines.
 
 ### [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim)
 
@@ -133,12 +125,10 @@ A collection of small QoL plugins (dashboard, notifier, terminal, etc.).
 This is a big one. `<Leader-s>` modes:
 
 - `f` – fuzzy find cwd
-- `b` – open buffer
 - `g` – live grep
 - `n` – fuzzy Neovim config
 - `r` – ranger-style file browser
 
-…and the cwd key also uses Telescope.
 
 ### [Treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
@@ -155,6 +145,14 @@ Should also be obvious.
 - Some other stuff to make everything look nice
 
 _(UI plugins include [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) and [alpha-nvim](https://github.com/goolord/alpha-nvim))_
+
+
+### Harpoon for harpoon stuff
+
+
+###
+
+Flash for faster navigation 
 
 ---
 

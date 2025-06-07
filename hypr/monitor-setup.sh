@@ -17,7 +17,7 @@
 #   bind = SUPER, M, exec, ~/bin/monitor-setup.sh
 
 INTERNAL="eDP-1"
-EXTERNAL="DP-7"
+EXTERNAL="DP-8"
 
 echo "=== monitor-setup.sh toggle at $(date '+%Y-%m-%d %H:%M:%S') ==="
 

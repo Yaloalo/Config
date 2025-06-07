@@ -265,42 +265,6 @@ return {
         })
       end, { desc = " Search Notes (include folders)" })
 
-      -- <leader>sr → file_browser
-      vim.keymap.set("n", "<leader>sr", function()
-        telescope.extensions.file_browser.file_browser({
-          path              = vim.fn.getcwd(),
-          cwd               = vim.fn.getcwd(),
-          select_buffer     = true,
-          hidden            = true,
-          hijack_netrw      = true,
-          respect_gitignore = respect_gitignore,
-          layout_strategy   = "horizontal",
-          layout_config     = {
-            horizontal = { preview_width = 0.6 },
-            width      = 0.9,
-            height     = 0.8,
-            preview_cutoff = 120,
-          },
-          borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-          attach_mappings = function(prompt_bufnr, map)
-            map("n", "<CR>", function()
-              local sel = action_state.get_selected_entry()
-              if not sel then
-                return
-              end
-              local p = sel.path or sel.value
-              actions.close(prompt_bufnr)
-              if vim.fn.isdirectory(p) == 1 then
-                vim.api.nvim_set_current_dir(p)
-                print("  Changed cwd to " .. p)
-              else
-                vim.cmd("edit " .. p)
-              end
-            end)
-            return true
-          end,
-        })
-      end, { desc = "󰉓 File Browser" })
 
       -- <leader>sd → choose_directory
       vim.keymap.set("n", "<leader>sd", function()
