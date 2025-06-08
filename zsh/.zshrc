@@ -44,6 +44,7 @@ colors() {
 alias ls='ls --color=auto'
 alias la='ls -a'
 alias h='cd'
+alias y='yazi'
 alias b='bluetui'
 alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'

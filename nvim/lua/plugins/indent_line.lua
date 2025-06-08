@@ -5,48 +5,39 @@ return {
     main = "ibl",
     event = "BufReadPost",
     config = function()
-      -- Use Tokyo Night palette for indent colors
-      local tokyo = {
-        "TNIndent1",
-        "TNIndent2",
-        "TNIndent3",
-        "TNIndent4",
-        "TNIndent5",
-        "TNIndent6",
-        "TNIndent7",
+      -- Monochrome greyscale levels
+      local grey = {
+        "MonoIndent1",
+        "MonoIndent2",
+        "MonoIndent3",
+        "MonoIndent4",
+        "MonoIndent5",
+        "MonoIndent6",
+        "MonoIndent7",
       }
 
       -- Register highlight groups on colorscheme change
       local hooks = require("ibl.hooks")
       hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        -- Level 1: blue
-        vim.api.nvim_set_hl(0, "TNIndent1", { fg = "#7aa2f7" })
-        -- Level 2: green
-        vim.api.nvim_set_hl(0, "TNIndent2", { fg = "#9ece6a" })
-        -- Level 3: purple
-        vim.api.nvim_set_hl(0, "TNIndent3", { fg = "#bb9af7" })
-        -- Level 4: yellow
-        vim.api.nvim_set_hl(0, "TNIndent4", { fg = "#e0af68" })
-        -- Level 5: red
-        vim.api.nvim_set_hl(0, "TNIndent5", { fg = "#f7768e" })
-        -- Level 6: aqua/teal
-        vim.api.nvim_set_hl(0, "TNIndent6", { fg = "#2ac3de" })
-        -- Level 7: orange
-        vim.api.nvim_set_hl(0, "TNIndent7", { fg = "#ff9e64" })
+        vim.api.nvim_set_hl(0, "MonoIndent1", { fg = "#222222" })
+        vim.api.nvim_set_hl(0, "MonoIndent2", { fg = "#333333" })
+        vim.api.nvim_set_hl(0, "MonoIndent3", { fg = "#444444" })
+        vim.api.nvim_set_hl(0, "MonoIndent4", { fg = "#555555" })
+        vim.api.nvim_set_hl(0, "MonoIndent5", { fg = "#666666" })
+        vim.api.nvim_set_hl(0, "MonoIndent6", { fg = "#777777" })
+        vim.api.nvim_set_hl(0, "MonoIndent7", { fg = "#888888" })
       end)
 
-      -- Setup indent-blankline with Tokyo Night colors
-      --   and perforated current-scope lines (no start/end)
       require("ibl").setup({
         indent = {
           char      = "│",
           tab_char  = "│",
-          highlight = tokyo,
+          highlight = grey,
         },
         scope = {
           enabled    = true,
-          show_start = false,  -- omit the top line of the current scope
-          show_end   = false,  -- omit the bottom line of the current scope
+          show_start = false,
+          show_end   = false,
         },
         exclude = {
           filetypes = { "help", "alpha", "neo-tree", "toggleterm" },

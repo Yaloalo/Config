@@ -1,16 +1,14 @@
-# ~/.config/starship.toml
-
-# Layout: cat icon first, all info on first line, prompt symbol on second, with separators
+    # Layout: cat icon first, all info on first line, prompt symbol on second, with separators
 format = """
 󰄛 \
-(#00BFFF) $username\
-(#00BFFF)$hostname\
-[ | ](#00BFFF)$directory [ | ](#00BFFF)\
+(#FFFFFF) $username\
+(#FFFFFF)$hostname\
+[ | ](#FFFFFF)$directory [ | ](#FFFFFF)\
 $git_branch\
 $git_state\
 $git_status\
 $python\
-[ | ](#00BFFF) $time\
+[ | ](#FFFFFF) $time\
 $line_break\
 $character"""
 
@@ -18,34 +16,34 @@ $character"""
 command = 'echo 󰄛'
 when    = true
 format  = '[$output]($style) '
-style   = "#FFFFFF"        # pure white for the cat
+style   = "#FFFFFF"
 
-# ── Username (very dark navy) ───────────────────────
+# ── Username (navy blue) ───────────────────────
 [username]
-style_user = "#0D1B2A"     # #0D1B2A: almost-black navy
+style_user = "#3B4D63"
 
-# ── Hostname (dark slate blue) ────────────────────
+# ── Hostname (slate blue) ──────────────────────
 [hostname]
-style = "#415A77"          # #415A77: deep blue-grey
+style = "#4F5E77"
 
-# ── Directory (steel blue) ────────────────────────
+# ── Directory (steel blue) ─────────────────────
 [directory]
-style = "#778DA9"          # #778DA9: mid-tone blue
+style = "#5F728D"
 
-# ── Git Branch (sky blue) ─────────────────────────
+# ── Git Branch (desaturated sky blue) ──────────
 [git_branch]
 format = "[$branch]($style)"
-style  = "#A3CEF1"         # #A3CEF1: light sky blue
+style  = "#6B88A6"
 
-# ── Git State (pale light blue) ──────────────────
+# ── Git State (icy blue) ───────────────────────
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style  = "#CDE2F5"         # #CDE2F5: very pale blue
+style  = "#7A9BB7"
 
-# ── Git Status (near-white blue) ──────────────────
+# ── Git Status (near white-blue) ───────────────
 [git_status]
 format     = " [$ahead_behind$stashed]($style)"
-style      = "#E0F2FF"     # #E0F2FF: almost-white icy blue
+style      = "#9EB7CC"
 conflicted = ""
 untracked  = ""
 modified   = ""
@@ -54,20 +52,20 @@ renamed    = ""
 deleted    = ""
 stashed    = "≡"
 
-# ── Python Virtualenv (soft light blue) ───────────
+# ── Python Virtualenv (powder blue) ────────────
 [python]
 format = "[$virtualenv]($style) "
-style  = "#B0D4F1"         # #B0D4F1: pale pastel blue
+style  = "#87AFCB"
 
-# ── Time (light vibrant blue) ─────────────────────
+# ── Time (bright sky blue) ─────────────────────
 [time]
 disabled     = false
 time_format  = "%Y-%m-%d %H:%M:%S"
 format       = "[$time]($style) "
-style        = "#5C9EFF"   # lighter, vibrant blue for smoother transition
+style        = "#73A8D5"
 
-# ── Character Symbols ──────────────────────────────
+# ── Character Symbols ──────────────────────────
 [character]
-success_symbol = "[❯](#778DA9)"  # match directory color on success
-error_symbol   = "[❯](#E06C75)"  # retain red for errors
-vimcmd_symbol  = "[❮](#7fbb72)"  # keep green for vim-mode
+success_symbol = "[❯](#5F728D)"  # matches directory color
+error_symbol   = "[❯](#E06C75)"  # red for errors
+vimcmd_symbol  = "[❮](#73C0D8)"  # cool turquoise-blue

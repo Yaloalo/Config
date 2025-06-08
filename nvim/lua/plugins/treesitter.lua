@@ -67,7 +67,7 @@ return {
         select = {
           enable = true,
           lookahead = true,
-          keymaps = {
+          keymps = {
             ["af"] = "@function.outer",
             ["if"] = "@function.inner",
             ["ac"] = "@class.outer",

@@ -35,7 +35,7 @@ return {
           vim.notify(".gitignore → now ignored", vim.log.levels.INFO)
         end
       end
-      vim.keymap.set("n", "<C-h>", toggle_gitignore, { desc = "🔃 Toggle .gitignore in Telescope" })
+      vim.keymap.set("n", "<C-g>", toggle_gitignore, { desc = "🔃 Toggle .gitignore in Telescope" })
 
       ---------------------------------------------------------------------------------------------------
       -- 2) CUSTOM FIND FILES FUNCTION (no <All> in title)

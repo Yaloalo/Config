@@ -45,27 +45,30 @@ end)
 -- Ensure the tab bar itself is transparent too, but with deep purple accents
 
 config.colors = {
+  foreground = "#ffffff",
+  background = "#000000",
+
   tab_bar = {
-    background = "rgba(0,0,0,0)",
+    background = "#000000",
     active_tab = {
-      bg_color = "rgba(0,0,0,0)",
-      fg_color = "#005fbb", -- bright blue for active
+      bg_color = "#000000",
+      fg_color = "#6B88A6",
     },
     inactive_tab = {
-      bg_color = "rgba(0,0,0,0)",
-      fg_color = "#26003e", -- dark tone for inactive
+      bg_color = "#000000",
+      fg_color = "#ffffff",
     },
     inactive_tab_hover = {
-      bg_color = "rgba(0,0,0,0)",
-      fg_color = "#005fbb", -- bright blue on hover
+      bg_color = "#000000",
+      fg_color = "#ffffff",
     },
     new_tab = {
-      bg_color = "rgba(0,0,0,0)",
-      fg_color = "#26003e", -- dark tone for new-tab button
+      bg_color = "#000000",
+      fg_color = "#ffffff",
     },
     new_tab_hover = {
-      bg_color = "rgba(0,0,0,0)",
-      fg_color = "#005fbb", -- bright blue hover
+      bg_color = "#000000",
+      fg_color = "#ffffff",
     },
   },
 }
