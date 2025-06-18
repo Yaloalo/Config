@@ -1,6 +1,7 @@
 -- ~/.config/nvim/lua/plugins/ufo.lua
 return {
-  {
+--[[
+    {
     "kevinhwang91/nvim-ufo",
     dependencies = { "kevinhwang91/promise-async" },
     config = function()
@@ -21,16 +22,6 @@ return {
       vim.o.foldlevelstart = 99     -- keep them open on buffer load
       vim.o.foldenable     = true   -- enable folding
 
-      -- 3) Custom provider selector with proper fallback chaining
-      local function customizeSelector(bufnr)
-        -- handle a fallback exception by retrying with the next provider
-        local function handleFallbackException(err, providerName)
-          if type(err) == "string" and err:match("UfoFallbackException") then
-            return require("ufo").getFolds(bufnr, providerName)
-          else
-            return require("promise").reject(err)
-          end
-        end
 
         -- try LSP first, then Treesitter, then indent
         return require("ufo").getFolds(bufnr, "lsp")
@@ -74,4 +65,5 @@ return {
       end, opts)
     end,
   },
+--]]
 }

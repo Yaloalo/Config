@@ -1,7 +1,11 @@
 local map = vim.keymap.set
 
 -- track whether diagnostics are currently shown
-local diagnostics_on = true
+local diagnostics_on = false
+vim.diagnostic.disable()
+
+--Mode navigation
+vim.keymap.set("v", "<C-c>", "<Esc>")
 
 -- Clear search highlights
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
