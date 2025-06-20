@@ -1,29 +1,51 @@
 -- lua/plugins/treesitter.lua
 return {
-  -- core nvim-treesitter plugin
   {
     "nvim-treesitter/nvim-treesitter",
-    version = false, -- always use latest
+    version = false,
     build = ":TSUpdate",
     dependencies = {
-      -- rainbow-delimiters.nvim (uses its own setup API, not the old ts-module system)
-      {
-        "HiPhish/rainbow-delimiters.nvim",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-        config = function()
-          require("rainbow-delimiters.setup").setup({
-            strategy = {
-              [""] = "rainbow-delimiters.strategy.global",
-            },
-          })
-        end,
-      },
+{
+  "HiPhish/rainbow-delimiters.nvim",
+  dependencies = { "nvim-treesitter/nvim-treesitter" },
+  config = function()
+    local api = vim.api
 
-      "nvim-treesitter/playground", -- interactive query inspector
-      "nvim-treesitter/nvim-treesitter-textobjects", -- textobjects (select/move)
+    -- 1) Alternate White → G1 → B1 → R1 → G2 → B2 → R2 → G3 → B3 → R3
+    local greens = { "#7CFC00", "#00FF00", "#00CC00" }   -- vibrant greens
+    local blues  = { "#00BFFF", "#1E90FF", "#4169E1" }   -- vibrant blues
+    local reds   = { "#FF4500", "#FF0000", "#DC143C" }   -- vibrant reds
+
+    local palette = { "#FFFFFF" }  -- level 1: white
+    for i = 1, 3 do
+      table.insert(palette, greens[i])
+      table.insert(palette, blues[i])
+      table.insert(palette, reds[i])
+    end
+    -- now palette = { White, G1, B1, R1, G2, B2, R2, G3, B3, R3 }
+
+    -- 2) Register highlight groups
+    local groups = {}
+    for i, col in ipairs(palette) do
+      local name = "RainbowLevel" .. i
+      api.nvim_set_hl(0, name, { fg = col })
+      groups[#groups+1] = name
+    end
+
+    -- 3) Hook into rainbow-delimiters.nvim
+    require("rainbow-delimiters.setup").setup({
+      strategy       = { [""] = "rainbow-delimiters.strategy.global" },
+      query          = { [""] = "rainbow-delimiters" },
+      highlight      = groups,
+      max_file_lines = 2000,
+    })
+  end,
+},
+
+      "nvim-treesitter/playground",
+      "nvim-treesitter/nvim-treesitter-textobjects",
     },
     opts = {
-      -- 1) Parsers to install
       ensure_installed = {
         "bash",
         "c",
@@ -41,7 +63,6 @@ return {
       sync_install = false,
       auto_install = true,
 
-      -- 2) Highlight & indent
       highlight = {
         enable = true,
         additional_vim_regex_highlighting = true,
@@ -51,7 +72,6 @@ return {
         disable = { "python" },
       },
 
-      -- 3) Incremental selection (gnn/grn/grc/grm)
       incremental_selection = {
         enable = true,
         keymaps = {
@@ -62,7 +82,6 @@ return {
         },
       },
 
-      -- 4) Textobjects: select/move between functions & classes
       textobjects = {
         select = {
           enable = true,
@@ -76,19 +95,12 @@ return {
         },
         move = {
           enable = true,
-          set_jumps = true, -- update jumplist
-          goto_next_start = {
-            ["]m"] = "@function.outer",
-            ["]]"] = "@class.outer",
-          },
-          goto_previous_start = {
-            ["[m"] = "@function.outer",
-            ["[["] = "@class.outer",
-          },
+          set_jumps = true,
+          goto_next_start = { ["]m"] = "@function.outer", ["]]"] = "@class.outer" },
+          goto_previous_start = { ["[m"] = "@function.outer", ["[["] = "@class.outer" },
         },
       },
 
-      -- 5) Playground: inspect treesitter queries in real time
       playground = {
         enable = true,
         updatetime = 25,

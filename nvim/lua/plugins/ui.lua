@@ -16,6 +16,12 @@ local function update_winbar()
   local color = mode_colors[m] or mode_colors.n
   vim.api.nvim_set_hl(0, "WinBar", { fg = color })
   local bar = require("lspsaga.symbol.winbar").get_bar() or ""
+  if bar == "" then
+    local bufname = vim.api.nvim_buf_get_name(0)
+    local fname = bufname ~= "" and vim.fn.fnamemodify(bufname, ":t") or "[No Name]"
+    bar = fname
+  end
+
   vim.opt.winbar = string.format(" %s %s", m:upper(), bar)
 end
 
@@ -30,39 +36,49 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "ModeChanged" }, {
 -- ──────────────────────────────────────────────────────────────────────────────
 
 return {
-  {
-    "aktersnurra/no-clown-fiesta.nvim",
-    priority = 1000,
-    lazy = false,
-    config = function()
-      local is_transparent = false
+{
+  "p00f/alabaster.nvim",
+  priority = 1000,
+  lazy = false,
+  config = function()
+    -- ensure truecolor
+    vim.o.termguicolors = true
+    vim.g.alabaster_dim_comments = false
+    vim.g.alabaster_floatborder  = false
 
-      local function apply_theme()
-        require("no-clown-fiesta").setup({
-          transparent = is_transparent,
-          styles = {
-            type = { bold = true },
-            lsp = { underline = false },
-            match_paren = { underline = true },
-          },
-        })
-        vim.cmd("colorscheme no-clown-fiesta")
+    -- your chosen grey
+    local grey = "#101010"
+    local transparent = false
+
+    local function apply_theme()
+      -- load Alabaster colorscheme
+      vim.cmd("colorscheme alabaster")
+
+      if transparent then
+        -- full transparency
+        vim.cmd([[
+          highlight Normal      guibg=NONE
+          highlight NormalFloat guibg=NONE
+          highlight FloatBorder guibg=NONE
+        ]])
+      else
+        -- dark grey background
+        vim.cmd(string.format("highlight Normal      guibg=%s", grey))
+        vim.cmd(string.format("highlight NormalFloat guibg=%s", grey))
+        vim.cmd(string.format("highlight FloatBorder guibg=%s", grey))
       end
+    end
 
-      local function toggle_transparency()
-        is_transparent = not is_transparent
-        apply_theme()
-      end
+    -- initial application
+    apply_theme()
 
+    -- toggle with <leader>b
+    vim.keymap.set("n", "<leader>b", function()
+      transparent = not transparent
       apply_theme()
-      vim.keymap.set(
-        "n",
-        "<leader>b",
-        toggle_transparency,
-        { desc = "Toggle Background Transparency" }
-      )
-    end,
-  },
+    end, { desc = "Toggle Alabaster Background Transparency" })
+  end,
+},
 
   {
     "folke/noice.nvim",

@@ -5,7 +5,6 @@ return {
   require("plugins.lspsaga"), -- LSp Stuff
   require("plugins.lspconfig"), -- Mote Slp suff
   require("plugins.trouble"), -- MOre LSP Erros
-  require("plugins.blink"), -- Autocomplete
   require("plugins.conform"), -- Autoformat
   require("plugins.mason"), -- LSP
   require("plugins.indent_line"), --Line indetation
@@ -14,6 +13,6 @@ return {
   require("plugins.treesitter"), -- Color
   require("plugins.autopairs"), --Automtic closing brackets
   require("plugins.ui"), --looks nice
-  require("plugins.harpoon"),
-  require("plugins.flash"),
+  require("plugins.harpoon"), --jumps
+  require("plugins.flash"), --jumps in buff
 }
