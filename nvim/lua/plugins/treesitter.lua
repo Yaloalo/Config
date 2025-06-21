@@ -5,42 +5,42 @@ return {
     version = false,
     build = ":TSUpdate",
     dependencies = {
-{
-  "HiPhish/rainbow-delimiters.nvim",
-  dependencies = { "nvim-treesitter/nvim-treesitter" },
-  config = function()
-    local api = vim.api
+      {
+        "HiPhish/rainbow-delimiters.nvim",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+        config = function()
+          local api = vim.api
 
-    -- 1) Alternate White → G1 → B1 → R1 → G2 → B2 → R2 → G3 → B3 → R3
-    local greens = { "#7CFC00", "#00FF00", "#00CC00" }   -- vibrant greens
-    local blues  = { "#00BFFF", "#1E90FF", "#4169E1" }   -- vibrant blues
-    local reds   = { "#FF4500", "#FF0000", "#DC143C" }   -- vibrant reds
+          -- 1) Alternate White → G1 → B1 → R1 → G2 → B2 → R2 → G3 → B3 → R3
+          local greens = { "#7CFC00", "#00FF00", "#00CC00" } -- vibrant greens
+          local blues = { "#00BFFF", "#1E90FF", "#4169E1" } -- vibrant blues
+          local reds = { "#FF4500", "#FF0000", "#DC143C" } -- vibrant reds
 
-    local palette = { "#FFFFFF" }  -- level 1: white
-    for i = 1, 3 do
-      table.insert(palette, greens[i])
-      table.insert(palette, blues[i])
-      table.insert(palette, reds[i])
-    end
-    -- now palette = { White, G1, B1, R1, G2, B2, R2, G3, B3, R3 }
+          local palette = { "#FFFFFF" } -- level 1: white
+          for i = 1, 3 do
+            table.insert(palette, greens[i])
+            table.insert(palette, blues[i])
+            table.insert(palette, reds[i])
+          end
+          -- now palette = { White, G1, B1, R1, G2, B2, R2, G3, B3, R3 }
 
-    -- 2) Register highlight groups
-    local groups = {}
-    for i, col in ipairs(palette) do
-      local name = "RainbowLevel" .. i
-      api.nvim_set_hl(0, name, { fg = col })
-      groups[#groups+1] = name
-    end
+          -- 2) Register highlight groups
+          local groups = {}
+          for i, col in ipairs(palette) do
+            local name = "RainbowLevel" .. i
+            api.nvim_set_hl(0, name, { fg = col })
+            groups[#groups + 1] = name
+          end
 
-    -- 3) Hook into rainbow-delimiters.nvim
-    require("rainbow-delimiters.setup").setup({
-      strategy       = { [""] = "rainbow-delimiters.strategy.global" },
-      query          = { [""] = "rainbow-delimiters" },
-      highlight      = groups,
-      max_file_lines = 2000,
-    })
-  end,
-},
+          -- 3) Hook into rainbow-delimiters.nvim
+          require("rainbow-delimiters.setup").setup({
+            strategy = { [""] = "rainbow-delimiters.strategy.global" },
+            query = { [""] = "rainbow-delimiters" },
+            highlight = groups,
+            max_file_lines = 2000,
+          })
+        end,
+      },
 
       "nvim-treesitter/playground",
       "nvim-treesitter/nvim-treesitter-textobjects",
