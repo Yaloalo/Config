@@ -37,7 +37,7 @@ return {
       end
       vim.keymap.set(
         "n",
-        "<C-h>",
+        "<C-i>",
         toggle_gitignore,
         { desc = "🔃 Toggle .gitignore in Telescope" }
       )
