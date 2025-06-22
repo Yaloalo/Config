@@ -5,6 +5,20 @@ return {
   -- Load on GrugFar commands or keymaps below
   cmd = { "GrugFar", "GrugFarWithin" },
   keys = {
+
+
+-- Search in current file with ripgrep (replace '/' key)
+    {
+      "<leader>px",
+      function()
+        require("grug-far").open_file_search({ select_word = true })
+      end,
+      desc = "gf: Search in current file with grug-far",
+    },
+
+
+
+
     -- Replace in current file
     {
       "<leader>pc",
@@ -46,17 +60,6 @@ return {
         })
       end,
       desc = "gf: GrugFar ▶ pick subdir then search",
-    },
-    -- In-buffer ripgrep search with <C-S>, then step through with n/N
-    {
-      "<C-S>",
-      function()
-        local pat = vim.fn.input('rg ❯ ')
-        if pat == '' then return end
-        vim.fn.setreg('/', pat)                      -- highlight via search register
-        vim.cmd('silent grep! ' .. vim.fn.shellescape(pat) .. ' %')
-      end,
-      desc = "rg: in-buffer ripgrep search",
     },
   },
   config = function()

@@ -240,6 +240,7 @@ return {
         })
       end, { desc = "󰝰 Custom Find Files" })
 
+
       -- <leader>sg → live_grep
       vim.keymap.set("n", "<leader>sg", function()
         builtin.live_grep({
@@ -251,7 +252,7 @@ return {
             return args
           end,
         })
-      end, { desc = "  Live Grep" })
+      end, { desc = "  Live Grep (CWD)" })
 
       -- <leader>sn → find_files in config
       vim.keymap.set("n", "<leader>sn", function()
