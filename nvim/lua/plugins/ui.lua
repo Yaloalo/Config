@@ -4,7 +4,7 @@ vim.o.termguicolors = true
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Winbar + Mode Indicator (top of window), entire line colored per mode
 -- ──────────────────────────────────────────────────────────────────────────────
-
+--[[
 local mode_colors = {
   n = "#569CD6", -- Normal = blue
   i = "#6A9955", -- Insert = green
@@ -30,7 +30,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "ModeChanged" }, {
   group = grp,
   callback = update_winbar,
 })
-
+]]
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Plugins and UI Appearance
 -- ──────────────────────────────────────────────────────────────────────────────

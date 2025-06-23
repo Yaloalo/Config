@@ -276,17 +276,6 @@ return {
         })
       end, { desc = " Search Notes (include folders)" })
 
-      -- <leader>sr → file_browser
-
-      -- <leader>sd → choose_directory
-      vim.keymap.set("n", "<leader>sd", function()
-        choose_directory()
-      end, { desc = "󰉋 Choose Directory" })
-
-      -- <leader>sx → search_in_chosen_directory
-      vim.keymap.set("n", "<leader>sx", function()
-        search_in_chosen_directory()
-      end, { desc = "󰱿 Search in Chosen Directory" })
     end,
   },
 

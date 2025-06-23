@@ -21,10 +21,6 @@ return {
     local toggleterm = require("toggleterm")
     toggleterm.setup(opts)
 
-    -- standard terminal toggle
-    vim.keymap.set({ "n", "t" }, "<leader>t", "<Cmd>ToggleTerm<CR>", {
-      desc = "Toggle Terminal",
-    })
 
     -- prepare a floating terminal for yazi
     local Terminal = require("toggleterm.terminal").Terminal
