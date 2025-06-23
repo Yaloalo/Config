@@ -116,9 +116,6 @@ return {
         },
       })
 
-      vim.keymap.set("n", "<leader>m", function()
-        require("noice").cmd("history")
-      end, { desc = "Noice: Message History" })
 
       vim.api.nvim_set_hl(0, "NoiceWhiteBorder", { fg = "#ffffff", bg = "none" })
     end,

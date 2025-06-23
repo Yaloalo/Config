@@ -15,4 +15,4 @@ require("core.autocmds") -- any vim.api.nvim_create_autocmd(…) groups
 
 require("core.plugins") -- bootstrap lazy.nvim & import lua/plugins/*.lua
 
-require("core.live_rg").setup()
+

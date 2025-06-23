@@ -232,14 +232,27 @@ return {
       -- 5) KEY MAPPINGS: all searches respect the toggle; no <All> titles
       ---------------------------------------------------------------------------------------------------
 
+      -- Buffer-only requires
+      local pickers = require("telescope.pickers")
+      local finders = require("telescope.finders")
+      local conf = require("telescope.config").values
+      local make_entry = require("telescope.make_entry")
+
+      -- ─── 6) BUFFER-ONLY FUZZY SEARCH & RG ────────────────────────────────
+
+      -- <leader>sf → fuzzy-find *only* in the current buffer
+      vim.keymap.set("n", "<leader>sc", require("telescope.builtin").current_buffer_fuzzy_find, {
+        desc = "󰏤 Fuzzy search in current buffer",
+      })
+
+
       -- <leader>sf → custom_find_files
       vim.keymap.set("n", "<leader>sf", function()
         custom_find_files({
           previewer = false,
           path_display = { "absolute" },
         })
-      end, { desc = "󰝰 Custom Find Files" })
-
+      end, { desc = "󰝰 Find Files" })
 
       -- <leader>sg → live_grep
       vim.keymap.set("n", "<leader>sg", function()
@@ -275,7 +288,6 @@ return {
           find_command = base_cmd,
         })
       end, { desc = " Search Notes (include folders)" })
-
     end,
   },
 
@@ -328,6 +340,10 @@ return {
         { "<leader>l", group = "  [L]SP" },
         { "<leader>o", group = "󰏆  [O]il" },
         { "<leader>n", group = "󰎞  [N]otes" },
+        { "<leader>p", group = "  [G]rug" },
+        { "<leader>h", group = "  [H]arpoon" },
+
+        { "<leader>r", group = "󰍉  [R]ing" },
       },
     },
     config = function(_, opts)

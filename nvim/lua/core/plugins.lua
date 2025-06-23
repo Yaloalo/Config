@@ -26,21 +26,12 @@ require('lazy').setup({
   { import = 'plugins' },
 }, {
   ui = {
-    -- use Nerd Font icons if available; otherwise fall back
-    icons = vim.g.have_nerd_font and {} or {
-      cmd = '⌘',
-      config = '🛠',
-      event = '📅',
-      ft = '📂',
-      init = '⚙',
-      keys = '🗝',
-      plugin = '🔌',
-      runtime = '💻',
-      require = '📑',
-      source = '📄',
-      start = '🚀',
-      task = '📌',
-      lazy = '💤',
-    },
+    -- always use Nerd Font icons (no fallback)
+    icons = {},
+  },
+  -- disable luarocks/hererocks support
+  rocks = {
+    enabled   = false,
+    hererocks = false,
   },
 })

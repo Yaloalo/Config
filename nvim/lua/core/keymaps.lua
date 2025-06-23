@@ -10,6 +10,22 @@ vim.keymap.set("v", "<C-c>", "<Esc>")
 -- Clear search highlights
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
+-- Horizontal split on <leader>s
+map("n", "<leader>c", "<cmd>split<CR>", {
+  desc = "Horizontal split",
+})
+
+-- Vertical split on <leader>d
+map("n", "<leader>v", "<cmd>vsplit<CR>", {
+  desc = "Vertical split",
+})
+
+-- 1) disable Ctrl-S in all modes (normal, insert, visual, term)
+map({ "n","i","v","t" }, "<C-s>", "<Nop>", { silent = true, desc = "Disable Ctrl-S" })
+
+-- 2) disable Ctrl-H everywhere except Normal (so only your <C-h> → window-left still works)
+map({ "i","v","t","c","o" }, "<C-h>", "<Nop>", { silent = true, desc = "Disable Ctrl-H outside Normal" })
+
 -- Window navigation
 map("n", "<C-h>", "<C-w><C-h>", { desc = "Move to left window" })
 map("n", "<C-j>", "<C-w><C-j>", { desc = "Move to bottom window" })
@@ -45,8 +61,6 @@ map("n", "<leader>ld", vim.lsp.buf.hover, { desc = "LSP: Hover Documentation" })
 -- Restart all attached LSP servers
 map("n", "<leader>lr", "<cmd>LspRestart<CR>", { desc = "LSP: Restart servers" })
 
--- Close the current window/buffer with <leader>c
-map("n", "<leader>c", "<cmd>q<CR>", { desc = "Close window" })
 
 -- Epic Root dir Search
 map("n", "<leader>w", function()
