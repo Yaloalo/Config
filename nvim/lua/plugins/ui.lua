@@ -72,11 +72,6 @@ return {
     -- initial application
     apply_theme()
 
-    -- toggle with <leader>b
-    vim.keymap.set("n", "<leader>b", function()
-      transparent = not transparent
-      apply_theme()
-    end, { desc = "Toggle Alabaster Background Transparency" })
   end,
 },
 

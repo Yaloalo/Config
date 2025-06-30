@@ -11,12 +11,12 @@ vim.keymap.set("v", "<C-c>", "<Esc>")
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Horizontal split on <leader>s
-map("n", "<leader>c", "<cmd>split<CR>", {
+map("n", "<leader>n", "<cmd>split<CR>", {
   desc = "Horizontal split",
 })
 
 -- Vertical split on <leader>d
-map("n", "<leader>v", "<cmd>vsplit<CR>", {
+map("n", "<leader>m", "<cmd>vsplit<CR>", {
   desc = "Vertical split",
 })
 

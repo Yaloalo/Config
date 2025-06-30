@@ -1,4 +1,6 @@
-    # Layout: cat icon first, all info on first line, prompt symbol on second, with separators
+# ~/.config/starship.toml
+
+# ── Prompt Layout ──────────────────────────────────────────────────────────────
 format = """
 󰄛 \
 (#FFFFFF) $username\
@@ -12,35 +14,45 @@ $python\
 $line_break\
 $character"""
 
+# ── Custom Cat Icon ────────────────────────────────────────────────────────────
 [custom.cat]
 command = 'echo 󰄛'
 when    = true
 format  = '[$output]($style) '
 style   = "#FFFFFF"
 
-# ── Username (navy blue) ───────────────────────
+# ── Username (navy blue) ───────────────────────────────────────────────────────
 [username]
 style_user = "#3B4D63"
 
-# ── Hostname (slate blue) ──────────────────────
+# ── Hostname (slate blue) ──────────────────────────────────────────────────────
 [hostname]
 style = "#4F5E77"
 
-# ── Directory (steel blue) ─────────────────────
+# ── Directory (steel blue) ────────────────────────────────────────────────────
 [directory]
-style = "#5F728D"
+style               = "#5F728D"
+# 1) Replace your home path with nothing (no '~' either)
+home_symbol         = ""
+# 2) Strip out the literal '/home/youruser/' prefix
+substitutions       = { "/home/youruser/" = "" }
+# 3) Disable truncation so you always see the full subpath
+truncation_length   = 0
+# 4) Don’t force truncation at repo root
+truncate_to_repo    = false
+# (leave format/read_only/etc at their defaults)
 
-# ── Git Branch (desaturated sky blue) ──────────
+# ── Git Branch (desaturated sky blue) ─────────────────────────────────────────
 [git_branch]
 format = "[$branch]($style)"
 style  = "#6B88A6"
 
-# ── Git State (icy blue) ───────────────────────
+# ── Git State (icy blue) ──────────────────────────────────────────────────────
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
 style  = "#7A9BB7"
 
-# ── Git Status (near white-blue) ───────────────
+# ── Git Status (near white-blue) ──────────────────────────────────────────────
 [git_status]
 format     = " [$ahead_behind$stashed]($style)"
 style      = "#9EB7CC"
@@ -52,20 +64,21 @@ renamed    = ""
 deleted    = ""
 stashed    = "≡"
 
-# ── Python Virtualenv (powder blue) ────────────
+# ── Python Virtualenv (powder blue) ──────────────────────────────────────────
 [python]
 format = "[$virtualenv]($style) "
 style  = "#87AFCB"
 
-# ── Time (bright sky blue) ─────────────────────
+# ── Time (bright sky blue) ────────────────────────────────────────────────────
 [time]
 disabled     = false
 time_format  = "%Y-%m-%d %H:%M:%S"
 format       = "[$time]($style) "
-style        = "#73A8D5"
+style        = "#73C0D5"
 
-# ── Character Symbols ──────────────────────────
+# ── Character Symbols ─────────────────────────────────────────────────────────
 [character]
-success_symbol = "[❯](#5F728D)"  # matches directory color
-error_symbol   = "[❯](#E06C75)"  # red for errors
-vimcmd_symbol  = "[❮](#73C0D8)"  # cool turquoise-blue
+success_symbol = "[❯](#5F728D)"
+error_symbol   = "[❯](#E06C75)"
+vimcmd_symbol  = "[❮](#73C0D8)"
+

@@ -1,0 +1,7 @@
+[Unit]
+Description=Battery critical watcher (persistent alert at ≤10%)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/scripts/battery-watch-critical.sh
+

@@ -340,9 +340,9 @@ return {
         { "<leader>l", group = "  [L]SP" },
         { "<leader>o", group = "󰏆  [O]il" },
         { "<leader>n", group = "󰎞  [N]otes" },
-        { "<leader>p", group = "  [G]rug" },
+        { "<leader>g", group = "  [G]rug" },
         { "<leader>h", group = "  [H]arpoon" },
-
+        { "<leader>u", group = " [U]ndotree" },
         { "<leader>r", group = "󰍉  [R]ing" },
       },
     },

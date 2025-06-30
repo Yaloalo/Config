@@ -9,7 +9,7 @@ return {
 
 -- Search in current file with ripgrep (replace '/' key)
     {
-      "<leader>px",
+      "<leader>gs",
       function()
         require("grug-far").open_file_search({ select_word = true })
       end,
@@ -21,7 +21,7 @@ return {
 
     -- Replace in current file
     {
-      "<leader>pc",
+      "<leader>gc",
       function()
         require("grug-far").open({ prefills = { paths = vim.fn.expand("%:p") } })
       end,
@@ -29,7 +29,7 @@ return {
     },
     -- Project-wide search/replace in cwd
     {
-      "<leader>pw",
+      "<leader>gf",
       function()
         require("grug-far").open()
       end,
@@ -37,7 +37,7 @@ return {
     },
     -- Pick a directory via Telescope, then search there
     {
-      "<leader>pd",
+      "<leader>gd",
       function()
         local actions      = require("telescope.actions")
         local action_state = require("telescope.actions.state")

@@ -3,6 +3,7 @@ return {
   {
     "nvimdev/lspsaga.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    lazy = false,
     event = "LspAttach",
     config = function()
       local ok, saga = pcall(require, "lspsaga")
@@ -14,24 +15,24 @@ return {
       -- 1. Setup Saga with winbar symbols
       saga.setup({
         symbol_in_winbar = {
-          enable      = true,
-          separator   = "  ",
-          show_file   = true,
-          folder_level= 2,
+          enable = true,
+          separator = "  ",
+          show_file = true,
+          folder_level = 2,
         },
         lightbulb = { enable = false },
       })
 
       -- 2. Hide default statusline and mode text
       vim.o.laststatus = 0
-      vim.o.showmode   = false
+      vim.o.showmode = false
 
       -- 3. Mode-colored Winbar + Mode indicator
       vim.o.termguicolors = true
       local mode_colors = { n = "#569CD6", i = "#6A9955", v = "#C586C0" }
       local function update_winbar()
         -- mode letter
-        local m = vim.api.nvim_get_mode().mode:sub(1,1)
+        local m = vim.api.nvim_get_mode().mode:sub(1, 1)
         local color = mode_colors[m] or mode_colors.n
         vim.api.nvim_set_hl(0, "WinBar", { fg = color })
         -- get saga's symbol path
@@ -44,7 +45,7 @@ return {
       end
       local grp = vim.api.nvim_create_augroup("SagaWinbarMode", { clear = true })
       vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "ModeChanged" }, {
-        group    = grp,
+        group = grp,
         callback = update_winbar,
       })
 
