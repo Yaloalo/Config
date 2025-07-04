@@ -1,114 +1,127 @@
--- lua/plugins/treesitter.lua
+-- ~/.config/nvim/lua/plugins/treesitter.lua
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    version = false,
     build = ":TSUpdate",
     dependencies = {
-      {
-        "HiPhish/rainbow-delimiters.nvim",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-        config = function()
-          local api = vim.api
-
-          -- 1) Alternate White → G1 → B1 → R1 → G2 → B2 → R2 → G3 → B3 → R3
-          local greens = { "#7CFC00", "#00FF00", "#00CC00" } -- vibrant greens
-          local blues = { "#00BFFF", "#1E90FF", "#4169E1" } -- vibrant blues
-          local reds = { "#FF4500", "#FF0000", "#DC143C" } -- vibrant reds
-
-          local palette = { "#FFFFFF" } -- level 1: white
-          for i = 1, 3 do
-            table.insert(palette, greens[i])
-            table.insert(palette, blues[i])
-            table.insert(palette, reds[i])
-          end
-          -- now palette = { White, G1, B1, R1, G2, B2, R2, G3, B3, R3 }
-
-          -- 2) Register highlight groups
-          local groups = {}
-          for i, col in ipairs(palette) do
-            local name = "RainbowLevel" .. i
-            api.nvim_set_hl(0, name, { fg = col })
-            groups[#groups + 1] = name
-          end
-
-          -- 3) Hook into rainbow-delimiters.nvim
-          require("rainbow-delimiters.setup").setup({
-            strategy = { [""] = "rainbow-delimiters.strategy.global" },
-            query = { [""] = "rainbow-delimiters" },
-            highlight = groups,
-            max_file_lines = 2000,
-          })
-        end,
-      },
-
+      -- Treesitter extensions
       "nvim-treesitter/playground",
       "nvim-treesitter/nvim-treesitter-textobjects",
+      -- Replace p00f/nvim-ts-rainbow with HiPhish’s rainbow-delimiters.nvim
+      "HiPhish/rainbow-delimiters.nvim",
     },
-    opts = {
-      ensure_installed = {
-        "bash",
-        "c",
-        "lua",
-        "python",
-        "javascript",
-        "typescript",
-        "html",
-        "css",
-        "markdown",
-        "vim",
-        "query",
-        "latex",
-      },
-      sync_install = false,
-      auto_install = true,
-
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = true,
-      },
-      indent = {
-        enable = true,
-        disable = { "python" },
-      },
-
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "gnn",
-          node_incremental = "grn",
-          scope_incremental = "grc",
-          node_decremental = "grm",
+    config = function()
+      -- Treesitter core setup
+      require("nvim-treesitter.configs").setup {
+        -- Parsers to install
+        ensure_installed = {
+          "bash", "c", "lua", "python", "javascript",
+          "typescript", "html", "css", "markdown",
+          "vim", "query", "latex", "rust"
         },
-      },
+        sync_install = false,
+        auto_install = true,
 
-      textobjects = {
-        select = {
+        -- Core highlighting
+        highlight = {
           enable = true,
-          lookahead = true,
-          keymps = {
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = "@class.inner",
+          additional_vim_regex_highlighting = false,
+        },
+
+        -- Indentation
+        indent = {
+          enable = true,
+          disable = { "python" },
+        },
+
+        -- Incremental selection
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection    = "gnn",
+            node_incremental  = "grn",
+            scope_incremental = "grc",
+            node_decremental  = "grm",
           },
         },
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = { ["]m"] = "@function.outer", ["]]"] = "@class.outer" },
-          goto_previous_start = { ["[m"] = "@function.outer", ["[["] = "@class.outer" },
-        },
-      },
 
-      playground = {
-        enable = true,
-        updatetime = 25,
-        persist_queries = false,
-      },
-    },
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
+        -- Text objects
+        textobjects = {
+          select = {
+            enable    = true,
+            lookahead = true,
+            keymaps   = {
+              ["af"] = "@function.outer",
+              ["if"] = "@function.inner",
+              ["ac"] = "@class.outer",
+              ["ic"] = "@class.inner",
+            },
+          },
+          move = {
+            enable          = true,
+            set_jumps       = true,
+            goto_next_start = {
+              ["]m"] = "@function.outer",
+              ["]]"] = "@class.outer",
+            },
+            goto_previous_start = {
+              ["[m"] = "@function.outer",
+              ["[["] = "@class.outer",
+            },
+          },
+        },
+
+        -- Playground for Treesitter queries
+        playground = {
+          enable          = true,
+          updatetime      = 25,
+          persist_queries = false,
+        },
+
+        -- (Removed p00f/nvim-ts-rainbow settings)
+      }
+
+      -- === rainbow-delimiters.nvim setup ===
+
+      -- Define highlight groups with your custom hex colors
+      vim.cmd [[
+        highlight RainbowDelimiterWhite       guifg=#FFFFFF
+        highlight RainbowDelimiterLawnGreen   guifg=#7CFC00
+        highlight RainbowDelimiterDeepSkyBlue guifg=#00BFFF
+        highlight RainbowDelimiterOrangeRed   guifg=#FF4500
+        highlight RainbowDelimiterLime        guifg=#00FF00
+        highlight RainbowDelimiterDodgerBlue  guifg=#1E90FF
+        highlight RainbowDelimiterRed         guifg=#FF0000
+        highlight RainbowDelimiterGreen2      guifg=#00CC00
+        highlight RainbowDelimiterRoyalBlue   guifg=#4169E1
+        highlight RainbowDelimiterCrimson     guifg=#DC143C
+      ]]
+
+      -- Configure rainbow-delimiters.nvim
+      require("rainbow-delimiters.setup").setup {
+        -- use the global (buffer-wise) strategy for all filetypes
+        strategy = {
+          [""] = "rainbow-delimiters.strategy.global",
+        },
+        -- use the default "rainbow-delimiters" query for all filetypes
+        query = {
+          [""] = "rainbow-delimiters",
+        },
+        -- assign your custom highlight groups, in nesting order
+        highlight = {
+          "RainbowDelimiterWhite",
+          "RainbowDelimiterLawnGreen",
+          "RainbowDelimiterDeepSkyBlue",
+          "RainbowDelimiterOrangeRed",
+          "RainbowDelimiterLime",
+          "RainbowDelimiterDodgerBlue",
+          "RainbowDelimiterRed",
+          "RainbowDelimiterGreen2",
+          "RainbowDelimiterRoyalBlue",
+          "RainbowDelimiterCrimson",
+        },
+      }
     end,
   },
 }
+

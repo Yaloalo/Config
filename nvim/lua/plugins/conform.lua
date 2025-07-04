@@ -58,6 +58,12 @@ return {
         }
       end
 
+      local rustfmt_fmt = {
+        exe = "rustfmt",
+        args = { "--emit", "stdout" },
+        stdin = true,
+      }
+
       local function black_fmt(bufnr)
         local file = vim.api.nvim_buf_get_name(bufnr)
         local args = { "--quiet", "--fast", "--stdin-filename", file, "-" }
@@ -100,6 +106,7 @@ return {
           clang_format = clang_fmt,
           black = black_fmt,
           prettier = prettier_fmt,
+          rustfmt = rustfmt_fmt,
         },
 
         formatters_by_ft = {
@@ -110,6 +117,7 @@ return {
           sh = { "shfmt" },
           c = { "clang_format" },
           cpp = { "clang_format" },
+          rust = { "rustfmt" },
         },
       })
     end,

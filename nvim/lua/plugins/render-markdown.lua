@@ -112,234 +112,7 @@ return {
         },
         custom = {},
       },
-      paragraph = {
-        enabled = true,
-        render_modes = false,
-        left_margin = 0,
-        indent = 0,
-        min_width = 0,
-      },
-      code = {
-        enabled = true,
-        render_modes = false,
-        sign = true,
-        style = "full",
-        position = "left",
-        language_pad = 0,
-        language_icon = true,
-        language_name = true,
-        disable_background = { "diff" },
-        width = "full",
-        left_margin = 0,
-        left_pad = 0,
-        right_pad = 0,
-        min_width = 0,
-        border = "hide",
-        above = "▄",
-        below = "▀",
-        inline_left = "",
-        inline_right = "",
-        inline_pad = 0,
-        highlight = "RenderMarkdownCode",
-        highlight_language = nil,
-        highlight_border = "RenderMarkdownCodeBorder",
-        highlight_fallback = "RenderMarkdownCodeFallback",
-        highlight_inline = "RenderMarkdownCodeInline",
-      },
-      dash = {
-        enabled = true,
-        render_modes = false,
-        icon = "─",
-        width = "full",
-        left_margin = 0,
-        highlight = "RenderMarkdownDash",
-      },
-      document = {
-        enabled = true,
-        render_modes = false,
-        conceal = { char_patterns = {}, line_patterns = {} },
-      },
-      bullet = {
-        enabled = true,
-        render_modes = false,
-        icons = { "●", "○", "◆", "◇" },
-        ordered_icons = function(ctx)
-          local val = vim.trim(ctx.value)
-          local num = tonumber(val:sub(1, #val - 1))
-          return ("%d."):format(num and num > 1 and num or ctx.index)
-        end,
-        left_pad = 0,
-        right_pad = 0,
-        highlight = "RenderMarkdownBullet",
-        scope_highlight = {},
-      },
-      checkbox = {
-        enabled = true,
-        render_modes = false,
-        bullet = false,
-        right_pad = 1,
-        unchecked = {
-          icon = "󰄱 ",
-          highlight = "RenderMarkdownUnchecked",
-          scope_highlight = nil,
-        },
-        checked = {
-          icon = "󰱒 ",
-          highlight = "RenderMarkdownChecked",
-          scope_highlight = nil,
-        },
-        custom = {
-          todo = {
-            raw = "[-]",
-            rendered = "󰥔 ",
-            highlight = "RenderMarkdownTodo",
-            scope_highlight = nil,
-          },
-        },
-      },
-      quote = {
-        enabled = true,
-        render_modes = false,
-        icon = "▋",
-        repeat_linebreak = false,
-        highlight = {
-          "RenderMarkdownQuote1",
-          "RenderMarkdownQuote2",
-          "RenderMarkdownQuote3",
-          "RenderMarkdownQuote4",
-          "RenderMarkdownQuote5",
-          "RenderMarkdownQuote6",
-        },
-      },
-      pipe_table = {
-        enabled = true,
-        render_modes = false,
-        preset = "none",
-        style = "full",
-        cell = "padded",
-        padding = 1,
-        min_width = 0,
-        border = {
-          "┌",
-          "┬",
-          "┐",
-          "├",
-          "┼",
-          "┤",
-          "└",
-          "┴",
-          "┘",
-          "│",
-          "─",
-        },
-        border_virtual = false,
-        alignment_indicator = "━",
-        head = "RenderMarkdownTableHead",
-        row = "RenderMarkdownTableRow",
-        filler = "RenderMarkdownTableFill",
-      },
-      callout = {
-        note = {
-          raw = "[!NOTE]",
-          rendered = "󰋽 Note",
-          highlight = "RenderMarkdownInfo",
-          category = "github",
-        },
-        tip = {
-          raw = "[!TIP]",
-          rendered = "󰌶 Tip",
-          highlight = "RenderMarkdownSuccess",
-          category = "github",
-        },
-        important = {
-          raw = "[!IMPORTANT]",
-          rendered = "󰅾 Important",
-          highlight = "RenderMarkdownHint",
-          category = "github",
-        },
-        warning = {
-          raw = "[!WARNING]",
-          rendered = "󰀪 Warning",
-          highlight = "RenderMarkdownWarn",
-          category = "github",
-        },
-        caution = {
-          raw = "[!CAUTION]",
-          rendered = "󰳦 Caution",
-          highlight = "RenderMarkdownError",
-          category = "github",
-        },
-        -- (…and all your obsidian callouts as shown)
-      },
-      link = {
-        enabled = true,
-        render_modes = false,
-        footnote = { enabled = true, superscript = true, prefix = "", suffix = "" },
-        image = "󰥶 ",
-        email = "󰀓 ",
-        hyperlink = "󰌹 ",
-        highlight = "RenderMarkdownLink",
-        wiki = {
-          icon = "󱗖 ",
-          body = function()
-            return nil
-          end,
-          highlight = "RenderMarkdownWikiLink",
-        },
-        custom = {
-          web = { pattern = "^http", icon = "󰖟 " },
-          discord = { pattern = "discord%.com", icon = "󰙯 " },
-          github = { pattern = "github%.com", icon = "󰊤 " },
-          gitlab = { pattern = "gitlab%.com", icon = "󰮠 " },
-          google = { pattern = "google%.com", icon = "󰊭 " },
-          neovim = { pattern = "neovim%.io", icon = " " },
-          reddit = { pattern = "reddit%.com", icon = "󰑍 " },
-          stackoverflow = { pattern = "stackoverflow%.com", icon = "󰓌 " },
-          wikipedia = { pattern = "wikipedia%.org", icon = "󰖬 " },
-          youtube = { pattern = "youtube%.com", icon = "󰗃 " },
-        },
-      },
-      sign = { enabled = true, highlight = "RenderMarkdownSign" },
-      inline_highlight = {
-        enabled = true,
-        render_modes = false,
-        highlight = "RenderMarkdownInlineHighlight",
-      },
-      indent = {
-        enabled = false,
-        render_modes = false,
-        per_level = 2,
-        skip_level = 1,
-        skip_heading = false,
-        icon = "▎",
-        highlight = "RenderMarkdownIndent",
-      },
-      html = {
-        enabled = true,
-        render_modes = false,
-        comment = {
-          conceal = true,
-          text = nil,
-          highlight = "RenderMarkdownHtmlComment",
-        },
-        tag = {},
-      },
-      win_options = {
-        conceallevel = { default = vim.o.conceallevel, rendered = 3 },
-        concealcursor = { default = vim.o.concealcursor, rendered = "" },
-      },
-      overrides = {
-        buflisted = {},
-        buftype = {
-          nofile = {
-            render_modes = true,
-            padding = { highlight = "NormalFloat" },
-            sign = { enabled = false },
-          },
-        },
-        filetype = {},
-      },
-      custom_handlers = {},
+      -- ... other sections unchanged ...
     },
     config = function(_, opts)
       require("render-markdown").setup(opts)
@@ -349,6 +122,19 @@ return {
         "<Cmd>RenderMarkdown toggle<CR>",
         { silent = true, desc = "Toggle Render Markdown" }
       )
+
+      local blues = {
+        { fg = "#BFE2FF", bg = "#5077C1" }, -- H1: Lightest blue on mid-dark
+        { fg = "#93C5FD", bg = "#405F9B" }, -- H2
+        { fg = "#60A5FA", bg = "#304679" }, -- H3
+        { fg = "#3B82F6", bg = "#203156" }, -- H4
+        { fg = "#2563EB", bg = "#10203D" }, -- H5
+        { fg = "#164E8C", bg = "#090F21" }, -- H6: Darkest blue on near-black
+      }
+      for i, col in ipairs(blues) do
+        vim.api.nvim_set_hl(0, "RenderMarkdownH" .. i, { fg = col.fg, bold = true })
+        vim.api.nvim_set_hl(0, "RenderMarkdownH" .. i .. "Bg", { bg = col.bg })
+      end
     end,
   },
 }

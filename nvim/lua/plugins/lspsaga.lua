@@ -12,13 +12,10 @@ return {
         return
       end
 
-      -- 1. Setup Saga with winbar symbols
+      -- 1. Setup Saga WITHOUT its winbar autocmds, but leave symbol provider available
       saga.setup({
         symbol_in_winbar = {
-          enable = true,
-          separator = "  ",
-          show_file = true,
-          folder_level = 2,
+          enable = false, -- we’ll hook into its provider ourselves
         },
         lightbulb = { enable = false },
       })
@@ -26,30 +23,56 @@ return {
       -- 2. Hide default statusline and mode text
       vim.o.laststatus = 0
       vim.o.showmode = false
-
-      -- 3. Mode-colored Winbar + Mode indicator
       vim.o.termguicolors = true
+
+      -- 3. Highlight group for the big “U”
+      vim.api.nvim_set_hl(0, "WinBarModified", { fg = "#FF0000", bold = true })
+
+      -- 4. Our unified updater: draws U + mode color + Lspsaga symbol/file
       local mode_colors = { n = "#569CD6", i = "#6A9955", v = "#C586C0" }
+
       local function update_winbar()
-        -- mode letter
-        local m = vim.api.nvim_get_mode().mode:sub(1, 1)
-        local color = mode_colors[m] or mode_colors.n
-        vim.api.nvim_set_hl(0, "WinBar", { fg = color })
-        -- get saga's symbol path
+        local api = vim.api
+
+        -- a) Big “U” if modified (column 1)
+        local modified_flag = api.nvim_buf_get_option(0, "modified") and "%#WinBarModified#U%*"
+          or ""
+
+        -- b) Mode letter & color
+        local m = api.nvim_get_mode().mode:sub(1, 1):upper()
+        local color = mode_colors[m:lower()] or mode_colors.n
+        api.nvim_set_hl(0, "WinBar", { fg = color })
+
+        -- c) Lspsaga symbol path (falls back to filename)
         local bar = require("lspsaga.symbol.winbar").get_bar() or ""
         if bar == "" then
-          local buf = vim.api.nvim_buf_get_name(0)
-          bar = buf ~= "" and vim.fn.fnamemodify(buf, ":t") or "[No Name]"
+          local name = api.nvim_buf_get_name(0)
+          bar = name ~= "" and vim.fn.fnamemodify(name, ":t") or "[No Name]"
         end
-        vim.opt.winbar = string.format(" %s %s", m:upper(), bar)
+
+        -- d) Assemble: U, space, mode, space, symbol/file
+        vim.opt.winbar = string.format("%s %s %s", modified_flag, m, bar)
       end
-      local grp = vim.api.nvim_create_augroup("SagaWinbarMode", { clear = true })
-      vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "ModeChanged" }, {
+
+      -- 5. Autocmds: fire on everything that could change location or modified state
+      local evts = {
+        "BufEnter",
+        "WinEnter",
+        "CursorMoved",
+        "CursorMovedI",
+        "ModeChanged",
+        "TextChanged",
+        "TextChangedI",
+        "InsertLeave",
+        "BufWritePost",
+      }
+      local grp = vim.api.nvim_create_augroup("CustomSagaWinbar", { clear = true })
+      vim.api.nvim_create_autocmd(evts, {
         group = grp,
         callback = update_winbar,
       })
 
-      -- 4. Key mappings for Saga actions
+      -- 6. Lspsaga keymaps
       local map = vim.keymap.set
       local opts = { noremap = true, silent = true }
       map("n", "<leader>lD", "<cmd>Lspsaga hover_doc<CR>", opts)

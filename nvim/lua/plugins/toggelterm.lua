@@ -1,41 +1,19 @@
+-- ~/.config/nvim/lua/plugins/yazi.lua
 return {
-  "akinsho/toggleterm.nvim",
-  version = "*",
-  opts = {
-    -- we remove the default mapping so we can define our own below
-    start_in_insert = true,
-    direction       = "float",
-    float_opts      = {
-      border   = "rounded",
-      winblend = 0,
-    },
-    shade_terminals = false,
-    shell           = "zsh",
-    shellcmdflag    = "-i",
+  "mikavilpas/yazi.nvim",
+  event        = "VeryLazy",
+  dependencies = { "nvim-lua/plenary.nvim" },
+  keys = {
+    { "<leader>sr", mode = { "n","v" }, "<cmd>Yazi<cr>", desc = "Open yazi (file manager)" },
+    { "<leader>sw",             "<cmd>Yazi cwd<cr>", desc = "Open yazi in cwd"    },
   },
-  config = function(_, opts)
-    -- ensure <leader> is defined
-    vim.g.mapleader = " "
-    vim.g.maplocalleader = " "
-
-    local toggleterm = require("toggleterm")
-    toggleterm.setup(opts)
-
-
-    -- prepare a floating terminal for yazi
-    local Terminal = require("toggleterm.terminal").Terminal
-    local yazi_term = Terminal:new({
-      cmd        = "yazi",
-      dir        = vim.loop.cwd(),   -- initial cwd
-      hidden     = true,
-      direction  = "float",
-      float_opts = opts.float_opts,
-    })
-
-    -- toggle yazi, *updating* its dir each time to the current cwd
-    vim.keymap.set("n", "<leader>sr", function()
-      yazi_term.dir = vim.loop.cwd()
-      yazi_term:toggle()
-    end, { desc = "󰉓 Toggle yazi (file manager)" })
-  end,
+  opts = {
+    open_for_directories = false,
+    keymaps = { show_help = "<f1>" },
+    open_file_function = function(chosen_file)
+      -- this runs inside Neovim, so we can just edit the file here:
+      vim.cmd("edit " .. vim.fn.fnameescape(chosen_file))
+    end,
+  },
 }
+
