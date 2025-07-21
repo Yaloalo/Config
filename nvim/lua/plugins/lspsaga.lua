@@ -40,21 +40,22 @@ return {
     event = "VimEnter",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      vim.o.showtabline    = 2
-      vim.o.laststatus     = 3
-      vim.o.termguicolors  = true
-      vim.o.winbar = ""
+      -- Hide top tabline, show bottom statusline
+      vim.o.showtabline = 0 -- never show top
+      vim.o.laststatus = 2 -- show bottom when at least one window
 
-      -- your custom palette
+      vim.o.termguicolors = true
+      vim.o.winbar = "" -- make sure winbar is empty
+
       local colors = {
-        blue   = "#80a0ff",  -- normal
-        green  = "#a3be8c",  -- insert
-        violet = "#d183e8",  -- visual
-        black  = "#1a1b26",
-        white  = "#c6c6c6",
-        grey   = "#303030",
-        red    = "#ff5189",  -- replace
-        cyan   = "#79dac8",  -- visual/other
+        blue = "#80a0ff",
+        green = "#a3be8c",
+        violet = "#d183e8",
+        black = "#1a1b26",
+        white = "#c6c6c6",
+        grey = "#303030",
+        red = "#ff5189",
+        cyan = "#79dac8",
       }
 
       local bubbles_theme = {
@@ -81,17 +82,34 @@ return {
 
       require("lualine").setup({
         options = {
-          theme                = bubbles_theme,
+          theme = bubbles_theme,
           component_separators = "",
-          section_separators   = "",
-          globalstatus         = true,
+          section_separators = "",
+          globalstatus = true,
         },
-        tabline = {
-          lualine_c = {
+
+        -- Bottom statusline sections
+        sections = {
+          lualine_a = { "mode" }, -- current mode
+          lualine_b = {
             {
+              -- show a dot only if the buffer is modified
+              function()
+                return vim.bo.modified and "●" or ""
+              end,
+              color = { fg = colors.red },
+              cond = function()
+                return vim.bo.modified
+              end,
+            },
+          },
+          lualine_c = {
+            { -- breadcrumbs from lspsaga
               function()
                 local ok, winbar_mod = pcall(require, "lspsaga.symbol.winbar")
-                if not ok then return "" end
+                if not ok then
+                  return ""
+                end
                 return winbar_mod.get_bar() or ""
               end,
               cond = function()
@@ -100,32 +118,23 @@ return {
               end,
             },
           },
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = {},
         },
-        sections = {
-          lualine_a = { "mode" },
-          lualine_b = {
-            {
-              "filename",
-              path    = 1,
-              symbols = { modified = "[+]" },
-            }
-          },
+
+        -- No inactive sections
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
           lualine_c = {},
           lualine_x = {},
           lualine_y = {},
           lualine_z = {},
         },
-        inactive_sections = {
-          lualine_a = { "filename" },
-          lualine_b = {},
-          lualine_c = {},
-          lualine_x = {},
-          lualine_y = {},
-          lualine_z = { "location" },
-        },
+
         extensions = {},
       })
     end,
   },
-
 }
