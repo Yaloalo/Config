@@ -1,84 +1,31 @@
 local wezterm = require("wezterm")
-local act = wezterm.action
-local config = wezterm.config_builder()
+local act     = wezterm.action
+local config  = wezterm.config_builder()
 
--- ── Static transparent background; Hyprland will handle blur ─────────────────
-config.window_background_opacity = 0.0
+-- ── Static opaque background by default; Hyprland will handle blur when toggled ─────────────────
+config.window_background_opacity = 1.0
 config.kde_window_background_blur = false
 
--- Roman numeral helper (unchanged)
-local roman_map = {
-  { 1000, "M" },
-  { 900, "CM" },
-  { 500, "D" },
-  { 400, "CD" },
-  { 100, "C" },
-  { 90, "XC" },
-  { 50, "L" },
-  { 40, "XL" },
-  { 10, "X" },
-  { 9, "IX" },
-  { 5, "V" },
-  { 4, "IV" },
-  { 1, "I" },
-}
-local function to_roman(n)
-  local res = ""
-  for _, p in ipairs(roman_map) do
-    while n >= p[1] do
-      res = res .. p[2]
-      n = n - p[1]
-    end
-  end
-  return res
-end
-
--- Tabs: simple circles + Roman numerals
-config.use_fancy_tab_bar = false
+-- ── Tabs: show current running process (basename only) in each pane ───────────────────────────────
+config.use_fancy_tab_bar            = false
 config.hide_tab_bar_if_only_one_tab = false
+
 wezterm.on("format-tab-title", function(tab, _, _, _, _, max_width)
-  local sym = tab.is_active and "◉" or "○"
-  local title = sym .. to_roman(tab.tab_index + 1)
-  return { { Text = " " .. wezterm.truncate_right(title, max_width) .. " " } }
+  -- Get full process path (e.g. "/usr/bin/nvim")
+  local full = tab.active_pane.foreground_process_name or "?"
+  -- Extract basename ("nvim")
+  local proc = full:match("([^/]+)$") or full
+  -- Truncate so it never exceeds the tab width
+  local title = wezterm.truncate_right(proc, max_width)
+  return { { Text = " " .. title .. " " } }
 end)
 
--- Ensure the tab bar itself is transparent too, but with deep purple accents
-
-config.colors = {
-  foreground = "#ffffff",
-  background = "#000000",
-
-  tab_bar = {
-    background = "#000000",
-    active_tab = {
-      bg_color = "#000000",
-      fg_color = "#6B88A6",
-    },
-    inactive_tab = {
-      bg_color = "#000000",
-      fg_color = "#ffffff",
-    },
-    inactive_tab_hover = {
-      bg_color = "#000000",
-      fg_color = "#ffffff",
-    },
-    new_tab = {
-      bg_color = "#000000",
-      fg_color = "#ffffff",
-    },
-    new_tab_hover = {
-      bg_color = "#000000",
-      fg_color = "#ffffff",
-    },
-  },
-}
-
--- Scrollback → editor (unchanged)
+-- ── Scrollback → editor ─────────────────────────────────────────────────────────────────────────
 wezterm.on("edit-scrollback", function(window, pane)
   local rows = pane:get_dimensions().scrollback_rows
   local text = pane:get_lines_as_text(rows)
-  local tmp = os.tmpname()
-  local f = io.open(tmp, "w+")
+  local tmp  = os.tmpname()
+  local f    = io.open(tmp, "w+")
   f:write(text)
   f:close()
   window:perform_action(
@@ -89,58 +36,63 @@ wezterm.on("edit-scrollback", function(window, pane)
   os.remove(tmp)
 end)
 
--- Appearance & shell
-config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size = 15.0
+-- ── Appearance & shell ─────────────────────────────────────────────────────────────────────────
+config.font         = wezterm.font("JetBrainsMono Nerd Font")
+config.font_size    = 15.0
 config.color_scheme = "tokyonight_night"
-config.window_padding = { left = "0pt", right = "0pt", top = "0pt", bottom = "0pt" }
+config.window_padding = {
+  left   = "0pt",
+  right  = "0pt",
+  top    = "0pt",
+  bottom = "0pt",
+}
 config.default_prog = { "/usr/bin/zsh", "-l" }
 
--- Toggle full transparency ↔ opaque + TokyoNight
+-- ── Toggle opaque ↔ transparent + retain TokyoNight scheme on opaque ─────────────────────────────
 local toggle_transparency = wezterm.action_callback(function(window, _)
   local ovr = window:get_config_overrides() or {}
-  local cur_opacity = ovr.window_background_opacity or config.window_background_opacity
-  if cur_opacity < 0.1 then
-    ovr.window_background_opacity = 1.0
-    ovr.color_scheme = "tokyonight_night"
-  else
+  local cur = ovr.window_background_opacity or config.window_background_opacity
+  if cur > 0.9 then
     ovr.window_background_opacity = 0.0
+  else
+    ovr.window_background_opacity = 1.0
+    ovr.color_scheme            = "tokyonight_night"
   end
   window:set_config_overrides(ovr)
 end)
 
--- Keybindings
+-- ── Keybindings ─────────────────────────────────────────────────────────────────────────────────
 config.disable_default_key_bindings = true
 config.keys = {
-
-  -- Clear
-
   -- scrollback
   { key = "R", mods = "CTRL|SHIFT", action = act.EmitEvent("edit-scrollback") },
+
   -- tabs
-  { key = "T", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
+  { key = "T",          mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
   { key = "RightArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(1) },
-  { key = "LeftArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+  { key = "LeftArrow",  mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+  { key = "RightArrow", mods = "CTRL",       action = act.MoveTabRelative(1) },
+  { key = "LeftArrow",  mods = "CTRL",       action = act.MoveTabRelative(-1) },
+
   -- splits & pane movement
-  { key = "N", mods = "CTRL|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-  {
-    key = "M",
-    mods = "CTRL|SHIFT",
-    action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
-  },
+  { key = "N", mods = "CTRL|SHIFT", action = act.SplitVertical({   domain = "CurrentPaneDomain" }) },
+  { key = "M", mods = "CTRL|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   { key = "H", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Left") },
   { key = "L", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Right") },
   { key = "K", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Up") },
   { key = "J", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Down") },
-  { key = "H", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Left", 1 }) },
+  { key = "H", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Left",  1 }) },
   { key = "L", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 1 }) },
-  { key = "K", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Up", 1 }) },
-  { key = "J", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Down", 1 }) },
+  { key = "K", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Up",    1 }) },
+  { key = "J", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Down",  1 }) },
+
   -- copy/paste
   { key = "C", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
   { key = "V", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
+
   -- toggle transparency
   { key = "B", mods = "CTRL|SHIFT", action = toggle_transparency },
 }
 
 return config
+

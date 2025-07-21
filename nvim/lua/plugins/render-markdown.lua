@@ -135,6 +135,20 @@ return {
         vim.api.nvim_set_hl(0, "RenderMarkdownH" .. i, { fg = col.fg, bold = true })
         vim.api.nvim_set_hl(0, "RenderMarkdownH" .. i .. "Bg", { bg = col.bg })
       end
+
+      -- 🟧 Custom quote colors: orange shades per quote level
+      local oranges = {
+        "#FFA500", -- level 1: orange
+        "#FF8C00", -- level 2: darkorange
+        "#FF7F50", -- level 3: coral
+        "#FF6347", -- level 4: tomato
+        "#FF4500", -- level 5: orangered
+        "#FF3300", -- level 6: deep red-orange
+      }
+
+      for i, color in ipairs(oranges) do
+        vim.api.nvim_set_hl(0, "RenderMarkdownQuote" .. i, { fg = color, italic = true })
+      end
     end,
   },
 }

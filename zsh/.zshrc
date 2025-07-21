@@ -55,6 +55,7 @@ alias s='tree | ripgrep'
 alias n='nvim'
 alias f='clear'
 alias m='mpv --hwdec=vaapi --vo=gpu --gpu-context=wayland'
+
 # ─── 5. PATH & broot hook ─────────────────────────────────────────────────────────
 export PATH="$HOME/.cargo/bin:$PATH"
 if [[ -s "$HOME/.config/broot/launcher/bash/br" ]]; then
@@ -79,7 +80,16 @@ bindkey -e
 autoload -Uz compinit
 compinit
 
-
+# ─── FZF-based History Search Widget ─────────────────────────────────────────────
+fzf-history-widget() {
+  # liste alle History-Einträge (älteste zuletzt)
+  local selected
+  selected=$(fc -l 1 | awk '{$1=""; print substr($0,2)}' | fzf +s --tac) || return
+  LBUFFER=$selected       # in den Eingabe-Puffer übernehmen
+  zle redisplay
+}
+zle -N fzf-history-widget
+bindkey '^R' fzf-history-widget
 
 # tell Starship exactly where your config lives
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
@@ -92,3 +102,6 @@ if command -v starship >/dev/null 2>&1; then
 fi
 
 # ─── End of file ─────────────────────────────────────────────────────────────────
+
+
+source /home/yaloalo/.config/broot/launcher/bash/br

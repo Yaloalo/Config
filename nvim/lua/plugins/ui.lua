@@ -2,78 +2,51 @@
 vim.o.termguicolors = true
 
 -- ──────────────────────────────────────────────────────────────────────────────
--- Winbar + Mode Indicator (top of window), entire line colored per mode
--- ──────────────────────────────────────────────────────────────────────────────
---[[
-local mode_colors = {
-  n = "#569CD6", -- Normal = blue
-  i = "#6A9955", -- Insert = green
-  v = "#C586C0", -- Visual = purple
-}
-
-local function update_winbar()
-  local m = vim.api.nvim_get_mode().mode:sub(1, 1)
-  local color = mode_colors[m] or mode_colors.n
-  vim.api.nvim_set_hl(0, "WinBar", { fg = color })
-  local bar = require("lspsaga.symbol.winbar").get_bar() or ""
-  if bar == "" then
-    local bufname = vim.api.nvim_buf_get_name(0)
-    local fname = bufname ~= "" and vim.fn.fnamemodify(bufname, ":t") or "[No Name]"
-    bar = fname
-  end
-
-  vim.opt.winbar = string.format(" %s %s", m:upper(), bar)
-end
-
-local grp = vim.api.nvim_create_augroup("SagaWinbarMode", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "ModeChanged" }, {
-  group = grp,
-  callback = update_winbar,
-})
-]]
--- ──────────────────────────────────────────────────────────────────────────────
 -- Plugins and UI Appearance
 -- ──────────────────────────────────────────────────────────────────────────────
 
 return {
-{
-  "p00f/alabaster.nvim",
-  priority = 1000,
-  lazy = false,
-  config = function()
-    -- ensure truecolor
-    vim.o.termguicolors = true
-    vim.g.alabaster_dim_comments = false
-    vim.g.alabaster_floatborder  = false
 
-    -- your chosen grey
-    local grey = "#101010"
-    local transparent = false
+  {
+    "p00f/alabaster.nvim",
+    priority = 1000,
+    lazy = false,
+    config = function()
+      -- enable truecolor
+      vim.o.termguicolors = true
+      vim.g.alabaster_dim_comments = false
+      vim.g.alabaster_floatborder = false
 
-    local function apply_theme()
-      -- load Alabaster colorscheme
-      vim.cmd("colorscheme alabaster")
+      -- your custom palette
+      local colors = {
+        bg = "#1a1b26",
+        comment = "#565f89",
+        constant = "#ff9e64",
+        string = "#bb9af7",
+        global = "#2ac3de",
+      }
 
-      if transparent then
-        -- full transparency
-        vim.cmd([[
-          highlight Normal      guibg=NONE
-          highlight NormalFloat guibg=NONE
-          highlight FloatBorder guibg=NONE
-        ]])
-      else
-        -- dark grey background
-        vim.cmd(string.format("highlight Normal      guibg=%s", grey))
-        vim.cmd(string.format("highlight NormalFloat guibg=%s", grey))
-        vim.cmd(string.format("highlight FloatBorder guibg=%s", grey))
+      local function apply_theme()
+        -- 1) load the base Alabaster theme
+        vim.cmd("colorscheme alabaster")
+
+        -- 2) override the background for Normal windows & floats
+        vim.api.nvim_set_hl(0, "Normal", { bg = colors.bg })
+        vim.api.nvim_set_hl(0, "NormalFloat", { bg = colors.bg })
+        vim.api.nvim_set_hl(0, "FloatBorder", { bg = colors.bg })
+
+        -- 3) remap syntax groups to your custom palette
+        vim.api.nvim_set_hl(0, "Comment", { fg = colors.comment, bg = colors.bg })
+        vim.api.nvim_set_hl(0, "Constant", { fg = colors.constant, bg = colors.bg })
+        vim.api.nvim_set_hl(0, "String", { fg = colors.string, bg = colors.bg })
+        -- “global” variables in code often use the Identifier group
+        vim.api.nvim_set_hl(0, "Identifier", { fg = colors.global, bg = colors.bg })
       end
-    end
 
-    -- initial application
-    apply_theme()
-
-  end,
-},
+      -- apply immediately
+      apply_theme()
+    end,
+  },
 
   {
     "folke/noice.nvim",
@@ -110,7 +83,6 @@ return {
           },
         },
       })
-
 
       vim.api.nvim_set_hl(0, "NoiceWhiteBorder", { fg = "#ffffff", bg = "none" })
     end,

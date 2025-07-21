@@ -12,9 +12,6 @@ return {
       { "<leader>uf", "<cmd>UndotreeFocus<CR>", desc = "Focus UndoTree" },
     },
     config = function()
-      -- persistent undo
-      vim.opt.undofile = true
-      vim.opt.undodir = vim.fn.stdpath("data") .. "/undo//"
 
       -- Undotree UI settings
       vim.g.undotree_WindowLayout = 2 -- side-by-side

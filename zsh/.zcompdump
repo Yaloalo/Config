@@ -1,4 +1,4 @@
-#files: 841	version: 5.9
+#files: 846	version: 5.9
 
 _comps=(
 '-' '_precommand'
@@ -160,6 +160,7 @@ _comps=(
 'basename' '_basename'
 'basenc' '_basenc'
 'bash' '_bash'
+'bat' '_bat'
 'batch' '_at'
 'baz' '_baz'
 'beep' '_beep'
@@ -395,6 +396,7 @@ _comps=(
 'extcheck' '_java'
 'extract' '_extract'
 'extractres' '_psutils'
+'eza' '_eza'
 'fakeroot' '_fakeroot'
 'false' '_nothing'
 'fc' '_fc'
@@ -424,6 +426,7 @@ _comps=(
 'fixwpps' '_psutils'
 'fixwwps' '_psutils'
 'flac' '_flac'
+'flatpak' '_flatpak'
 'flex' '_flex'
 'flex++' '_flex'
 'flipdiff' '_patchutils'
@@ -1153,6 +1156,7 @@ _comps=(
 'run0' '_run0'
 'rup' '_hosts'
 'rusage' '_precommand'
+'rustup' '_rustup'
 'rview' '_vim'
 'rvim' '_vim'
 'rwho' '_hosts'
@@ -1409,6 +1413,7 @@ _comps=(
 'useradd' '_user_admin'
 'userdel' '_users'
 'usermod' '_user_admin'
+'uv' '_uv'
 'vacuumdb' '_postgresql'
 'val' '_sccs'
 'valgrind' '_valgrind'
@@ -1691,20 +1696,21 @@ bindkey '^[,' _history-complete-newer
 bindkey '^[/' _history-complete-older
 bindkey '^[~' _bash_complete-word
 
-autoload -Uz _extract _bluetoothctl _bootctl _busctl _bwrap \
-            _cargo _coredumpctl _ctr _curl _docker \
-            _fd _ghostty _glow _hostnamectl _hyprctl \
-            _hyprpm _img2sixel _insmod _journalctl _kernel-install \
-            _keyring _kitty _libinput _localectl _loginctl \
-            _lsmod _machinectl _mako _makoctl _meson \
-            _mkinitcpio _mpv _networkctl _ninja _oomctl \
-            _pacman _paru _pip _playerctl _pulseaudio \
-            _resolvectl _rg _rmmod _run0 _sd_hosts_or_user_at_host \
-            _sd_machines _sd_outputmodes _sd_unit_files _sensors _sensors-detect \
-            _starship _sway _swayidle _swaylock _swaymsg \
-            _swww _systemctl _systemd _systemd-analyze _systemd-delta \
-            _systemd-inhibit _systemd-nspawn _systemd-path _systemd-run _systemd-tmpfiles \
-            _timedatectl _udevadm _udisks2 _upower _varlinkctl \
+autoload -Uz _extract _bat _bluetoothctl _bootctl _busctl \
+            _bwrap _cargo _coredumpctl _ctr _curl \
+            _docker _eza _fd _flatpak _ghostty \
+            _glow _hostnamectl _hyprctl _hyprpm _img2sixel \
+            _insmod _journalctl _kernel-install _keyring _kitty \
+            _libinput _localectl _loginctl _lsmod _machinectl \
+            _mako _makoctl _meson _mkinitcpio _mpv \
+            _networkctl _ninja _oomctl _pacman _paru \
+            _pip _playerctl _pulseaudio _resolvectl _rg \
+            _rmmod _run0 _rustup _sd_hosts_or_user_at_host _sd_machines \
+            _sd_outputmodes _sd_unit_files _sensors _sensors-detect _starship \
+            _sway _swayidle _swaylock _swaymsg _swww \
+            _systemctl _systemd _systemd-analyze _systemd-delta _systemd-inhibit \
+            _systemd-nspawn _systemd-path _systemd-run _systemd-tmpfiles _timedatectl \
+            _udevadm _udisks2 _upower _uv _varlinkctl \
             _wezterm _wl-copy _wl-paste _wpctl _yay \
             _yazi _zoxide _cdr _all_labels _all_matches \
             _alternative _approximate _arg_compile _arguments _bash_completions \

@@ -4,7 +4,6 @@ return {
   require("plugins.oil"), --Buffer editor
   require("plugins.lspsaga"), -- LSp Stuff
   require("plugins.lspconfig"), -- Mote Slp suff
-  require("plugins.trouble"), -- MOre LSP Erros
   require("plugins.conform"), -- Autoformat
   require("plugins.mason"), -- LSP
   require("plugins.indent_line"), --Line indetation

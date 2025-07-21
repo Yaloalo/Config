@@ -1,0 +1,38 @@
+  {
+    "p00f/alabaster.nvim",
+    priority = 1000,
+    lazy = false,
+    config = function()
+      -- ensure truecolor
+      vim.o.termguicolors = true
+      vim.g.alabaster_dim_comments = false
+      vim.g.alabaster_floatborder = false
+
+      -- your chosen grey
+      local grey = "#101010"
+      local transparent = false
+
+      local function apply_theme()
+        -- load Alabaster colorscheme
+        vim.cmd("colorscheme alabaster")
+
+        if transparent then
+          -- full transparency
+          vim.cmd([[
+          highlight Normal      guibg=NONE
+          highlight NormalFloat guibg=NONE
+          highlight FloatBorder guibg=NONE
+        ]])
+        else
+          -- dark grey background
+          vim.cmd(string.format("highlight Normal      guibg=%s", grey))
+          vim.cmd(string.format("highlight NormalFloat guibg=%s", grey))
+          vim.cmd(string.format("highlight FloatBorder guibg=%s", grey))
+        end
+      end
+
+      -- initial application
+      apply_theme()
+    end,
+  },
+
