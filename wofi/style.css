@@ -1,9 +1,9 @@
-@define-color base         #000000;
-@define-color base-rgb     rgb(0, 0, 0);
-@define-color mantle       #000000;
-@define-color mantle-rgb   rgb(0, 0, 0);
-@define-color crust        #000000;
-@define-color crust-rgb    rgb(0, 0, 0);
+@define-color base         #1a1b26;
+@define-color base-rgb     rgb(26, 27, 38);
+@define-color mantle       #1a1b26;
+@define-color mantle-rgb   rgb(26, 27, 38);
+@define-color crust        #1a1b26;
+@define-color crust-rgb    rgb(26, 27, 38);
 
 @define-color text         #ffffff;
 @define-color text-rgb     rgb(255, 255, 255);
@@ -21,6 +21,7 @@
 @define-color lavender       #ffffff;
 @define-color lavender-rgb   rgb(255, 255, 255);
 
+/* keep these “warning/accents” as they were */
 @define-color rosewater      #ffffff;
 @define-color rosewater-rgb  rgb(255, 255, 255);
 @define-color flamingo       #ffffff;
@@ -48,6 +49,10 @@
 @define-color blue           #ffffff;
 @define-color blue-rgb       rgb(255, 255, 255);
 
+/* new border colour */
+@define-color border         #80a0ff;
+@define-color border-rgb     rgb(128, 160, 255);
+
 * {
   font-family: 'CaskaydiaCove Nerd Font', monospace;
   font-size: 18px;
@@ -57,9 +62,9 @@
 window {
   margin: 0px;
   padding: 10px;
-  border: 2px solid @lavender;
+  border: 2px solid @border;   /* changed */
   border-radius: 8px;
-  background-color: @base;
+  background-color: @base;     /* now #1a1b26 */
 }
 
 /* Inner Box */
@@ -123,7 +128,7 @@ window {
 
 /* Selected Entry */
 #entry:selected {
-  border: 0.11em solid @lavender;
+  border: 0.11em solid @border; /* use new border colour here too */
 }
 
 #entry:selected #text {
@@ -133,3 +138,4 @@ window {
 #entry:drop(active) {
   background-color: @lavender!important;
 }
+

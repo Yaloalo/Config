@@ -41,20 +41,15 @@ colors() {
 }
 
 # ─── 4. Aliases ─────────────────────────────────────────────────────────────────
-alias ls='ls --color=auto'
-alias la='ls -a'
-alias h='cd'
+alias l='eza'
 alias y='yazi'
-alias b='bluetui'
-alias grep='grep --colour=auto'
-alias egrep='egrep --colour=auto'
-alias fgrep='fgrep --colour=auto'
 alias c='wl-copy'
 alias notes='nvim ~/documents/Main'
-alias s='tree | ripgrep'
 alias n='nvim'
 alias f='clear'
 alias m='mpv --hwdec=vaapi --vo=gpu --gpu-context=wayland'
+
+
 
 # ─── 5. PATH & broot hook ─────────────────────────────────────────────────────────
 export PATH="$HOME/.cargo/bin:$PATH"

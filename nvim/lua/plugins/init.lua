@@ -14,4 +14,5 @@ return {
   require("plugins.ui"), --looks nice
   require("plugins.harpoon"), --jumps
   require("plugins.lush"),
+  require("plugins.rainbow_brackets"),
 }

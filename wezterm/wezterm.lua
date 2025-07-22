@@ -73,6 +73,7 @@ config.keys = {
   { key = "LeftArrow",  mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
   { key = "RightArrow", mods = "CTRL",       action = act.MoveTabRelative(1) },
   { key = "LeftArrow",  mods = "CTRL",       action = act.MoveTabRelative(-1) },
+  { key = "F", mods = "CTRL|SHIFT", action = act.CloseCurrentTab({ confirm = false }) },
 
   -- splits & pane movement
   { key = "N", mods = "CTRL|SHIFT", action = act.SplitVertical({   domain = "CurrentPaneDomain" }) },

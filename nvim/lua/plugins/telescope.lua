@@ -34,7 +34,7 @@ return {
         else
           vim.notify(".gitignore → now ignored", vim.log.levels.INFO)
         end
-      end
+   end
       vim.keymap.set(
         "n",
         "<C-i>",
@@ -277,7 +277,7 @@ return {
       end, { desc = "  Search Neovim Config" })
 
       -- <leader>ns → search notes (include folders)
-      vim.keymap.set("n", "<leader>ns", function()
+      vim.keymap.set("n", "<leader>bs", function()
         local base_cmd = { "fd", "--type", "f", "--type", "d", "--hidden", "--follow" }
         if not respect_gitignore then
           table.insert(base_cmd, "--no-ignore")
@@ -339,7 +339,7 @@ return {
         { "<leader>d", group = "  [D]ebug" },
         { "<leader>l", group = "  [L]SP" },
         { "<leader>o", group = "󰏆  [O]il" },
-        { "<leader>n", group = "󰎞  [N]otes" },
+        { "<leader>b", group = "󰎞  [B]ullshit" },
         { "<leader>g", group = "  [G]rug" },
         { "<leader>h", group = "  [H]arpoon" },
         { "<leader>u", group = " [U]ndotree" },
