@@ -5,7 +5,6 @@ return {
   dependencies = { "nvim-lua/plenary.nvim" },
   keys = {
     { "<leader>sr", mode = { "n","v" }, "<cmd>Yazi<cr>", desc = "Open yazi (file manager)" },
-    { "<leader>sw",             "<cmd>Yazi cwd<cr>", desc = "Open yazi in cwd"    },
   },
   opts = {
     open_for_directories = false,

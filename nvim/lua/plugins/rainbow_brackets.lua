@@ -4,6 +4,7 @@ return {
   dependencies = { "nvim-treesitter/nvim-treesitter" },
   lazy = false,
   priority = 1000,
+
   config = function()
     ---------------------------------------------------------------------------
     -- 1) Highlight groups
@@ -24,7 +25,11 @@ return {
 
     vim.api.nvim_create_autocmd(
       { "ColorScheme", "User", "LspAttach" },
-      { pattern = { "*", "LazyColorScheme" }, callback = set_groups }
+      {
+        pattern = { "*", "LazyColorScheme" },
+        callback = set_groups,
+        desc = "Re-apply rainbow delimiter highlight groups",
+      }
     )
     set_groups()
 
@@ -43,39 +48,6 @@ return {
         "RainbowDelimiterRoyalBlue", "RainbowDelimiterCrimson",
       },
     }
-
-    ---------------------------------------------------------------------------
-    -- 3) SUPER HACK: always (re)enable TS highlight + rainbow, no checks
-    ---------------------------------------------------------------------------
-    local function slam(buf)
-      buf = buf or vim.api.nvim_get_current_buf()
-      -- Re-start TS highlight unconditionally
-      -- NVIM ≥0.10
-      pcall(vim.treesitter.start, buf)
-      -- Fallback for older NVIM (safe even on 0.10):
-      pcall(vim.cmd, "silent! TSBufEnable highlight")
-      -- Re-enable rainbow
-      pcall(function() require("rainbow-delimiters").enable(buf) end)
-    end
-
-    local grp = vim.api.nvim_create_augroup("ForceRainbowAlways", { clear = true })
-    vim.api.nvim_create_autocmd(
-      { "BufEnter", "BufWinEnter", "CursorMoved", "CursorMovedI", "WinScrolled",
-        "TextChanged", "TextChangedI", "LspAttach", "User" },
-      {
-        group = grp,
-        pattern = { "*", "TSBufEnter", "TSBufDetach", "LazyColorScheme" },
-        callback = function(a) slam(a.buf) end,
-      }
-    )
-
-    -- Optional watchdog every 300ms (comment out if you hate timers)
-    local timer = vim.loop.new_timer()
-    timer:start(300, 300, vim.schedule_wrap(function()
-      if vim.api.nvim_get_mode().mode ~= "c" then
-        slam()
-      end
-    end))
   end,
 }
 

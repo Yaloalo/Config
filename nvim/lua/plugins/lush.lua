@@ -18,11 +18,13 @@ return {
         bg        = hsl("#1a1b26"), -- Storm background
         bg_alt    = hsl("#1f2335"), -- darker Storm for CursorLine
         fg        = hsl("#ffffff"), -- default text = white
-        constant  = hsl("#FF8700"), -- saturated orange
-        string    = hsl("#73daca"), -- your turquoise
-        global    = hsl("#ffffff"), -- deep purple for globals
-        comment   = hsl("#565f89"), -- your light blue
-        linenr    = hsl("#565f89"), -- gutter numbers same as comments
+        constant  = hsl("#FF8700"), -- orange for constants
+        string    = hsl("#73daca"), -- turquoise for strings
+        func      = hsl("#4160fa"), -- new green for functions
+        global    = hsl("#ffffff"), -- globals (other than functions)
+        comment   = hsl("#565f89"), -- comments and gutter
+        linenr    = hsl("#565f89"), -- line numbers
+        type      = hsl("#a80f96"), -- purple for types
       }
 
       -- 4) Build the Lush spec
@@ -37,27 +39,27 @@ return {
           CursorLineNr  { fg = colors.constant, bg = colors.bg_alt   },
           VertSplit     { fg = colors.fg,      bg = colors.bg        },
 
-          -- Alabaster‑style minimal classes
-          Constant      { fg = colors.constant, bg = "NONE"          },
-          String        { fg = colors.string,   bg = "NONE"          },
+          -- Core syntax
+          Constant      { fg = colors.constant, bg = "NONE"         },
+          String        { fg = colors.string,   bg = "NONE"         },
           Comment       { fg = colors.comment,  bg = colors.bg, gui = "italic" },
-          Function      { fg = colors.global,   bg = "NONE"          },  -- globals only
+          Function      { fg = colors.func,     bg = "NONE"         },
+          Type          { fg = colors.type,     bg = "NONE"         },
 
-          -- Force everything else white on bg
+          -- Other syntax
           Keyword       { fg = colors.fg },
           Statement     { fg = colors.fg },
           PreProc       { fg = colors.fg },
-          Type          { fg = colors.fg },
           Special       { fg = colors.fg },
           Identifier    { fg = colors.fg },
           Underlined    { fg = colors.fg },
-          Todo          { fg = colors.fg,    bg = colors.bg        },
+          Todo          { fg = colors.fg,      bg = colors.bg       },
 
-          -- Diagnostics (optional extras)
+          -- Diagnostics
           Error         { fg = colors.constant, bg = colors.bg, gui = "bold" },
-          Warning       { fg = colors.global,   bg = colors.bg         },
-          Info          { fg = colors.string,   bg = colors.bg         },
-          Hint          { fg = colors.comment,  bg = colors.bg         },
+          Warning       { fg = colors.global,   bg = colors.bg        },
+          Info          { fg = colors.string,   bg = colors.bg        },
+          Hint          { fg = colors.comment,  bg = colors.bg        },
 
           -- Treesitter groups
           TSKeyword         { fg = colors.fg },
@@ -66,9 +68,9 @@ return {
           TSField           { fg = colors.fg },
           TSProperty        { fg = colors.fg },
           TSMethod          { fg = colors.fg },
-          TSFunction        { fg = colors.global },
+          TSFunction        { fg = colors.func   }, -- green for TS functions
           TSConstant        { fg = colors.constant },
-          TSString          { fg = colors.string },
+          TSString          { fg = colors.string   },
           TSComment         { fg = colors.comment, bg = colors.bg, gui = "italic" },
           TSParameter       { fg = colors.fg },
           TSConstructor     { fg = colors.fg },
@@ -77,23 +79,22 @@ return {
           TSOperator        { fg = colors.fg },
           TSException       { fg = colors.fg },
           TSLabel           { fg = colors.fg },
-TSInclude         { fg = colors.fg },
-          TSStructure       { fg = colors.fg },
+          TSInclude         { fg = colors.fg },
+          TSStructure       { fg = colors.type    },
 
-          -- 5) Force Lualine & Winbar to white‑on‑Storm
-          StatusLine        { fg = colors.fg,      bg = colors.bg },
-          StatusLineNC      { fg = colors.fg,      bg = colors.bg },
-          TabLineFill       { fg = colors.fg,      bg = colors.bg },
-          TabLineSel        { fg = colors.fg,      bg = colors.bg },
-          TabLine           { fg = colors.fg,      bg = colors.bg },
-
-          WinBar            { fg = colors.fg,      bg = colors.bg },
-          WinBarNC          { fg = colors.fg,      bg = colors.bg },
-          SagaWinbar        { fg = colors.fg,      bg = colors.bg },  -- LSPSaga winbar
-          SagaWinbarSep     { fg = colors.comment, bg = colors.bg }, -- separator
+          -- Lualine & Winbar
+          StatusLine        { fg = colors.fg,    bg = colors.bg },
+          StatusLineNC      { fg = colors.fg,    bg = colors.bg },
+          TabLineFill       { fg = colors.fg,    bg = colors.bg },
+          TabLineSel        { fg = colors.fg,    bg = colors.bg },
+          TabLine           { fg = colors.fg,    bg = colors.bg },
+          WinBar            { fg = colors.fg,    bg = colors.bg },
+          WinBarNC          { fg = colors.fg,    bg = colors.bg },
+          SagaWinbar        { fg = colors.fg,    bg = colors.bg },
+          SagaWinbarSep     { fg = colors.comment, bg = colors.bg },
 
           -- Floats & Borders
-          FloatBorder       { fg = colors.fg,      bg = colors.bg },
+          FloatBorder       { fg = colors.fg,    bg = colors.bg },
 
           -- Telescope
           TelescopeBorder        { fg = colors.string, bg = colors.bg },

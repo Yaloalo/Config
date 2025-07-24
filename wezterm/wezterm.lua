@@ -1,13 +1,13 @@
 local wezterm = require("wezterm")
-local act     = wezterm.action
-local config  = wezterm.config_builder()
+local act = wezterm.action
+local config = wezterm.config_builder()
 
 -- ── Static opaque background by default; Hyprland will handle blur when toggled ─────────────────
 config.window_background_opacity = 1.0
 config.kde_window_background_blur = false
 
 -- ── Tabs: show current running process (basename only) in each pane ───────────────────────────────
-config.use_fancy_tab_bar            = false
+config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = false
 
 wezterm.on("format-tab-title", function(tab, _, _, _, _, max_width)
@@ -20,12 +20,15 @@ wezterm.on("format-tab-title", function(tab, _, _, _, _, max_width)
   return { { Text = " " .. title .. " " } }
 end)
 
+-- Ask if kill process
+config.window_close_confirmation = "NeverPrompt"
+
 -- ── Scrollback → editor ─────────────────────────────────────────────────────────────────────────
 wezterm.on("edit-scrollback", function(window, pane)
   local rows = pane:get_dimensions().scrollback_rows
   local text = pane:get_lines_as_text(rows)
-  local tmp  = os.tmpname()
-  local f    = io.open(tmp, "w+")
+  local tmp = os.tmpname()
+  local f = io.open(tmp, "w+")
   f:write(text)
   f:close()
   window:perform_action(
@@ -37,13 +40,13 @@ wezterm.on("edit-scrollback", function(window, pane)
 end)
 
 -- ── Appearance & shell ─────────────────────────────────────────────────────────────────────────
-config.font         = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size    = 15.0
+config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font_size = 15.0
 config.color_scheme = "tokyonight_night"
 config.window_padding = {
-  left   = "0pt",
-  right  = "0pt",
-  top    = "0pt",
+  left = "0pt",
+  right = "0pt",
+  top = "0pt",
   bottom = "0pt",
 }
 config.default_prog = { "/usr/bin/zsh", "-l" }
@@ -56,10 +59,13 @@ local toggle_transparency = wezterm.action_callback(function(window, _)
     ovr.window_background_opacity = 0.0
   else
     ovr.window_background_opacity = 1.0
-    ovr.color_scheme            = "tokyonight_night"
+    ovr.color_scheme = "tokyonight_night"
   end
   window:set_config_overrides(ovr)
 end)
+
+-- ── dynamic resize on font-change ─────────────────────────────────────
+config.adjust_window_size_when_changing_font_size = true
 
 -- ── Keybindings ─────────────────────────────────────────────────────────────────────────────────
 config.disable_default_key_bindings = true
@@ -67,25 +73,37 @@ config.keys = {
   -- scrollback
   { key = "R", mods = "CTRL|SHIFT", action = act.EmitEvent("edit-scrollback") },
 
+  { key = "(", mods = "CTRL|SHIFT", action = act.IncreaseFontSize },
+  { key = ")", mods = "CTRL|SHIFT", action = act.DecreaseFontSize },
+  { key = "=", mods = "CTRL|SHIFT", action = act.ResetFontSize },
+
   -- tabs
-  { key = "T",          mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
+  { key = "T", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
   { key = "RightArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(1) },
-  { key = "LeftArrow",  mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
-  { key = "RightArrow", mods = "CTRL",       action = act.MoveTabRelative(1) },
-  { key = "LeftArrow",  mods = "CTRL",       action = act.MoveTabRelative(-1) },
+  { key = "LeftArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+  { key = "RightArrow", mods = "CTRL", action = act.MoveTabRelative(1) },
+  { key = "LeftArrow", mods = "CTRL", action = act.MoveTabRelative(-1) },
   { key = "F", mods = "CTRL|SHIFT", action = act.CloseCurrentTab({ confirm = false }) },
 
   -- splits & pane movement
-  { key = "N", mods = "CTRL|SHIFT", action = act.SplitVertical({   domain = "CurrentPaneDomain" }) },
-  { key = "M", mods = "CTRL|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  {
+    key = "N",
+    mods = "CTRL|SHIFT",
+    action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
+  },
+  {
+    key = "M",
+    mods = "CTRL|SHIFT",
+    action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+  },
   { key = "H", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Left") },
   { key = "L", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Right") },
   { key = "K", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Up") },
   { key = "J", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Down") },
-  { key = "H", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Left",  1 }) },
+  { key = "H", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Left", 1 }) },
   { key = "L", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 1 }) },
-  { key = "K", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Up",    1 }) },
-  { key = "J", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Down",  1 }) },
+  { key = "K", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Up", 1 }) },
+  { key = "J", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Down", 1 }) },
 
   -- copy/paste
   { key = "C", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
@@ -96,4 +114,3 @@ config.keys = {
 }
 
 return config
-

@@ -6,10 +6,10 @@ height=200
 margin=20
 padding=20
 
-border-size=3
-border-color=#ffffff
+border-size=2
+border-color=#80a0ff
 
-background-color=#000000
+background-color=#1a1b26
 text-color=#cdd6f4
 progress-color=over #313244
 
@@ -31,3 +31,4 @@ border-color=#f9e2af
 # ── Urgency: critical ───────────────────────────────────────────
 [urgency=critical]
 border-color=#f38ba8
+
