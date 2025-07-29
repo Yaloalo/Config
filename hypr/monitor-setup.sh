@@ -1,84 +1,65 @@
 #!/usr/bin/env bash
 #
-# monitor-setup.sh (toggle mode)
+# monitor-setup.sh — toggle between:
+#   • primary:   WS 1–10 & 12 → eDP-1, WS 11 → DP-7
+#   • secondary: WS 1–12 → DP-7
 #
-# Each time you run this script, it will:
-#   1. Detect where workspace 1 currently lives (eDP-1 or DP-7).
-#   2. If workspace 1 is on eDP-1 → move workspaces 1–5 → DP-7, then focus DP-7.
-#   3. If workspace 1 is on DP-7 → move workspaces 1–5 → eDP-1, then focus eDP-1.
+# Usage (bind this to SUPER+M in hyprland.conf):
+#   monitor-setup.sh            # toggle
+#   monitor-setup.sh primary    # force primary layout
+#   monitor-setup.sh secondary  # force secondary layout
 #
-# This ensures alternating behavior each run—no external JSON or jq needed.
-# Requirements: hyprctl (Hyprland CLI) and Bash.
-#
-# Usage: 
-#   chmod +x ~/bin/monitor-setup.sh
-#   ~/bin/monitor-setup.sh
-# Or bind to a key via your Hyprland config:
-#   bind = SUPER, M, exec, ~/bin/monitor-setup.sh
+# Requires: hyprctl, bash
 
 INTERNAL="eDP-1"
 EXTERNAL="DP-7"
+STATE_FILE="/tmp/monitor-setup.state"
 
-echo "=== monitor-setup.sh toggle at $(date '+%Y-%m-%d %H:%M:%S') ==="
-
-#
-# 1) Find out where workspace 1 currently is.
-#    We run `hyprctl workspaces` (plain text) and grep for the line:
-#      workspace ID 1 (<name>) on monitor <MONITOR>:
-#    Then extract <MONITOR> via a Bash regex.
-#
-ws1_line=$(hyprctl workspaces | grep -E "^workspace ID 1 ")
-if [[ -z "$ws1_line" ]]; then
-  echo "Error: Could not find 'workspace 1' in hyprctl workspaces output."
-  exit 1
-fi
-
-# Regex to pull out the monitor name for workspace 1:
-#   Example: "workspace ID 1 (1) on monitor eDP-1:"
-if [[ $ws1_line =~ on[[:space:]]monitor[[:space:]]([^:]+): ]]; then
-  ws1_mon="${BASH_REMATCH[1]}"
-  echo "Workspace 1 is currently on monitor: $ws1_mon"
+# 1) Determine mode
+if [[ "$1" == "primary" ]]; then
+  mode="primary"
+elif [[ "$1" == "secondary" ]]; then
+  mode="secondary"
 else
-  echo "Error: Failed to parse monitor name from: $ws1_line"
-  exit 1
+  # toggle based on last run
+  if [[ -f "$STATE_FILE" ]]; then
+    last="$(<"$STATE_FILE")"
+    if [[ "$last" == "primary" ]]; then
+      mode="secondary"
+    else
+      mode="primary"
+    fi
+  else
+    # assume you start in primary → first toggle is secondary
+    mode="secondary"
+  fi
 fi
 
-#
-# 2) Decide the destination (DST) based on ws1_mon:
-#    • If ws1_mon == eDP-1 → DST=DP-7 (move out to external).
-#    • Otherwise (ws1_mon == DP-7) → DST=eDP-1 (move back to laptop).
-#
-if [[ "$ws1_mon" == "$INTERNAL" ]]; then
-  DST="$EXTERNAL"
-  echo "→ Toggling: moving 1–5 from $INTERNAL → $EXTERNAL"
-elif [[ "$ws1_mon" == "$EXTERNAL" ]]; then
-  DST="$INTERNAL"
-  echo "→ Toggling: moving 1–5 from $EXTERNAL → $INTERNAL"
-else
-  echo "Warning: Workspace 1 is on '$ws1_mon', which is neither $INTERNAL nor $EXTERNAL."
-  echo "Defaulting to moving toward $EXTERNAL."
-  DST="$EXTERNAL"
-fi
+# persist new state
+echo "$mode" > "$STATE_FILE"
+echo ">>> Applying mode: $mode <<<"
 
-#
-# 3) Loop over workspaces 1–5 and move each one to $DST:
-#    We do:
-#      hyprctl dispatch workspace N
-#      hyprctl dispatch movecurrentworkspacetomonitor $DST
-#
-#    Even if a workspace is already on $DST, movecurrentworkspacetomonitor <same> is a no-op.
-#
-for N in 1 2 3 4 5; do
-  echo "   • workspace $N → $DST"
-  hyprctl dispatch workspace "$N"
-  hyprctl dispatch movecurrentworkspacetomonitor "$DST"
+# 2) Apply
+for ws in {1..12}; do
+  hyprctl dispatch workspace "$ws"
+  if [[ "$mode" == "secondary" ]]; then
+    hyprctl dispatch movecurrentworkspacetomonitor "$EXTERNAL"
+  else
+    # primary: only WS 11 goes external
+    if [[ "$ws" -eq 11 ]]; then
+      hyprctl dispatch movecurrentworkspacetomonitor "$EXTERNAL"
+    else
+      hyprctl dispatch movecurrentworkspacetomonitor "$INTERNAL"
+    fi
+  fi
 done
 
-#
-# 4) Finally, focus $DST so new windows/keystrokes land on the correct monitor:
-#
-echo "Focusing monitor $DST"
-hyprctl dispatch focusmonitor "$DST"
+# 3) Focus correct monitor
+if [[ "$mode" == "secondary" ]]; then
+  hyprctl dispatch focusmonitor "$EXTERNAL"
+else
+  hyprctl dispatch focusmonitor "$INTERNAL"
+fi
 
-echo "=== toggle complete ==="
 exit 0
+

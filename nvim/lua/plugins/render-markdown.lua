@@ -217,7 +217,7 @@ return {
       -- toggle key
       vim.keymap.set(
         "n",
-        "<Leader>m",
+        "<Leader>ppp",
         "<Cmd>RenderMarkdown toggle<CR>",
         { silent = true, desc = "Toggle Render Markdown" }
       )
