@@ -41,7 +41,7 @@ end)
 
 -- ── Appearance & shell ─────────────────────────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size = 15.0
+config.font_size = 18.0
 config.color_scheme = "tokyonight_night"
 config.window_padding = {
   left = "0pt",

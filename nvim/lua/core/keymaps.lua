@@ -11,12 +11,12 @@ vim.keymap.set("v", "<C-c>", "<Esc>")
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Horizontal split on <leader>s
-map("n", "<leader>n", "<cmd>split<CR>", {
+map("n", "<C-n>", "<cmd>split<CR>", {
   desc = "Horizontal split",
 })
 
 -- Vertical split on <leader>d
-map("n", "<leader>m", "<cmd>vsplit<CR>", {
+map("n", "<C-m>", "<cmd>vsplit<CR>", {
   desc = "Vertical split",
 })
 
@@ -42,25 +42,6 @@ map("i", "<C-l>", "<Right>")
 map("n", "<leader>bn", function()
   vim.cmd("edit " .. vim.fn.expand("~/notes"))
 end, { desc = "Open notes" })
-
--- Toggle all LSP diagnostics on/off
-map("n", "<leader>lt", function()
-  if diagnostics_on then
-    vim.diagnostic.disable()
-    vim.notify("Diagnostics OFF", vim.log.levels.WARN)
-  else
-    vim.diagnostic.enable()
-    vim.notify("Diagnostics ON", vim.log.levels.INFO)
-  end
-  diagnostics_on = not diagnostics_on
-end, { desc = "Toggle LSP Diagnostics" })
-
--- Show LSP Documentation for a function
-map("n", "<leader>ld", vim.lsp.buf.hover, { desc = "LSP: Hover Documentation" })
-
--- Restart all attached LSP servers
-map("n", "<leader>lr", "<cmd>LspRestart<CR>", { desc = "LSP: Restart servers" })
-
 
 -- Epic Root dir Search
 map("n", "<leader>w", function()

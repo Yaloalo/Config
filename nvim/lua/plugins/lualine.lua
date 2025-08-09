@@ -1,40 +1,5 @@
 -- ~/.config/nvim/lua/plugins/lspsaga.lua
 return {
-  -- 1) Lspsaga + your keymaps (unchanged)
-  {
-    "nvimdev/lspsaga.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    lazy = false,
-    event = "LspAttach",
-    config = function()
-      local ok, saga = pcall(require, "lspsaga")
-      if not ok then
-        vim.notify("Lspsaga failed to load: " .. tostring(saga), vim.log.levels.ERROR)
-        return
-      end
-
-      -- keep symbol provider, but disable its own winbar/autocmd
-      saga.setup({
-        symbol_in_winbar = { enable = false },
-        lightbulb = { enable = false },
-      })
-
-      vim.o.showmode = false
-      vim.o.termguicolors = true
-
-      local map = vim.keymap.set
-      local opts = { noremap = true, silent = true }
-      map("n", "<leader>lD", "<cmd>Lspsaga hover_doc<CR>", opts)
-      map("n", "<leader>lA", "<cmd>Lspsaga code_action<CR>", opts)
-      map("n", "<leader>lH", "<cmd>Lspsaga incoming_calls<CR>", opts)
-      map("n", "<leader>lI", "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
-      map("n", "<leader>lO", "<cmd>Lspsaga outline<CR>", opts)
-      map("n", "<leader>lR", "<cmd>Lspsaga rename<CR>", opts)
-    end,
-  },
-
-  -- 2) Lualine + Bubbles theme, with #1a1b26 as “black”
-  -- 2) Lualine + Bubbles theme on top, simple bottom statusline
   {
     "nvim-lualine/lualine.nvim",
     event = "VimEnter",
@@ -104,20 +69,18 @@ return {
             },
           },
           lualine_c = {
-            { -- breadcrumbs from lspsaga
+            {
               function()
-                local ok, winbar_mod = pcall(require, "lspsaga.symbol.winbar")
-                if not ok then
-                  return ""
+                local name = vim.api.nvim_buf_get_name(0)
+                if name == "" then
+                  return "[No Name]"
                 end
-                return winbar_mod.get_bar() or ""
-              end,
-              cond = function()
-                local ok, winbar_mod = pcall(require, "lspsaga.symbol.winbar")
-                return ok and (winbar_mod.get_bar() or "") ~= ""
+                local rel = vim.fn.fnamemodify(name, ":.") -- relative to CWD if possible
+                return rel:sub(1, 1) == "/" and vim.fn.fnamemodify(name, ":p") or rel
               end,
             },
           },
+
           lualine_x = {},
           lualine_y = {},
           lualine_z = {},

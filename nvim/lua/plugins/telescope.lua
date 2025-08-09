@@ -24,7 +24,7 @@ return {
       local last_picker_fn = nil
 
       -- ─── GLOBAL <C-h> ─ toggle ignore & rerun last picker ────────
-      vim.keymap.set("n", "<C-h>", function()
+      vim.keymap.set("n", "<C-f>", function()
         respect_gitignore = not respect_gitignore
         notify(
           "Telescope ▶ "
@@ -88,7 +88,13 @@ return {
               local entry = action_state.get_selected_entry()
               actions.close(prompt_bufnr)
               vim.cmd("vnew | setlocal buftype=nofile bufhidden=wipe swapfile=false")
-              vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.fn.systemlist("git show "..entry.value))
+              vim.api.nvim_buf_set_lines(
+                0,
+                0,
+                -1,
+                false,
+                vim.fn.systemlist("git show " .. entry.value)
+              )
               vim.cmd("setfiletype diff")
             end
             map("i", "<C-s>", open_commit)
@@ -108,9 +114,9 @@ return {
           layout_strategy = "horizontal",
           layout_config = {
             horizontal = { preview_width = 0.6 },
-            vertical   = { preview_height = 0.5 },
-            width      = 0.9,
-            height     = 0.8,
+            vertical = { preview_height = 0.5 },
+            width = 0.9,
+            height = 0.8,
             preview_cutoff = 120,
           },
           borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
@@ -125,7 +131,8 @@ return {
                 if entry then
                   actions.close(prompt_bufnr)
                   local target = entry.path or entry.value
-                  local dir = Path:new(target):is_dir() and target or vim.fn.fnamemodify(target, ":h")
+                  local dir = Path:new(target):is_dir() and target
+                    or vim.fn.fnamemodify(target, ":h")
                   vim.cmd("Oil " .. vim.fn.fnameescape(dir))
                 end
               end,
@@ -133,11 +140,15 @@ return {
                 respect_gitignore = not respect_gitignore
                 notify(
                   "Telescope ▶ "
-                    .. (respect_gitignore and "now respecting .gitignore" or "now ignoring .gitignore")
+                    .. (
+                      respect_gitignore and "now respecting .gitignore" or "now ignoring .gitignore"
+                    )
                 )
                 actions.close(prompt_bufnr)
                 vim.schedule(function()
-                  if last_picker_fn then last_picker_fn() end
+                  if last_picker_fn then
+                    last_picker_fn()
+                  end
                 end)
               end,
               ["<C-g>"] = layout_actions.toggle_preview,
@@ -150,7 +161,8 @@ return {
                 if entry then
                   actions.close(prompt_bufnr)
                   local target = entry.path or entry.value
-                  local dir = Path:new(target):is_dir() and target or vim.fn.fnamemodify(target, ":h")
+                  local dir = Path:new(target):is_dir() and target
+                    or vim.fn.fnamemodify(target, ":h")
                   vim.cmd("Oil " .. vim.fn.fnameescape(dir))
                 end
               end,
@@ -158,11 +170,15 @@ return {
                 respect_gitignore = not respect_gitignore
                 notify(
                   "Telescope ▶ "
-                    .. (respect_gitignore and "now respecting .gitignore" or "now ignoring .gitignore")
+                    .. (
+                      respect_gitignore and "now respecting .gitignore" or "now ignoring .gitignore"
+                    )
                 )
                 actions.close(prompt_bufnr)
                 vim.schedule(function()
-                  if last_picker_fn then last_picker_fn() end
+                  if last_picker_fn then
+                    last_picker_fn()
+                  end
                 end)
               end,
               ["<C-g>"] = layout_actions.toggle_preview,
@@ -171,19 +187,19 @@ return {
         },
         pickers = {
           find_files = { hidden = true },
-          live_grep  = { only_sort_text = true },
+          live_grep = { only_sort_text = true },
         },
         extensions = {
           ["ui-select"] = themes.get_dropdown({}),
           file_browser = {
-            hidden       = true,
+            hidden = true,
             hijack_netrw = true,
-            cwd_to_path  = true,
+            cwd_to_path = true,
             layout_strategy = "horizontal",
-            layout_config   = {
+            layout_config = {
               horizontal = { preview_width = 0.6 },
-              width      = 0.9,
-              height     = 0.8,
+              width = 0.9,
+              height = 0.8,
               preview_cutoff = 120,
             },
             borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
@@ -195,12 +211,21 @@ return {
       telescope.load_extension("file_browser")
 
       -- ─── SEARCH KEYMAPS ───────────────────────────────────────────
-      vim.keymap.set("n", "<leader>sf", launch_find,        { desc = "󰝰 Find Files" })
-      vim.keymap.set("n", "<leader>sg", launch_live_grep,   { desc = " Live Grep" })
-      vim.keymap.set("n", "<leader>ss", launch_grep_string,{ desc = " Grep String" })
-      vim.keymap.set("n", "<leader>fb", launch_file_browser,{ desc = " File Browser" })
+      vim.keymap.set("n", "<leader>sf", launch_find, { desc = "󰝰 Find Files" })
+      vim.keymap.set("n", "<leader>sg", launch_live_grep, { desc = " Live Grep" })
+      vim.keymap.set("n", "<leader>ss", launch_grep_string, { desc = " Grep String" })
+      vim.keymap.set("n", "<leader>fb", launch_file_browser, { desc = " File Browser" })
       vim.keymap.set("n", "<leader>sc", launch_git_commits, { desc = " Git Commits" })
+
+      -- ─── Standalone Search Neovim Config ──────────────────────────────────
+      vim.keymap.set("n", "<leader>sn", function()
+        require("telescope.builtin").find_files({
+          cwd = vim.fn.stdpath("config"),
+          hidden = true,
+          -- unconditionally include hidden, ignore gitignore toggle
+          find_command = { "fd", "--type", "file", "--color", "never", "--hidden" },
+        })
+      end, { desc = " Search Neovim Config" })
     end,
   },
 }
-
