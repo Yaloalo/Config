@@ -44,7 +44,7 @@ colors() {
 alias l='eza'
 alias y='yazi'
 alias c='wl-copy'
-alias notes='nvim ~/documents/Main'
+alias notes='nvim /home/yaloalo/notes/life200/Planung/Tagesplan.md'
 alias n='nvim'
 alias f='clear'
 alias m='mpv --hwdec=vaapi --vo=gpu --gpu-context=wayland'
@@ -90,7 +90,6 @@ bindkey '^R' fzf-history-widget
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 
 source "$HOME/projects/volcanite/vulkan/1.4.313.0/setup-env.sh"
-
 # …later, your existing Starship init…
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"

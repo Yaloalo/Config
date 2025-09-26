@@ -15,7 +15,7 @@ return {
       after = false,
       style = "inline", -- render the label inline so it doesn’t sit on top of the match
       format = function(opts)
-        -- draw a clear “pill” like [D] (customize if you want)
+        -- draw a clear “pill” like [D]
         return { { "[" .. opts.match.label .. "]", "FlashLabel" } }
       end,
     },
@@ -26,7 +26,7 @@ return {
         match = "FlashMatch",
         current = "FlashCurrent",
         backdrop = "FlashBackdrop",
-        label = "FlashLabel", -- we’ll set this below
+        label = "FlashLabel",
       },
     },
     remote_op = { restore = true, motion = true },
@@ -45,11 +45,10 @@ return {
       vim.api.nvim_set_hl(0, "FlashCurrent", { link = "IncSearch" })
       vim.api.nvim_set_hl(0, "FlashBackdrop",{ link = "Comment" })
 
-      -- HIGH-CONTRAST label “pill”
-      -- bg: bright, fg: dark, bold, nocombine so it never blends with other hl
+      -- HIGH-CONTRAST label “pill” (light blue as requested)
       local normal = get_hl("Normal")
       local label_fg = normal.bg and 0x000000 or 0x000000
-      local label_bg = 0xFFD200 -- amber; change if it clashes with your theme
+      local label_bg = 0x66CCFF -- light blue
 
       vim.api.nvim_set_hl(0, "FlashLabel", {
         fg = label_fg,
