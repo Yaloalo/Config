@@ -214,7 +214,7 @@ return {
       vim.keymap.set("n", "<leader>sf", launch_find, { desc = "󰝰 Find Files" })
       vim.keymap.set("n", "<leader>sg", launch_live_grep, { desc = " Live Grep" })
       vim.keymap.set("n", "<leader>ss", launch_grep_string, { desc = " Grep String" })
-      vim.keymap.set("n", "<leader>fb", launch_file_browser, { desc = " File Browser" })
+      vim.keymap.set("n", "<leader>sb", launch_file_browser, { desc = " File Browser" })
       vim.keymap.set("n", "<leader>sc", launch_git_commits, { desc = " Git Commits" })
 
       -- ─── Standalone Search Neovim Config ──────────────────────────────────
