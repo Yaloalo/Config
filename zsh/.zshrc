@@ -16,6 +16,7 @@ source "$ZSH/oh-my-zsh.sh"
 
 # ─── 2. zoxide & NVM initialization ─────────────────────────────────────────────
 eval "$(zoxide init zsh --cmd j)"
+eval "$(direnv hook zsh)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ]         && source "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
