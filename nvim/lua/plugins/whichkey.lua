@@ -33,7 +33,6 @@ return {
         { "<leader>s", group = "󰈞  [S]earch" },
         { "<leader>c", group = "󰈞  [C]ompiler" },
         { "<leader>o", group = "󰏆  [O]il" },
-        { "<leader>b", group = "󰎞  [B]ullshit" },
         { "<leader>g", group = "  [G]rug" },
         { "<leader>h", group = "  [H]arpoon" },
         { "<leader>r", group = "󰍉  [R]ing" },

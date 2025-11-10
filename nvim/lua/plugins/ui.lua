@@ -90,17 +90,6 @@ return {
       -- (optional) green for added lines
       vim.api.nvim_set_hl(0, "MiniDiffNumberAdd", { fg = "#00ff00" })
 
-      -- Optional keymaps
-      local map = vim.keymap.set
-      map("n", "<leader>ds", function()
-        diff.toggle_overlay()
-      end, { desc = "MiniDiff: toggle overlay" })
-      map("n", "]h", function()
-        diff.goto_hunk("next")
-      end, { desc = "MiniDiff: next hunk" })
-      map("n", "[h", function()
-        diff.goto_hunk("prev")
-      end, { desc = "MiniDiff: prev hunk" })
 
       -- Keep signcolumn to one cell (still useful if you keep signs)
       vim.opt.signcolumn = "yes:1"

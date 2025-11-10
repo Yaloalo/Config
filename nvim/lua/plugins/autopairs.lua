@@ -1,4 +1,4 @@
--- lua/plugins/autopairs.lua
+-- -- lua/plugins/autopairs.lua
 return {
   {
     "windwp/nvim-autopairs",

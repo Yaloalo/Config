@@ -214,14 +214,6 @@ return {
     config = function(_, opts)
       require("render-markdown").setup(opts)
 
-      -- toggle key
-      vim.keymap.set(
-        "n",
-        "<Leader>ppp",
-        "<Cmd>RenderMarkdown toggle<CR>",
-        { silent = true, desc = "Toggle Render Markdown" }
-      )
-
       -- coloured heading underlines
       local blues = {
         { fg = "#BFE2FF" }, -- H1
