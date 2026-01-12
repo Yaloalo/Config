@@ -2,9 +2,12 @@
 
 ## Install command (copy/paste on a new machine)
 ```
-REPO_URL=https://github.com/Yaloalo/Config BRANCH=main bash -lc 'wget -q -O - https://raw.githubusercontent.com/Yaloalo/Config/main/install/bootstrap.sh | bash'
+REPO_URL=https://github.com/Yaloalo/Config BRANCH=main bash -c "$(wget -qO- https://raw.githubusercontent.com/Yaloalo/Config/main/install/bootstrap.sh)"
 ```
-If `wget` is missing, swap the middle part with `curl -fsSL ... | bash`.
+If `wget` is missing:
+```
+REPO_URL=https://github.com/Yaloalo/Config BRANCH=main bash -c "$(curl -fsSL https://raw.githubusercontent.com/Yaloalo/Config/main/install/bootstrap.sh)"
+```
 
 ## Quick setup
 - Already cloned to `~/.config`: run `install/install.sh`.
