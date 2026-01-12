@@ -5,6 +5,8 @@ SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 CONFIG_TARGET="${XDG_CONFIG_HOME:-$HOME/.config}"
 OH_MY_ZSH_REPO=${OH_MY_ZSH_REPO:-"https://github.com/ohmyzsh/ohmyzsh.git"}
+WORDLIST_REPO=${WORDLIST_REPO:-"https://github.com/kkrypt0nn/wordlists"}
+HACKING_DIR=${HACKING_DIR:-"$HOME/hacking"}
 
 INSTALL_PACKAGES=1
 ENABLE_SYSTEMD=1
@@ -138,6 +140,49 @@ install_aur_packages() {
 
   log "Installing AUR packages via $helper..."
   "$helper" -S --needed "${AUR_PACKAGES[@]}"
+}
+
+install_blackarch() {
+  if ! command -v pacman >/dev/null 2>&1; then
+    warn "pacman not found; skipping BlackArch setup."
+    return
+  fi
+
+  if grep -qs "^[[:space:]]*\\[blackarch\\]" /etc/pacman.conf; then
+    log "BlackArch repo already configured."
+    return
+  fi
+
+  if ! command -v curl >/dev/null 2>&1; then
+    warn "curl missing; cannot run BlackArch strap script."
+    return
+  fi
+
+  log "Installing BlackArch repo via strap script..."
+  curl -fsS https://blackarch.org/strap.sh | sudo bash || warn "BlackArch strap script failed."
+}
+
+install_wordlists() {
+  mkdir -p "$HACKING_DIR"
+
+  if [[ -d "$HACKING_DIR/wordlists/.git" ]]; then
+    log "Updating wordlists in $HACKING_DIR/wordlists"
+    git -C "$HACKING_DIR/wordlists" pull --ff-only || warn "Could not update wordlists repo."
+    return
+  fi
+
+  if [[ -d "$HACKING_DIR/wordlists" ]]; then
+    log "Wordlists directory already present at $HACKING_DIR/wordlists"
+    return
+  fi
+
+  if ! command -v git >/dev/null 2>&1; then
+    warn "git missing; cannot clone wordlists into $HACKING_DIR"
+    return
+  fi
+
+  log "Cloning wordlists into $HACKING_DIR/wordlists"
+  git clone --depth 1 "$WORDLIST_REPO" "$HACKING_DIR/wordlists"
 }
 
 install_oh_my_zsh() {
@@ -314,35 +359,6 @@ EOF
   chmod +x "$launcher"
 }
 
-sync_karlos_keys() {
-  local ssh_dir="$HOME/.ssh"
-  local moved=0
-
-  mkdir -p "$ssh_dir"
-
-  if [[ -f "$REPO_ROOT/karlos.ssh" ]]; then
-    install -m 600 -D "$REPO_ROOT/karlos.ssh" "$ssh_dir/karlos"
-    moved=1
-  elif [[ -f "$HOME/karlos.ssh" ]]; then
-    install -m 600 -D "$HOME/karlos.ssh" "$ssh_dir/karlos"
-    moved=1
-  fi
-
-  if [[ -f "$REPO_ROOT/karlos.ssh.pub" ]]; then
-    install -m 644 -D "$REPO_ROOT/karlos.ssh.pub" "$ssh_dir/karlos.pub"
-    moved=1
-  elif [[ -f "$HOME/karlos.ssh.pub" ]]; then
-    install -m 644 -D "$HOME/karlos.ssh.pub" "$ssh_dir/karlos.pub"
-    moved=1
-  fi
-
-  if [[ $moved -eq 0 ]]; then
-    warn "No karlos.ssh / karlos.ssh.pub found; skipping SSH key copy."
-  else
-    log "karlos SSH material copied into $ssh_dir"
-  fi
-}
-
 enable_systemd_units() {
   if ! command -v systemctl >/dev/null 2>&1; then
     warn "systemctl not available; skipping systemd setup."
@@ -384,6 +400,7 @@ main() {
 
   [[ $INSTALL_PACKAGES -eq 0 ]] || install_pacman_packages
   [[ $INSTALL_PACKAGES -eq 0 ]] || install_aur_packages
+  [[ $INSTALL_PACKAGES -eq 0 ]] || install_blackarch
 
   [[ $SYNC_CONFIG -eq 0 ]] || sync_dotfiles
   install_oh_my_zsh
@@ -392,7 +409,7 @@ main() {
   ensure_zsh_setup
   ensure_ghcup
   install_broot_launcher
-  sync_karlos_keys
+  install_wordlists
 
   [[ $ENABLE_SYSTEMD -eq 0 ]] || enable_systemd_units
 
