@@ -11,6 +11,8 @@ HACKING_DIR=${HACKING_DIR:-"$HOME/hacking"}
 INSTALL_PACKAGES=1
 ENABLE_SYSTEMD=1
 SYNC_CONFIG=1
+ENABLE_SYSTEM_SERVICES=1
+ENABLE_CHSH=1
 
 PACMAN_PACKAGES=(
   base-devel
@@ -48,6 +50,8 @@ PACMAN_PACKAGES=(
   wlogout
   kanshi
   kitty
+  greetd
+  tuigreet
   tmux
   zsh
   ttf-jetbrains-mono-nerd
@@ -88,6 +92,8 @@ Usage: $(basename "$0") [options]
   --skip-packages   Do not install pacman/yay packages
   --skip-systemd    Do not enable user systemd units
   --skip-sync       Do not copy dotfiles into \$XDG_CONFIG_HOME
+  --skip-system-services  Do not enable system-level services
+  --skip-shell      Do not change the login shell to zsh
 EOF
 }
 
@@ -100,6 +106,8 @@ parse_args() {
       --skip-packages) INSTALL_PACKAGES=0 ;;
       --skip-systemd)  ENABLE_SYSTEMD=0 ;;
       --skip-sync)     SYNC_CONFIG=0 ;;
+      --skip-system-services) ENABLE_SYSTEM_SERVICES=0 ;;
+      --skip-shell)    ENABLE_CHSH=0 ;;
       -h|--help) usage; exit 0 ;;
       *) usage; exit 1 ;;
     esac
@@ -301,6 +309,75 @@ EOF
   fi
 }
 
+ensure_zsh_shell() {
+  local desired_shell current_shell
+
+  if ! command -v zsh >/dev/null 2>&1; then
+    warn "zsh not installed; cannot change login shell."
+    return
+  fi
+
+  desired_shell="$(command -v zsh)"
+  if [[ -f /etc/shells ]] && ! grep -qx "$desired_shell" /etc/shells; then
+    warn "zsh shell $desired_shell not listed in /etc/shells; skipping chsh."
+    return
+  fi
+
+  if command -v getent >/dev/null 2>&1; then
+    current_shell="$(getent passwd "$USER" | cut -d: -f7)"
+  else
+    current_shell="${SHELL:-}"
+  fi
+
+  if [[ -n "$current_shell" && "$current_shell" == "$desired_shell" ]]; then
+    log "Login shell already set to zsh ($desired_shell)"
+    return
+  fi
+
+  if chsh -s "$desired_shell" "$USER"; then
+    log "Changed login shell to $desired_shell"
+  else
+    warn "Failed to change login shell; run: chsh -s $desired_shell"
+  fi
+}
+
+ensure_greetd_config() {
+  local config="/etc/greetd/config.toml"
+  local tmp_file
+
+  if [[ -f "$config" ]]; then
+    log "greetd config already present at $config"
+    return
+  fi
+
+  if ! command -v tuigreet >/dev/null 2>&1; then
+    warn "tuigreet not installed; skipping greetd config."
+    return
+  fi
+
+  if ! command -v sudo >/dev/null 2>&1; then
+    warn "sudo not available; cannot write $config."
+    return
+  fi
+
+  tmp_file="$(mktemp)"
+  cat >"$tmp_file" <<'EOF'
+[terminal]
+vt = 1
+
+[default_session]
+command = "tuigreet --cmd Hyprland"
+user = "greeter"
+EOF
+
+  if sudo install -Dm644 "$tmp_file" "$config"; then
+    log "Installed greetd config at $config"
+  else
+    warn "Failed to write $config"
+  fi
+  rm -f "$tmp_file"
+}
+
 ensure_ghcup() {
   local env_file="$HOME/.ghcup/env"
 
@@ -359,6 +436,29 @@ EOF
   chmod +x "$launcher"
 }
 
+enable_system_services() {
+  local svc
+
+  if ! command -v systemctl >/dev/null 2>&1; then
+    warn "systemctl not available; skipping system service setup."
+    return
+  fi
+
+  if ! command -v sudo >/dev/null 2>&1; then
+    warn "sudo not available; cannot enable system services."
+    return
+  fi
+
+  for svc in NetworkManager.service pipewire.service pipewire-pulse.service wireplumber.service greetd.service; do
+    if systemctl list-unit-files --type=service --no-legend 2>/dev/null | awk '{print $1}' | grep -qx "$svc"; then
+      log "Enabling system service: $svc"
+      sudo systemctl enable --now "$svc" || warn "Failed to enable $svc"
+    else
+      warn "System service $svc not found; skipping."
+    fi
+  done
+}
+
 enable_systemd_units() {
   if ! command -v systemctl >/dev/null 2>&1; then
     warn "systemctl not available; skipping systemd setup."
@@ -407,10 +507,13 @@ main() {
   install_omz_plugin "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions.git"
   install_omz_plugin "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-syntax-highlighting.git"
   ensure_zsh_setup
+  [[ $ENABLE_CHSH -eq 0 ]] || ensure_zsh_shell
   ensure_ghcup
   install_broot_launcher
   install_wordlists
 
+  ensure_greetd_config
+  [[ $ENABLE_SYSTEM_SERVICES -eq 0 ]] || enable_system_services
   [[ $ENABLE_SYSTEMD -eq 0 ]] || enable_systemd_units
 
   log "Done."
