@@ -1,11 +1,16 @@
 # Config (Hyprland + tooling)
 
+## Install command (copy/paste on a new machine)
+```
+REPO_URL=https://github.com/Yaloalo/Config BRANCH=main bash -lc 'wget -q -O - https://raw.githubusercontent.com/Yaloalo/Config/main/install/bootstrap.sh | bash'
+```
+If `wget` is missing, swap the middle part with `curl -fsSL ... | bash`.
+
 ## Quick setup
-- Fresh box: run `~/.config/install/bootstrap.sh` (wget grabs the repo, runs installer). If already cloned to `~/.config`, run `install/install.sh`.
+- Already cloned to `~/.config`: run `install/install.sh`.
 - Flags: `--skip-packages`, `--skip-systemd`, `--skip-sync` as needed.
 - AUR helper: expects `yay` or `paru` for AUR packages. ProtonVPN/Tor units start only if binaries exist.
 - Wallpaper: bundled at `~/.config/wallpapers/default.png` and loaded by hyprpaper for all monitors.
-- SSH: if `karlos.ssh`/`.pub` is present (repo or `$HOME`), installer copies to `~/.ssh` with correct perms (not tracked).
 
 ## Stack overview
 - Hyprland + hyprpaper + hypridle + hyprlock; kanshi for outputs.
