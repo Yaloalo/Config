@@ -8,7 +8,7 @@ main() {
   local tmp archive repo_dir
   tmp=$(mktemp -d "${TMPDIR:-/tmp}/config-install.XXXXXX")
   archive="$tmp/config.tar.gz"
-  trap 'rm -rf "$tmp"' EXIT
+  trap '[[ -n ${tmp-} ]] && rm -rf "$tmp"' EXIT
 
   echo "Downloading dotfiles from $REPO_URL (branch: $BRANCH) with wget..."
   wget -qO "$archive" "$REPO_URL/archive/refs/heads/$BRANCH.tar.gz"
