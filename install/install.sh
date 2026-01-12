@@ -7,6 +7,7 @@ CONFIG_TARGET="${XDG_CONFIG_HOME:-$HOME/.config}"
 OH_MY_ZSH_REPO=${OH_MY_ZSH_REPO:-"https://github.com/ohmyzsh/ohmyzsh.git"}
 WORDLIST_REPO=${WORDLIST_REPO:-"https://github.com/kkrypt0nn/wordlists"}
 HACKING_DIR=${HACKING_DIR:-"$HOME/hacking"}
+TUIGREET_PKG=${TUIGREET_PKG:-"tuigreet"}
 
 INSTALL_PACKAGES=1
 ENABLE_SYSTEMD=1
@@ -69,7 +70,7 @@ AUR_PACKAGES=(
   bluetui
   wezterm-git
   ghcup-hs-bin
-  tuigreet
+  "$TUIGREET_PKG"
 )
 
 TIMERS=(
@@ -147,7 +148,10 @@ install_aur_packages() {
   fi
 
   log "Installing AUR packages via $helper..."
-  "$helper" -S --needed "${AUR_PACKAGES[@]}"
+  for pkg in "${AUR_PACKAGES[@]}"; do
+    [[ -n "$pkg" ]] || continue
+    "$helper" -S --needed "$pkg" || warn "AUR package $pkg failed or not found; skipping."
+  done
 }
 
 install_blackarch() {
@@ -350,8 +354,13 @@ ensure_greetd_config() {
     return
   fi
 
-  if ! command -v tuigreet >/dev/null 2>&1; then
-    warn "tuigreet not installed; skipping greetd config."
+  local greet_cmd=""
+  if command -v tuigreet >/dev/null 2>&1; then
+    greet_cmd="tuigreet --cmd Hyprland"
+  elif command -v agreety >/dev/null 2>&1; then
+    greet_cmd="agreety --cmd Hyprland"
+  else
+    warn "No greetd greeter found (tuigreet/agreety); skipping greetd config."
     return
   fi
 
@@ -366,9 +375,10 @@ ensure_greetd_config() {
 vt = 1
 
 [default_session]
-command = "tuigreet --cmd Hyprland"
+command = "__GREET_CMD__"
 user = "greeter"
 EOF
+  sed -i "s|__GREET_CMD__|$greet_cmd|" "$tmp_file"
 
   if sudo install -Dm644 "$tmp_file" "$config"; then
     log "Installed greetd config at $config"
