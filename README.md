@@ -1,13 +1,14 @@
 # Config (Hyprland + tooling)
 
 ## Install command (copy/paste on a new machine)
-```
-REPO_URL=https://github.com/Yaloalo/Config BRANCH=main bash -c "$(wget -qO- https://raw.githubusercontent.com/Yaloalo/Config/main/install/bootstrap.sh)"
-```
-If `wget` is missing:
-```
-REPO_URL=https://github.com/Yaloalo/Config BRANCH=main bash -c "$(curl -fsSL https://raw.githubusercontent.com/Yaloalo/Config/main/install/bootstrap.sh)"
-```
+- From any shell (works in fish too):
+  ```
+  env REPO_URL=https://github.com/Yaloalo/Config BRANCH=main bash -lc 'tmp=$(mktemp) && wget -qO "$tmp" https://raw.githubusercontent.com/Yaloalo/Config/main/install/bootstrap.sh && bash "$tmp"'
+  ```
+  If `wget` is missing, swap it for curl:
+  ```
+  env REPO_URL=https://github.com/Yaloalo/Config BRANCH=main bash -lc 'tmp=$(mktemp) && curl -fsSL https://raw.githubusercontent.com/Yaloalo/Config/main/install/bootstrap.sh -o "$tmp" && bash "$tmp"'
+  ```
 
 ## Quick setup
 - Already cloned to `~/.config`: run `install/install.sh`.
