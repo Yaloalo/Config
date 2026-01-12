@@ -12,7 +12,11 @@ plugins=(
   zoxide
   vi-mode
 )
-source "$ZSH/oh-my-zsh.sh"
+if [[ -s "$ZSH/oh-my-zsh.sh" ]]; then
+  source "$ZSH/oh-my-zsh.sh"
+else
+  echo "oh-my-zsh not found at $ZSH; run install/install.sh to set it up." >&2
+fi
 
 # ─── 2. zoxide & NVM initialization ─────────────────────────────────────────────
 eval "$(zoxide init zsh --cmd j)"
@@ -99,5 +103,5 @@ fi
 # ─── End of file ─────────────────────────────────────────────────────────────────
 
 # Optional extras (expected to exist)
-source ~/.ghcup/env
-source /home/yaloalo/.config/broot/launcher/bash/br
+[[ -f "$HOME/.ghcup/env" ]] && source "$HOME/.ghcup/env"
+[[ -s "$HOME/.config/broot/launcher/bash/br" ]] && source "$HOME/.config/broot/launcher/bash/br"

@@ -9,12 +9,14 @@
   ```
   env REPO_URL=https://github.com/Yaloalo/Config BRANCH=main bash -lc 'tmp=$(mktemp) && curl -fsSL https://raw.githubusercontent.com/Yaloalo/Config/main/install/bootstrap.sh -o "$tmp" && bash "$tmp"'
   ```
+  Requires `git` on the target machine (bootstrap clones the repo before running the installer).
 
 ## Quick setup
 - Already cloned to `~/.config`: run `install/install.sh`.
 - Flags: `--skip-packages`, `--skip-systemd`, `--skip-sync` as needed.
 - AUR helper: expects `yay` or `paru` for AUR packages (uses `wezterm-git` from AUR; repo `wezterm` is not pulled).
 - Wallpaper: bundled at `~/.config/wallpapers/default.png` and loaded by hyprpaper for all monitors.
+- Upload helper: `scripts/upload.sh "message"` will git add/commit/push your config changes.
 
 ## Stack overview
 - Hyprland + hyprpaper + hypridle + hyprlock; kanshi for outputs.
@@ -35,5 +37,5 @@
 - Pacman + AUR lists live in `install/install.sh` (edit there, commit, rerun `install.sh --skip-sync` on other machines to pick up new packages).
 
 ## Keeping machines in sync
-- Edit configs in `~/.config`, then `git add/commit/push`.
+- Edit configs in `~/.config`, then `scripts/upload.sh "message"` (or `git add/commit/push`).
 - On other machines: `git pull` (and rerun `install.sh --skip-sync` if you changed packages/systemd).

@@ -23,6 +23,8 @@
 !/scripts/**
 !/install/
 !/install/**
+!/broot/
+!/broot/**
 !/wallpapers/
 !/wallpapers/**
 !/mako/

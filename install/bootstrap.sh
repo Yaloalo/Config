@@ -6,25 +6,24 @@ BRANCH=${BRANCH:-"main"}
 tmp=""
 
 main() {
-  local archive repo_dir
   tmp=$(mktemp -d "${TMPDIR:-/tmp}/config-install.XXXXXX")
-  archive="$tmp/config.tar.gz"
   trap 'tmp_clean="${tmp:-}"; if [ -n "$tmp_clean" ]; then rm -rf "$tmp_clean"; fi' EXIT
 
-  echo "Downloading dotfiles from $REPO_URL (branch: $BRANCH) with wget..."
-  wget -qO "$archive" "$REPO_URL/archive/refs/heads/$BRANCH.tar.gz"
+  if ! command -v git >/dev/null 2>&1 && command -v pacman >/dev/null 2>&1; then
+    echo "git not found; attempting to install via pacman..."
+    sudo pacman -Sy --needed git
+  fi
 
-  echo "Extracting archive..."
-  tar -xzf "$archive" -C "$tmp"
-  repo_dir=$(find "$tmp" -maxdepth 1 -type d -name "Config*" | head -n1)
-
-  if [[ -z "$repo_dir" ]]; then
-    echo "Could not locate extracted repository directory under $tmp" >&2
+  if ! command -v git >/dev/null 2>&1; then
+    echo "git is required to clone $REPO_URL; please install git and rerun." >&2
     exit 1
   fi
 
-  echo "Running installer from $repo_dir/install/install.sh"
-  bash "$repo_dir/install/install.sh" "$@"
+  echo "Cloning dotfiles from $REPO_URL (branch: $BRANCH)..."
+  git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$tmp/Config"
+
+  echo "Running installer from $tmp/Config/install/install.sh"
+  bash "$tmp/Config/install/install.sh" "$@"
 }
 
 main "$@"
