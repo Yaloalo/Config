@@ -164,6 +164,31 @@ install_oh_my_zsh() {
   git clone --depth 1 "$OH_MY_ZSH_REPO" "$omz_dir"
 }
 
+install_omz_plugin() {
+  local name="$1" repo="$2" target="$CONFIG_TARGET/zsh/oh-my-zsh/custom/plugins/$name"
+
+  mkdir -p "$(dirname "$target")"
+
+  if [[ -d "$target/.git" ]]; then
+    log "Updating Oh My Zsh plugin $name"
+    git -C "$target" pull --ff-only || warn "Could not update $name plugin"
+    return
+  fi
+
+  if [[ -d "$target" ]]; then
+    log "Oh My Zsh plugin $name already present"
+    return
+  fi
+
+  if ! command -v git >/dev/null 2>&1; then
+    warn "git missing; cannot install Oh My Zsh plugin $name"
+    return
+  fi
+
+  log "Cloning Oh My Zsh plugin $name"
+  git clone --depth 1 "$repo" "$target"
+}
+
 sync_dotfiles() {
   mkdir -p "$CONFIG_TARGET"
 
@@ -346,6 +371,8 @@ main() {
 
   [[ $SYNC_CONFIG -eq 0 ]] || sync_dotfiles
   install_oh_my_zsh
+  install_omz_plugin "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions.git"
+  install_omz_plugin "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-syntax-highlighting.git"
   ensure_zsh_setup
   ensure_ghcup
   install_broot_launcher
