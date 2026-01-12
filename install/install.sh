@@ -51,7 +51,6 @@ PACMAN_PACKAGES=(
   kanshi
   kitty
   greetd
-  tuigreet
   tmux
   zsh
   ttf-jetbrains-mono-nerd
@@ -70,6 +69,7 @@ AUR_PACKAGES=(
   bluetui
   wezterm-git
   ghcup-hs-bin
+  tuigreet
 )
 
 TIMERS=(
