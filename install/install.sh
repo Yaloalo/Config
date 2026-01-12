@@ -27,6 +27,7 @@ PACMAN_PACKAGES=(
   fd
   fzf
   zoxide
+  tree-sitter-cli
   direnv
   broot
   python-pynvim

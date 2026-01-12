@@ -2,7 +2,7 @@ local map = vim.keymap.set
 
 -- track whether diagnostics are currently shown
 local diagnostics_on = false
-vim.diagnostic.disable()
+vim.diagnostic.enable(false)
 
 --Mode navigation
 vim.keymap.set("v", "<C-c>", "<Esc>")

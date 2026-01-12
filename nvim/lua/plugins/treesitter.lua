@@ -7,8 +7,14 @@ return {
     "nvim-treesitter/nvim-treesitter-textobjects",
   },
   config = function()
+    local languages = { "bash","c","cpp","lua","python","javascript","typescript","html","css","markdown","vim","query","rust","zig", "asm", "svelte", "haskell" }
+    if vim.fn.executable("tree-sitter") == 1 then
+      table.insert(languages, "latex")
+    else
+      vim.notify("tree-sitter CLI not found; skipping latex parser install", vim.log.levels.WARN)
+    end
     require("nvim-treesitter.configs").setup {
-      ensure_installed = { "bash","c","cpp","lua","python","javascript","typescript","html","css","markdown","vim","query","latex","rust","zig", "asm", "svelte", "haskell" },
+      ensure_installed = languages,
       highlight = { enable = true, additional_vim_regex_highlighting = false },
       indent    = { enable = true, disable = { "python" } },
       incremental_selection = {
@@ -38,4 +44,3 @@ return {
     }
   end,
 }
-
