@@ -6,6 +6,7 @@ vim.o.termguicolors = true
 -- ──────────────────────────────────────────────────────────────────────────────
 
 return {
+--[[
   {
     "folke/noice.nvim",
     event = "VeryLazy",
@@ -45,7 +46,7 @@ return {
       vim.api.nvim_set_hl(0, "NoiceWhiteBorder", { fg = "#ffffff", bg = "none" })
     end,
   },
-
+--]]
   {
     "goolord/alpha-nvim",
     dependencies = { "echasnovski/mini.icons", "nvim-lua/plenary.nvim" },

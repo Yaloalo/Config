@@ -2,28 +2,35 @@ local wezterm = require("wezterm")
 local act = wezterm.action
 local config = wezterm.config_builder()
 
--- ── Static opaque background by default; Hyprland will handle blur when toggled ─────────────────
-config.window_background_opacity = 1.0
+-- ── Window background ─────────────────────────────────────────────────────────
+-- Start fully transparent; Hyprland handles blur/compositing.
+config.window_background_opacity = 0.0
 config.kde_window_background_blur = false
 
--- ── Tabs: show current running process (basename only) in each pane ───────────────────────────────
+-- ── Tabs: show tab index + current running process (basename only) ───────────
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = false
 
 wezterm.on("format-tab-title", function(tab, _, _, _, _, max_width)
-  -- Get full process path (e.g. "/usr/bin/nvim")
+  -- Full process path (e.g. "/usr/bin/nvim")
   local full = tab.active_pane.foreground_process_name or "?"
-  -- Extract basename ("nvim")
+  -- Basename ("nvim")
   local proc = full:match("([^/]+)$") or full
-  -- Truncate so it never exceeds the tab width
-  local title = wezterm.truncate_right(proc, max_width)
+
+  -- tab_index is 0-based; display 1-based
+  local index = tab.tab_index + 1
+  local title = string.format("%d: %s", index, proc)
+
+  -- Truncate so it fits in the tab width
+  title = wezterm.truncate_right(title, max_width)
+
   return { { Text = " " .. title .. " " } }
 end)
 
--- Ask if kill process
+-- Don't ask on window close
 config.window_close_confirmation = "NeverPrompt"
 
--- ── Scrollback → editor ─────────────────────────────────────────────────────────────────────────
+-- ── Scrollback → editor ──────────────────────────────────────────────────────
 wezterm.on("edit-scrollback", function(window, pane)
   local rows = pane:get_dimensions().scrollback_rows
   local text = pane:get_lines_as_text(rows)
@@ -39,40 +46,56 @@ wezterm.on("edit-scrollback", function(window, pane)
   os.remove(tmp)
 end)
 
--- ── Appearance & shell ─────────────────────────────────────────────────────────────────────────
+-- ── Appearance & shell ───────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = 18.0
 config.color_scheme = "tokyonight_night"
+
+-- Make the retro tab bar strip transparent, while keeping the scheme's tab colors.
+config.colors = {
+  tab_bar = {
+    -- Transparent strip behind the tabs
+    background = "rgba(0,0,0,0)",
+    -- We don't touch active_tab/inactive_tab, so the scheme's colors remain.
+  },
+}
+
 config.window_padding = {
   left = "0pt",
   right = "0pt",
   top = "0pt",
   bottom = "0pt",
 }
+
 config.default_prog = { "/usr/bin/zsh", "-l" }
 
--- ── Toggle opaque ↔ transparent + retain TokyoNight scheme on opaque ─────────────────────────────
+-- ── Toggle opaque ↔ transparent, keeping color scheme ────────────────────────
 local toggle_transparency = wezterm.action_callback(function(window, _)
   local ovr = window:get_config_overrides() or {}
   local cur = ovr.window_background_opacity or config.window_background_opacity
+
   if cur > 0.9 then
+    -- currently opaque → go transparent
     ovr.window_background_opacity = 0.0
   else
+    -- currently transparent → go opaque
     ovr.window_background_opacity = 1.0
-    ovr.color_scheme = "tokyonight_night"
+    -- no need to touch color_scheme here; we keep tokyonight_night
   end
+
   window:set_config_overrides(ovr)
 end)
 
--- ── dynamic resize on font-change ─────────────────────────────────────
+-- ── Dynamic resize on font-change ────────────────────────────────────────────
 config.adjust_window_size_when_changing_font_size = true
 
--- ── Keybindings ─────────────────────────────────────────────────────────────────────────────────
+-- ── Keybindings ──────────────────────────────────────────────────────────────
 config.disable_default_key_bindings = true
 config.keys = {
-  -- scrollback
+  -- scrollback → editor
   { key = "R", mods = "CTRL|SHIFT", action = act.EmitEvent("edit-scrollback") },
 
+  -- font size
   { key = "(", mods = "CTRL|SHIFT", action = act.IncreaseFontSize },
   { key = ")", mods = "CTRL|SHIFT", action = act.DecreaseFontSize },
   { key = "=", mods = "CTRL|SHIFT", action = act.ResetFontSize },
@@ -84,6 +107,19 @@ config.keys = {
   { key = "RightArrow", mods = "CTRL", action = act.MoveTabRelative(1) },
   { key = "LeftArrow", mods = "CTRL", action = act.MoveTabRelative(-1) },
   { key = "F", mods = "CTRL|SHIFT", action = act.CloseCurrentTab({ confirm = false }) },
+
+  -- direct tab selection: CTRL|SHIFT + number
+  { key = "1", mods = "CTRL|SHIFT", action = act.ActivateTab(0) },
+  { key = "2", mods = "CTRL|SHIFT", action = act.ActivateTab(1) },
+  { key = "3", mods = "CTRL|SHIFT", action = act.ActivateTab(2) },
+  { key = "4", mods = "CTRL|SHIFT", action = act.ActivateTab(3) },
+  { key = "5", mods = "CTRL|SHIFT", action = act.ActivateTab(4) },
+  { key = "6", mods = "CTRL|SHIFT", action = act.ActivateTab(5) },
+  { key = "7", mods = "CTRL|SHIFT", action = act.ActivateTab(6) },
+  { key = "8", mods = "CTRL|SHIFT", action = act.ActivateTab(7) },
+  { key = "9", mods = "CTRL|SHIFT", action = act.ActivateTab(8) },
+  -- optional: 0 for 10th tab
+  { key = "0", mods = "CTRL|SHIFT", action = act.ActivateTab(9) },
 
   -- splits & pane movement
   {
@@ -114,3 +150,4 @@ config.keys = {
 }
 
 return config
+

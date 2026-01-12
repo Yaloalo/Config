@@ -28,3 +28,17 @@ api.nvim_create_autocmd("VimEnter", {
     end
   end,
 })
+
+vim.o.splitright = true
+
+vim.api.nvim_create_autocmd("WinNew", {
+  pattern = "*",
+  callback = function()
+    if vim.fn.winnr('$') == 2 and vim.fn.win_gettype() == "" then
+      vim.cmd("wincmd =")
+    end
+  end,
+})
+
+
+

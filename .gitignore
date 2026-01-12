@@ -21,6 +21,10 @@
 !/scripts
 !/systemd/**
 !/scripts/**
+!/install/
+!/install/**
+!/wallpapers/
+!/wallpapers/**
 !/mako/
 !/mako/**
 !/gtk-3.0

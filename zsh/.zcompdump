@@ -1,4 +1,4 @@
-#files: 855	version: 5.9
+#files: 875	version: 5.9
 
 _comps=(
 '-' '_precommand'
@@ -234,6 +234,7 @@ _comps=(
 'chattr' '_chattr'
 'chcon' '_chcon'
 'chdir' '_cd'
+'checksec' '_checksec'
 'chfn' '_users'
 'chgrp' '_chown'
 'chimera' '_webbrowser'
@@ -517,6 +518,7 @@ _comps=(
 'git-upload-archive' '_git'
 'git-upload-pack' '_git'
 'gitk' '_git'
+'gitleaks' '_gitleaks'
 'gjoin' '_join'
 'glance' '_openstack'
 'gln' '_ln'
@@ -561,6 +563,7 @@ _comps=(
 'gprintenv' '_printenv'
 'gprof' '_gprof'
 'gqview' '_gqview'
+'gr_modtool' '_gr_modtool'
 'gradle' '_gradle'
 'gradlew' '_gradle'
 'grail' '_webbrowser'
@@ -664,6 +667,7 @@ _comps=(
 'hostnamectl' '_hostnamectl'
 'hotjava' '_webbrowser'
 'htop' '_htop'
+'hugo' '_hugo'
 'hyprctl' '_hyprctl'
 'hyprpm' '_hyprpm'
 'iceweasel' '_mozilla'
@@ -754,7 +758,6 @@ _comps=(
 'let' '_math'
 'lftp' '_ncftp'
 'lha' '_lha'
-'libinput' '_libinput'
 'light' '_webbrowser'
 'limit' '_limit'
 'links' '_links'
@@ -834,6 +837,7 @@ _comps=(
 'mdeltree' '_mtools'
 'mdir' '_mtools'
 'mdu' '_mtools'
+'medusa' '_medusa'
 'mencal' '_mencal'
 'mere' '_mere'
 'merge' '_rcs'
@@ -971,6 +975,7 @@ _comps=(
 'p4d' '_perforce'
 'pacat' '_pulseaudio'
 'pack' '_pack'
+'packer' '_packer'
 'packf' '_mh'
 'pacman' '_pacman'
 'pacman-conf' '_pacman'
@@ -1104,14 +1109,23 @@ _comps=(
 'pwait' '_pids'
 'pwdx' '_pids'
 'pwgen' '_pwgen'
+'pwn' '_pwn'
 'pyhtmlizer' '_twisted'
 'qdbus' '_qdbus'
 'qiv' '_qiv'
 'quilt' '_quilt'
 'r' '_fc'
+'r2' '_r2'
+'rabin2' '_rabin2'
+'radiff2' '_radiff2'
+'rafind2' '_rafind2'
+'ragg2' '_ragg2'
+'rahash2' '_rahash2'
 'rake' '_rake'
 'ranlib' '_ranlib'
 'rar' '_rar'
+'rasm2' '_rasm2'
+'rax2' '_rax2'
 'rc' '_sh'
 'rclone' '_rclone'
 'rcp' '_rlogin'
@@ -1179,6 +1193,7 @@ _comps=(
 'schedtool' '_schedtool'
 'scons' '_scons'
 'scp' '_ssh'
+'scrapy' '_scrapy'
 'screen' '_screen'
 'script' '_script'
 'scriptreplay' '_script'
@@ -1232,6 +1247,7 @@ _comps=(
 'smbclient' '_samba'
 'smbcontrol' '_samba'
 'smbstatus' '_samba'
+'sniffglue' '_sniffglue'
 'soa' '_hosts'
 'socket' '_socket'
 'sort' '_sort'
@@ -1293,6 +1309,7 @@ _comps=(
 'swww' '_swww'
 'sync' '_nothing'
 'sysctl' '_sysctl'
+'sysdig' '_sysdig'
 'systemctl' '_systemctl'
 'systemd-analyze' '_systemd-analyze'
 'systemd-ask-password' '_systemd'
@@ -1327,6 +1344,7 @@ _comps=(
 'tee' '_tee'
 'telnet' '_telnet'
 'tex' '_tex'
+'texdoc' '_texdoc'
 'texi2any' '_texinfo'
 'texi2dvi' '_texinfo'
 'texi2pdf' '_texinfo'
@@ -1360,6 +1378,7 @@ _comps=(
 'trap' '_trap'
 'tree' '_tree'
 'trial' '_twisted'
+'trivy' '_trivy'
 'trove' '_openstack'
 'true' '_nothing'
 'truncate' '_truncate'
@@ -1707,21 +1726,25 @@ bindkey '^[/' _history-complete-older
 bindkey '^[~' _bash_complete-word
 
 autoload -Uz _extract _bat _bluetoothctl _bootctl _busctl \
-            _bwrap _cargo _coredumpctl _ctr _curl \
-            _docker _eza _fd _flatpak _ghostty \
-            _glow _hostnamectl _hyprctl _hyprpm _img2sixel \
+            _bwrap _cargo _checksec _coredumpctl _ctr \
+            _curl _dkms _docker _eza _fd \
+            _flatpak _ghostty _gitleaks _glow _gr_modtool \
+            _hostnamectl _hugo _hyprctl _hyprpm _img2sixel \
             _insmod _john _journalctl _kernel-install _keyring \
-            _kitty _libinput _localectl _loginctl _lsmod \
-            _machinectl _mako _makoctl _meson _mkinitcpio \
+            _kitty _localectl _loginctl _lsmod _machinectl \
+            _mako _makoctl _medusa _meson _mkinitcpio \
             _mpv _msfconsole _msfvenom _networkctl _ninja \
-            _oomctl _p11-kit _pacman _paru _pip \
-            _playerctl _pulseaudio _resolvectl _rg _rmmod \
-            _run0 _rustup _sd_bus_address _sd_hosts_or_user_at_host _sd_machines \
-            _sd_outputmodes _sd_unit_files _sensors _sensors-detect _starship \
-            _sway _swayidle _swayimg _swaylock _swaymsg \
-            _swww _systemctl _systemd _systemd-analyze _systemd-delta \
-            _systemd-inhibit _systemd-nspawn _systemd-path _systemd-run _systemd-tmpfiles \
-            _timedatectl _trust _udevadm _udisks2 _upower \
+            _oomctl _p11-kit _packer _pacman _paru \
+            _pip _playerctl _pulseaudio _pwn _r2 \
+            _rabin2 _radiff2 _rafind2 _ragg2 _rahash2 \
+            _rasm2 _rax2 _resolvectl _rg _rmmod \
+            _run0 _rustup _scrapy _sd_bus_address _sd_hosts_or_user_at_host \
+            _sd_machines _sd_outputmodes _sd_unit_files _sensors _sensors-detect \
+            _sniffglue _starship _sway _swayidle _swayimg \
+            _swaylock _swaymsg _swww _sysdig _systemctl \
+            _systemd _systemd-analyze _systemd-delta _systemd-inhibit _systemd-nspawn \
+            _systemd-path _systemd-run _systemd-tmpfiles _texdoc _timedatectl \
+            _trivy _trust _udevadm _udisks2 _upower \
             _uv _varlinkctl _wezterm _wl-copy _wl-paste \
             _wlogout _wpctl _yay _yazi _zola \
             _zoxide _cdr _all_labels _all_matches _alternative \
