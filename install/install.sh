@@ -25,6 +25,9 @@ PACMAN_PACKAGES=(
   ripgrep
   fd
   fzf
+  zoxide
+  direnv
+  broot
   python-pynvim
   nodejs
   npm
@@ -58,6 +61,7 @@ AUR_PACKAGES=(
   uwsm
   bluetui
   wezterm-git
+  ghcup-hs-bin
 )
 
 TIMERS=(

@@ -98,5 +98,6 @@ fi
 
 # ─── End of file ─────────────────────────────────────────────────────────────────
 
+# Optional extras (expected to exist)
 source ~/.ghcup/env
 source /home/yaloalo/.config/broot/launcher/bash/br

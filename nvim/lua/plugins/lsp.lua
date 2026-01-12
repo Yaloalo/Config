@@ -30,9 +30,20 @@ return {
       { "j-hui/fidget.nvim", opts = {} },
     },
     config = function()
-      -- Mason bootstrap
-      require("mason").setup({})
-      require("mason-lspconfig").setup({
+      -- Mason bootstrap (guarded)
+      local ok_mason, mason = pcall(require, "mason")
+      if not ok_mason then
+        vim.notify("[lsp] mason.nvim not found; skipping LSP installer setup", vim.log.levels.WARN)
+        return
+      end
+      local ok_mason_lsp, mason_lsp = pcall(require, "mason-lspconfig")
+      if not ok_mason_lsp then
+        vim.notify("[lsp] mason-lspconfig.nvim not found; skipping LSP installer setup", vim.log.levels.WARN)
+        return
+      end
+
+      mason.setup({})
+      mason_lsp.setup({
         ensure_installed = {
           -- Web
           "vtsls", "svelte", "html", "cssls", "jsonls",
@@ -281,4 +292,3 @@ return {
     end,
   },
 }
-

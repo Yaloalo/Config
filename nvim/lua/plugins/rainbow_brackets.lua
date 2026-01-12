@@ -6,6 +6,12 @@ return {
   priority = 1000,
 
   config = function()
+    local ok_rd, rainbow = pcall(require, "rainbow-delimiters.setup")
+    if not ok_rd then
+      vim.notify("[rainbow] rainbow-delimiters not found; skipping setup", vim.log.levels.WARN)
+      return
+    end
+
     ---------------------------------------------------------------------------
     -- 1) Highlight groups
     ---------------------------------------------------------------------------
@@ -36,7 +42,7 @@ return {
     ---------------------------------------------------------------------------
     -- 2) rainbow-delimiters setup
     ---------------------------------------------------------------------------
-    require("rainbow-delimiters.setup").setup {
+    rainbow.setup {
       strategy  = { [""] = "rainbow-delimiters.strategy.global" },
       query     = { [""] = "rainbow-delimiters" },
       priority  = { [""] = 3000 },
@@ -50,4 +56,3 @@ return {
     }
   end,
 }
-
