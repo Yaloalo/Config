@@ -7,13 +7,16 @@ CONFIG_TARGET="${XDG_CONFIG_HOME:-$HOME/.config}"
 OH_MY_ZSH_REPO=${OH_MY_ZSH_REPO:-"https://github.com/ohmyzsh/ohmyzsh.git"}
 WORDLIST_REPO=${WORDLIST_REPO:-"https://github.com/kkrypt0nn/wordlists"}
 HACKING_DIR=${HACKING_DIR:-"$HOME/hacking"}
-TUIGREET_PKG=${TUIGREET_PKG:-"tuigreet"}
+SDDM_THEME_REPO=${SDDM_THEME_REPO:-"https://github.com/MarianArlt/sddm-sugar-candy.git"}
+SDDM_THEME_NAME=${SDDM_THEME_NAME:-"sugar-candy"}
+SDDM_THEME_DIR=${SDDM_THEME_DIR:-"/usr/share/sddm/themes/$SDDM_THEME_NAME"}
 
 INSTALL_PACKAGES=1
 ENABLE_SYSTEMD=1
 SYNC_CONFIG=1
 ENABLE_SYSTEM_SERVICES=1
 ENABLE_CHSH=1
+ENABLE_SDDM_THEME=1
 
 PACMAN_PACKAGES=(
   base-devel
@@ -51,7 +54,10 @@ PACMAN_PACKAGES=(
   wlogout
   kanshi
   kitty
-  greetd
+  sddm
+  qt5-graphicaleffects
+  qt5-quickcontrols2
+  qt5-svg
   tmux
   zsh
   ttf-jetbrains-mono-nerd
@@ -70,7 +76,6 @@ AUR_PACKAGES=(
   bluetui
   wezterm-git
   ghcup-hs-bin
-  "$TUIGREET_PKG"
 )
 
 TIMERS=(
@@ -95,6 +100,7 @@ Usage: $(basename "$0") [options]
   --skip-sync       Do not copy dotfiles into \$XDG_CONFIG_HOME
   --skip-system-services  Do not enable system-level services
   --skip-shell      Do not change the login shell to zsh
+  --skip-sddm-theme Do not install/configure the SDDM theme
 EOF
 }
 
@@ -109,6 +115,7 @@ parse_args() {
       --skip-sync)     SYNC_CONFIG=0 ;;
       --skip-system-services) ENABLE_SYSTEM_SERVICES=0 ;;
       --skip-shell)    ENABLE_CHSH=0 ;;
+      --skip-sddm-theme) ENABLE_SDDM_THEME=0 ;;
       -h|--help) usage; exit 0 ;;
       *) usage; exit 1 ;;
     esac
@@ -345,49 +352,6 @@ ensure_zsh_shell() {
   fi
 }
 
-ensure_greetd_config() {
-  local config="/etc/greetd/config.toml"
-  local tmp_file
-
-  if [[ -f "$config" ]]; then
-    log "greetd config already present at $config"
-    return
-  fi
-
-  local greet_cmd=""
-  if command -v tuigreet >/dev/null 2>&1; then
-    greet_cmd="tuigreet --cmd Hyprland"
-  elif command -v agreety >/dev/null 2>&1; then
-    greet_cmd="agreety --cmd Hyprland"
-  else
-    warn "No greetd greeter found (tuigreet/agreety); skipping greetd config."
-    return
-  fi
-
-  if ! command -v sudo >/dev/null 2>&1; then
-    warn "sudo not available; cannot write $config."
-    return
-  fi
-
-  tmp_file="$(mktemp)"
-  cat >"$tmp_file" <<'EOF'
-[terminal]
-vt = 1
-
-[default_session]
-command = "__GREET_CMD__"
-user = "greeter"
-EOF
-  sed -i "s|__GREET_CMD__|$greet_cmd|" "$tmp_file"
-
-  if sudo install -Dm644 "$tmp_file" "$config"; then
-    log "Installed greetd config at $config"
-  else
-    warn "Failed to write $config"
-  fi
-  rm -f "$tmp_file"
-}
-
 ensure_ghcup() {
   local env_file="$HOME/.ghcup/env"
 
@@ -446,6 +410,60 @@ EOF
   chmod +x "$launcher"
 }
 
+install_sddm_theme() {
+  if [[ -d "$SDDM_THEME_DIR" ]]; then
+    if [[ -d "$SDDM_THEME_DIR/.git" ]]; then
+      log "Updating SDDM theme in $SDDM_THEME_DIR"
+      sudo git -C "$SDDM_THEME_DIR" pull --ff-only || warn "Could not update SDDM theme"
+      return
+    fi
+    log "SDDM theme already present at $SDDM_THEME_DIR"
+    return
+  fi
+
+  if ! command -v git >/dev/null 2>&1; then
+    warn "git missing; cannot install SDDM theme from $SDDM_THEME_REPO"
+    return
+  fi
+
+  if ! command -v sudo >/dev/null 2>&1; then
+    warn "sudo not available; cannot install SDDM theme."
+    return
+  fi
+
+  log "Cloning SDDM theme into $SDDM_THEME_DIR"
+  sudo git clone --depth 1 "$SDDM_THEME_REPO" "$SDDM_THEME_DIR" || warn "Failed to clone SDDM theme."
+}
+
+configure_sddm_theme() {
+  local conf_dir="/etc/sddm.conf.d"
+  local conf_file="$conf_dir/00-theme.conf"
+  local tmp_file
+
+  if [[ -f "$conf_file" ]]; then
+    log "SDDM theme config already present at $conf_file"
+    return
+  fi
+
+  if ! command -v sudo >/dev/null 2>&1; then
+    warn "sudo not available; cannot write $conf_file."
+    return
+  fi
+
+  tmp_file="$(mktemp)"
+  cat >"$tmp_file" <<EOF
+[Theme]
+Current=$SDDM_THEME_NAME
+EOF
+
+  if sudo install -Dm644 "$tmp_file" "$conf_file"; then
+    log "Installed SDDM theme config at $conf_file"
+  else
+    warn "Failed to write $conf_file"
+  fi
+  rm -f "$tmp_file"
+}
+
 enable_system_services() {
   local svc
 
@@ -459,7 +477,7 @@ enable_system_services() {
     return
   fi
 
-  for svc in NetworkManager.service pipewire.service pipewire-pulse.service wireplumber.service greetd.service; do
+  for svc in NetworkManager.service pipewire.service pipewire-pulse.service wireplumber.service; do
     if systemctl list-unit-files --type=service --no-legend 2>/dev/null | awk '{print $1}' | grep -qx "$svc"; then
       log "Enabling system service: $svc"
       sudo systemctl enable --now "$svc" || warn "Failed to enable $svc"
@@ -522,7 +540,10 @@ main() {
   install_broot_launcher
   install_wordlists
 
-  ensure_greetd_config
+  if [[ $ENABLE_SDDM_THEME -ne 0 ]]; then
+    install_sddm_theme
+    configure_sddm_theme
+  fi
   [[ $ENABLE_SYSTEM_SERVICES -eq 0 ]] || enable_system_services
   [[ $ENABLE_SYSTEMD -eq 0 ]] || enable_systemd_units
 
