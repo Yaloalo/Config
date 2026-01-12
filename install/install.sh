@@ -165,7 +165,14 @@ install_oh_my_zsh() {
 }
 
 install_omz_plugin() {
-  local name="$1" repo="$2" target="$CONFIG_TARGET/zsh/oh-my-zsh/custom/plugins/$name"
+  local name="${1:-}" repo="${2:-}"
+  if [[ -z "$name" || -z "$repo" ]]; then
+    warn "install_omz_plugin missing name or repo; skipping."
+    return
+  fi
+  local target="$CONFIG_TARGET/zsh/oh-my-zsh/custom/plugins/$name"
+  local plugin_file_a="$target/$name.plugin.zsh"
+  local plugin_file_b="$target/$name.zsh"
 
   mkdir -p "$(dirname "$target")"
 
@@ -176,8 +183,16 @@ install_omz_plugin() {
   fi
 
   if [[ -d "$target" ]]; then
-    log "Oh My Zsh plugin $name already present"
-    return
+    if [[ -z "$(ls -A "$target")" ]]; then
+      log "Removing empty Oh My Zsh plugin dir $name"
+      rmdir "$target" || true
+    elif [[ -f "$plugin_file_a" || -f "$plugin_file_b" ]]; then
+      log "Oh My Zsh plugin $name already present"
+      return
+    else
+      log "Oh My Zsh plugin $name missing expected files; reinstalling"
+      rm -rf "$target"
+    fi
   fi
 
   if ! command -v git >/dev/null 2>&1; then
