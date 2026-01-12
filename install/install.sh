@@ -40,7 +40,6 @@ PACMAN_PACKAGES=(
   hyprlock
   wlogout
   kanshi
-  wezterm
   kitty
   tmux
   zsh
@@ -58,6 +57,7 @@ PACMAN_PACKAGES=(
 AUR_PACKAGES=(
   uwsm
   bluetui
+  wezterm-git
 )
 
 TIMERS=(

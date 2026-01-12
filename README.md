@@ -13,7 +13,7 @@
 ## Quick setup
 - Already cloned to `~/.config`: run `install/install.sh`.
 - Flags: `--skip-packages`, `--skip-systemd`, `--skip-sync` as needed.
-- AUR helper: expects `yay` or `paru` for AUR packages.
+- AUR helper: expects `yay` or `paru` for AUR packages (uses `wezterm-git` from AUR; repo `wezterm` is not pulled).
 - Wallpaper: bundled at `~/.config/wallpapers/default.png` and loaded by hyprpaper for all monitors.
 
 ## Stack overview

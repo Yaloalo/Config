@@ -5,7 +5,6 @@ local config = wezterm.config_builder()
 -- ── Window background ─────────────────────────────────────────────────────────
 -- Start fully transparent; Hyprland handles blur/compositing.
 config.window_background_opacity = 0.0
-config.kde_window_background_blur = false
 
 -- ── Tabs: show tab index + current running process (basename only) ───────────
 config.use_fancy_tab_bar = false
@@ -150,4 +149,3 @@ config.keys = {
 }
 
 return config
-
