@@ -58,7 +58,6 @@ PACMAN_PACKAGES=(
 AUR_PACKAGES=(
   uwsm
   bluetui
-  protonvpn-cli
 )
 
 TIMERS=(
@@ -72,7 +71,6 @@ SERVICES=(
 )
 
 PROTON_SERVICES=(
-  protonvpn.service
   tor.service
 )
 

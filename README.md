@@ -13,7 +13,7 @@
 ## Quick setup
 - Already cloned to `~/.config`: run `install/install.sh`.
 - Flags: `--skip-packages`, `--skip-systemd`, `--skip-sync` as needed.
-- AUR helper: expects `yay` or `paru` for AUR packages. ProtonVPN/Tor units start only if binaries exist.
+- AUR helper: expects `yay` or `paru` for AUR packages.
 - Wallpaper: bundled at `~/.config/wallpapers/default.png` and loaded by hyprpaper for all monitors.
 
 ## Stack overview
@@ -28,7 +28,7 @@
 
 ## Systemd user units
 - Timers: `battery-watch.timer`, `battery-watch-critical.timer`, `bedtime.timer`.
-- Services: `hyprlock-on-suspend.service`; optional `protonvpn.service` + `tor.service`.
+- Services: `hyprlock-on-suspend.service`; optional `tor.service` (starts only if `tor` is installed).
 - Installer runs `systemctl --user enable --now` on these; `daemon-reload` included.
 
 ## Packages
