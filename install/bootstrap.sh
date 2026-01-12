@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL=${REPO_URL:-"https://github.com/Yaloalo/Config"}
+REPO_URL=${REPO_URL:-"git@github.com:Yaloalo/Config.git"}
 BRANCH=${BRANCH:-"main"}
 tmp=""
 
