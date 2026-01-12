@@ -43,3 +43,6 @@
 # …except the nested oh-my-zsh repo
 /zsh/oh-my-zsh/
 /zsh/oh-my-zsh/**
+
+# zsh completion cache
+/zsh/.zcompdump*
