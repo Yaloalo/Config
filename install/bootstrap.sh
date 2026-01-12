@@ -3,12 +3,13 @@ set -euo pipefail
 
 REPO_URL=${REPO_URL:-"https://github.com/Yaloalo/Config"}
 BRANCH=${BRANCH:-"main"}
+tmp=""
 
 main() {
-  local tmp archive repo_dir
+  local archive repo_dir
   tmp=$(mktemp -d "${TMPDIR:-/tmp}/config-install.XXXXXX")
   archive="$tmp/config.tar.gz"
-  trap '[[ -n ${tmp-} ]] && rm -rf "$tmp"' EXIT
+  trap 'if [ -n "$tmp" ]; then rm -rf "$tmp"; fi' EXIT
 
   echo "Downloading dotfiles from $REPO_URL (branch: $BRANCH) with wget..."
   wget -qO "$archive" "$REPO_URL/archive/refs/heads/$BRANCH.tar.gz"
