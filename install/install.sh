@@ -150,13 +150,37 @@ sync_dotfiles() {
 
   log "Syncing dotfiles into $CONFIG_TARGET"
   rsync -av \
-    --exclude '.git' \
-    --exclude '.gitignore' \
+    --exclude '.p10k.zsh' \
     "$REPO_ROOT"/ "$CONFIG_TARGET"/
 
   # Ensure helper scripts remain executable after sync.
   find "$CONFIG_TARGET/hypr" "$CONFIG_TARGET/scripts" -type f -name '*.sh' -exec chmod +x {} +
   chmod +x "$CONFIG_TARGET/install/"*.sh 2>/dev/null || true
+}
+
+ensure_zsh_setup() {
+  local zshenv="$HOME/.zshenv"
+  local target_rc="$CONFIG_TARGET/zsh/.zshrc"
+
+  if [[ ! -f "$zshenv" ]]; then
+    cat >"$zshenv" <<'EOF'
+# Managed by Config installer
+export ZDOTDIR=$HOME/.config/zsh
+export EDITOR=nvim
+export QT_SELECT=4
+EOF
+    log "Created $zshenv to point ZDOTDIR at ~/.config/zsh"
+  fi
+
+  if [[ ! -e "$HOME/.zshrc" && -f "$target_rc" ]]; then
+    ln -s "$target_rc" "$HOME/.zshrc"
+    log "Linked ~/.zshrc -> $target_rc"
+  fi
+
+  if [[ -f "$HOME/.p10k.zsh" ]]; then
+    mv "$HOME/.p10k.zsh" "$HOME/.p10k.zsh.bak" || true
+    log "Moved existing ~/.p10k.zsh to ~/.p10k.zsh.bak to keep starship prompt."
+  fi
 }
 
 sync_karlos_keys() {
@@ -231,6 +255,7 @@ main() {
   [[ $INSTALL_PACKAGES -eq 0 ]] || install_aur_packages
 
   [[ $SYNC_CONFIG -eq 0 ]] || sync_dotfiles
+  ensure_zsh_setup
   sync_karlos_keys
 
   [[ $ENABLE_SYSTEMD -eq 0 ]] || enable_systemd_units

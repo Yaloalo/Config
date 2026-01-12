@@ -2,7 +2,7 @@
 
 # ─── 1. Oh My Zsh core setup ─────────────────────────────────────────────────────
 export ZSH="${ZDOTDIR:-$HOME/.config/zsh}/oh-my-zsh"
-ZSH_THEME="robbyrussell"  # Default theme (no Powerlevel10k)
+ZSH_THEME=""  # Disable oh-my-zsh theme; Starship will handle prompt
 plugins=(
   fzf
   extract
