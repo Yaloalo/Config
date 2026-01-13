@@ -4,10 +4,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 CONFIG_TARGET="${XDG_CONFIG_HOME:-$HOME/.config}"
-OH_MY_ZSH_REPO=${OH_MY_ZSH_REPO:-"https://github.com/ohmyzsh/ohmyzsh.git"}
-WORDLIST_REPO=${WORDLIST_REPO:-"https://github.com/kkrypt0nn/wordlists"}
+OH_MY_ZSH_REPO=${OH_MY_ZSH_REPO:-"git@github.com:ohmyzsh/ohmyzsh.git"}
+WORDLIST_REPO=${WORDLIST_REPO:-"git@github.com:kkrypt0nn/wordlists.git"}
 HACKING_DIR=${HACKING_DIR:-"$HOME/hacking"}
-SDDM_THEME_REPO=${SDDM_THEME_REPO:-"https://github.com/MarianArlt/sddm-sugar-candy.git"}
+SDDM_THEME_REPO=${SDDM_THEME_REPO:-"git@github.com:MarianArlt/sddm-sugar-candy.git"}
 SDDM_THEME_NAME=${SDDM_THEME_NAME:-"sugar-candy"}
 SDDM_THEME_DIR=${SDDM_THEME_DIR:-"/usr/share/sddm/themes/$SDDM_THEME_NAME"}
 
@@ -65,6 +65,9 @@ PACMAN_PACKAGES=(
   playerctl
   upower
   networkmanager
+  bluez
+  bluez-utils
+  blueman
   pipewire
   wireplumber
   tor
@@ -73,7 +76,6 @@ PACMAN_PACKAGES=(
 
 AUR_PACKAGES=(
   uwsm
-  bluetui
   wezterm-git
   ghcup-hs-bin
 )
@@ -371,8 +373,21 @@ ensure_ghcup() {
 
   if command -v ghcup >/dev/null 2>&1; then
     mkdir -p "$HOME/.ghcup"
-    ghcup env >"$env_file" || warn "Failed to write $env_file"
-    log "ghcup environment written to $env_file"
+    if ghcup env --help >/dev/null 2>&1; then
+      if ghcup env >"$env_file"; then
+        log "ghcup environment written to $env_file"
+      else
+        warn "Failed to write $env_file"
+      fi
+    elif ghcup --print-env >/dev/null 2>&1; then
+      if ghcup --print-env >"$env_file"; then
+        log "ghcup environment written to $env_file"
+      else
+        warn "Failed to write $env_file"
+      fi
+    else
+      warn "ghcup does not support env output on this version; skipping $env_file"
+    fi
   fi
 }
 
@@ -477,13 +492,9 @@ enable_system_services() {
     return
   fi
 
-  for svc in NetworkManager.service pipewire.service pipewire-pulse.service wireplumber.service; do
-    if systemctl list-unit-files --type=service --no-legend 2>/dev/null | awk '{print $1}' | grep -qx "$svc"; then
-      log "Enabling system service: $svc"
-      sudo systemctl enable --now "$svc" || warn "Failed to enable $svc"
-    else
-      warn "System service $svc not found; skipping."
-    fi
+  for svc in NetworkManager.service bluetooth.service pipewire.service pipewire-pulse.service wireplumber.service; do
+    log "Enabling system service: $svc"
+    sudo systemctl enable --now "$svc" || warn "Failed to enable $svc"
   done
 }
 

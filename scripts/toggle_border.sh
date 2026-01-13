@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+function refresh_single_window_borders {
+    local workspace_id address floating_status
+
+    while read -r workspace_id; do
+        while read -r address floating_status; do
+            if [[ -z "$address" ]]; then
+                continue
+            fi
+            if [[ "$floating_status" == "true" ]]; then
+                hyprctl dispatch setprop address:$address noborder 0
+            else
+                hyprctl dispatch setprop address:$address noborder 1
+            fi
+        done < <(hyprctl clients -j | jq -r --argjson id "$workspace_id" '.[] | select(.workspace.id == $id) | "\(.address) \(.floating)"')
+    done < <(hyprctl workspaces -j | jq -r '.[] | select(.windows == 1) | .id')
+}
+
 function handle {
     if [[ ${1:0:10} == "openwindow" ]]
     then
@@ -19,7 +36,6 @@ function handle {
                 hyprctl dispatch setprop address:0x$window_id noborder 1
             else
                 hyprctl dispatch setprop address:0x$window_id noborder 0
-                return
             fi
 
         elif [[ $windows -eq 2 ]]
@@ -55,7 +71,6 @@ function handle {
                 hyprctl dispatch setprop address:0x$window_id noborder 1
             else
                 hyprctl dispatch setprop address:0x$window_id noborder 0
-                return
             fi
         elif [[ $windows -eq 2 ]]
         then
@@ -90,7 +105,6 @@ function handle {
                 hyprctl dispatch setprop address:$window_id noborder 1
             else
                 hyprctl dispatch setprop address:$window_id noborder 0
-                return
             fi
 
         fi
@@ -113,8 +127,11 @@ function handle {
             fi
         fi
     fi
+
+    refresh_single_window_borders
 }
 
 # Socket directory has changed in Hyprland v0.40.0
 # socat - UNIX-CONNECT:/tmp/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/.socket2.sock | while read line; do handle $line; done
+refresh_single_window_borders
 socat -U - UNIX-CONNECT:$(echo $XDG_RUNTIME_DIR)/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/.socket2.sock | while read line; do handle $line; done
