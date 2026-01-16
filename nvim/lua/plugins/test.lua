@@ -1,5 +1,7 @@
+local plugin_dir = vim.fs.joinpath(vim.fn.stdpath("config"), "fuzzyslash")
+
 return  {
-    dir = "/home/yaloalo/projects/plugin",
+    dir = plugin_dir,
     name = "fuzzyslash",
     config = function()
       require("fuzzyslash").setup({
