@@ -58,6 +58,7 @@ alias m='mpv --hwdec=vaapi --vo=gpu --gpu-context=wayland'
 
 # ─── 5. PATH & broot hook ─────────────────────────────────────────────────────────
 export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.opencode/bin:$PATH"
 if [[ -s "$HOME/.config/broot/launcher/bash/br" ]]; then
   source "$HOME/.config/broot/launcher/bash/br"
 fi

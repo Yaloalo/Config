@@ -1,0 +1,7 @@
+Background 1.0 Background.qml
+Bar 1.0 Bar.qml
+KeybindData 1.0 KeybindData.qml
+Notifications 1.0 Notifications.qml
+Overlay 1.0 Overlay.qml
+singleton ShellState 1.0 ShellState.qml
+singleton Theme 1.0 Theme.qml

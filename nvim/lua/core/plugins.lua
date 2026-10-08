@@ -1,37 +1,24 @@
--- lua/core/plugins.lua
--- Bootstraps folke/lazy.nvim and loads all plugin specs in lua/plugins/*
+local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 
-local fn = vim.fn
-local data = fn.stdpath 'data'
-local lp = data .. '/lazy/lazy.nvim'
-
--- 1) Clone lazy.nvim if not already installed
-if not vim.loop.fs_stat(lp) then
-  fn.system {
-    'git',
-    'clone',
-    '--filter=blob:none',
-    '--branch=stable',
-    'https://github.com/folke/lazy.nvim.git',
-    lp,
-  }
+if not vim.uv.fs_stat(lazy_path) then
+  local result = vim.fn.system({
+    'git', 'clone', '--filter=blob:none', '--branch=stable',
+    'https://github.com/folke/lazy.nvim.git', lazy_path,
+  })
+  if vim.v.shell_error ~= 0 then error('Unable to install lazy.nvim:\n' .. result) end
 end
 
--- 2) Add lazy.nvim to runtime path
-vim.opt.rtp:prepend(lp)
+vim.opt.rtp:prepend(lazy_path)
 
--- 3) Configure and install plugins
 require('lazy').setup({
-  -- import all plugin-spec files from lua/plugins/*.lua
-  { import = 'plugins' },
+  { import = 'plugins.interface' },
+  { import = 'plugins.search' },
+  { import = 'plugins.files' },
+  { import = 'plugins.language' },
+  { import = 'plugins.format' },
 }, {
-  ui = {
-    -- always use Nerd Font icons (no fallback)
-    icons = {},
-  },
-  -- disable luarocks/hererocks support
-  rocks = {
-    enabled   = false,
-    hererocks = false,
-  },
+  change_detection = { notify = false },
+  checker = { enabled = not vim.env.NVIM_OFFLINE, notify = false },
+  rocks = { enabled = false, hererocks = false },
+  ui = { border = 'rounded' },
 })

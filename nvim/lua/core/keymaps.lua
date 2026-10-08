@@ -1,65 +1,13 @@
 local map = vim.keymap.set
 
--- track whether diagnostics are currently shown
-local diagnostics_on = false
-vim.diagnostic.enable(false)
+map('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlight' })
+map('v', '<C-c>', '<Esc>', { desc = 'Leave visual mode' })
+map('n', '<C-n>', '<cmd>split<CR>', { desc = 'Horizontal split' })
+map('n', '<C-m>', '<cmd>vsplit<CR>', { desc = 'Vertical split' })
 
---Mode navigation
-vim.keymap.set("v", "<C-c>", "<Esc>")
+for key, direction in pairs({ h = 'h', j = 'j', k = 'k', l = 'l' }) do
+  map('n', '<C-' .. key .. '>', '<C-w><C-' .. direction .. '>', { desc = 'Focus ' .. direction })
+end
 
--- Clear search highlights
-map("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
--- Horizontal split on <leader>s
-map("n", "<C-n>", "<cmd>split<CR>", {
-  desc = "Horizontal split",
-})
-
--- Vertical split on <leader>d
-map("n", "<C-m>", "<cmd>vsplit<CR>", {
-  desc = "Vertical split",
-})
-
--- 1) disable Ctrl-S in all modes (normal, insert, visual, term)
-map({ "n","i","v","t" }, "<C-s>", "<Nop>", { silent = true, desc = "Disable Ctrl-S" })
-
--- 2) disable Ctrl-H everywhere except Normal (so only your <C-h> → window-left still works)
-map({ "i","v","t","c","o" }, "<C-h>", "<Nop>", { silent = true, desc = "Disable Ctrl-H outside Normal" })
-
--- Window navigation
-map("n", "<C-h>", "<C-w><C-h>", { desc = "Move to left window" })
-map("n", "<C-j>", "<C-w><C-j>", { desc = "Move to bottom window" })
-map("n", "<C-k>", "<C-w><C-k>", { desc = "Move to top window" })
-map("n", "<C-l>", "<C-w><C-l>", { desc = "Move to right window" })
-
--- In insert mode: move cursor with Ctrl+hjkl
-map("i", "<C-h>", "<Left>")
-map("i", "<C-j>", "<Down>")
-map("i", "<C-k>", "<Up>")
-map("i", "<C-l>", "<Right>")
-
-
--- Epic Root dir Search
-map("n", "<leader>w", function()
-  local actions = require("telescope.actions")
-  local action_state = require("telescope.actions.state")
-
-  require("telescope.builtin").find_files({
-    prompt_title = "Find Directory (fd)",
-    cwd = "/",
-    find_command = { "fd", "-t", "d", "--hidden", "--no-ignore" },
-    attach_mappings = function(prompt_bufnr, map_)
-      actions.select_default:replace(function()
-        local entry = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        local dir = entry.value
-        if not dir:match("^/") then
-          dir = "/" .. dir
-        end
-        vim.cmd("cd " .. vim.fn.fnameescape(dir))
-        vim.notify("cwd → " .. vim.fn.getcwd(), vim.log.levels.INFO)
-      end)
-      return true
-    end,
-  })
-end, { desc = "Fuzzy-find directory from / and cd" })
+map('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Diagnostics list' })
+map('n', '<leader>w', '<cmd>write<CR>', { desc = 'Write file' })

@@ -11,10 +11,6 @@
 !/hypr/**
 !/nvim/**
 !/wezterm/**
-!/waybar
-!/waybar/**
-!/wofi/
-!/wofi/**
 !/formatters
 !/formatters/**
 !/systemd
@@ -27,8 +23,9 @@
 !/broot/**
 !/wallpapers/
 !/wallpapers/**
-!/mako/
-!/mako/**
+!/quickshell/
+!/quickshell/blackhole/
+!/quickshell/blackhole/**
 !/gtk-3.0
 !/gtk-4.0
 !/gtk-3.0/**
@@ -46,3 +43,6 @@
 
 # zsh completion cache
 /zsh/.zcompdump*
+
+# Hyprland 0.55+ uses hyprland.lua. An older live session may regenerate this.
+/hypr/hyprland.conf

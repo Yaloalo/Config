@@ -5,9 +5,9 @@
 # =============================
 set $mod Mod4
 set $terminal wezterm
-set $fileManager nautilus
-set $browser librewolf
-set $menu wofi --show drun
+set $fileManager wezterm start --always-new-process -- yazi
+set $browser firefox
+set $menu qs -c blackhole ipc call shell toggleLauncher
 
 # =============================
 # Output (monitor)
@@ -58,11 +58,9 @@ client.unfocused #000000FF  #00000000  #FFFFFFFF  #000000FF  #000000FF
 # =============================
 # Autostart Applications
 # =============================
-exec_always waybar --config ~/.config/waybar/config --style ~/.config/waybar/style.css &
-exec_always swaybg -o eDP-1 -i ~/Pictures/Wallpapers/2.jpg -m fill &
-exec_always mako &
+exec_always qs -c blackhole -n -d
 # Idle management: Super+I locks now; after 30m idle, lock then suspend; lid-close lock
-bindsym $mod+i exec swaylock image /home/yaloalo/Pictures/Wallpapers/2.jpg --scaling fill
+bindsym $mod+i exec swaylock image /home/yaloalo/.config/quickshell/blackhole/assets/black-hole.png --scaling fill
 exec_always swayidle -w \
     timeout 1800 'swaylock -f' \
     timeout 1800 'systemctl suspend' \
@@ -71,13 +69,16 @@ exec_always swayidle -w \
 # =============================
 # Keybindings
 # =============================
+# Searchable shortcut cheat sheet
+bindsym $mod+F1 exec qs -c blackhole ipc call shell toggleKeybinds
+
 # Monitor setup script
-bindsym $mod+m exec ~/.config/hypr/monitor-setup.sh
+bindsym $mod+m exec nwg-displays
 # Launchers & basics
 bindsym $mod+t exec $terminal
 bindsym $mod+Shift+q kill
 bindsym $mod+b exec $browser
-bindsym $mod+e exec /home/yaloalo/.config/hypr/nautilus-themed
+bindsym $mod+e exec $fileManager
 bindsym $mod+r exec $menu
 
 # Focus movement (Vim-style)

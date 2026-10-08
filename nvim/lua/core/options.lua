@@ -21,3 +21,7 @@ o.inccommand = 'split'
 o.cursorline = true
 o.scrolloff = 10
 o.confirm = true
+o.termguicolors = true
+o.completeopt = { 'menuone', 'noselect', 'popup' }
+o.pumheight = 12
+o.winborder = 'rounded'

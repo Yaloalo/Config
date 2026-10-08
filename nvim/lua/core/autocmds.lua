@@ -1,44 +1,38 @@
--- lua/core/autocmds.lua
-local api = vim.api
+local group = vim.api.nvim_create_augroup('blackhole_core', { clear = true })
 
--- Highlight on yank
-api.nvim_create_autocmd("TextYankPost", {
-  group = api.nvim_create_augroup("user_yank", { clear = true }),
+vim.api.nvim_create_autocmd('TextYankPost', {
+  group = group,
+  callback = function() vim.highlight.on_yank({ timeout = 180 }) end,
+})
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = group,
+  pattern = { '*.c', '*.cpp', '*.js', '*.lua', '*.py', '*.ts' },
   callback = function()
-    vim.highlight.on_yank()
+    local view = vim.fn.winsaveview()
+    vim.cmd([[silent! keeppatterns %s/\s\+$//e]])
+    vim.fn.winrestview(view)
   end,
 })
 
--- Trim trailing whitespace on save
-api.nvim_create_autocmd("BufWritePre", {
-  group = api.nvim_create_augroup("TrimWhitespace", { clear = true }),
-  pattern = { "*.c", "*.cpp", "*.py", "*.lua", "*.js" },
-  callback = function()
-    vim.cmd([[ %s/\s\+$//e ]])
-  end,
-})
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = group,
+  callback = function(event)
+    local buffer = event.buf
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    local map = function(lhs, rhs, desc)
+      vim.keymap.set('n', lhs, rhs, { buffer = buffer, desc = desc })
+    end
 
--- Fortune on start
-api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if vim.fn.argc() == 0 then
-      vim.schedule(function()
-        vim.cmd("silent !fortune | cowsay")
-      end)
+    map('<leader>ld', vim.lsp.buf.definition, 'LSP definition')
+    map('<leader>lr', vim.lsp.buf.references, 'LSP references')
+    map('<leader>la', vim.lsp.buf.code_action, 'LSP code action')
+    map('<leader>ln', vim.lsp.buf.rename, 'LSP rename')
+    map('<leader>lh', vim.lsp.buf.hover, 'LSP hover')
+
+    if client and client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, buffer, { autotrigger = true })
     end
   end,
 })
-
-vim.o.splitright = true
-
-vim.api.nvim_create_autocmd("WinNew", {
-  pattern = "*",
-  callback = function()
-    if vim.fn.winnr('$') == 2 and vim.fn.win_gettype() == "" then
-      vim.cmd("wincmd =")
-    end
-  end,
-})
-
-
 

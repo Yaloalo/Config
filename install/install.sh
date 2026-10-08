@@ -44,15 +44,12 @@ PACMAN_PACKAGES=(
   wl-clipboard
   grim
   slurp
-  waybar
-  wofi
-  mako
+  quickshell
+  nwg-displays
+  pavucontrol
   hyprland
-  hyprpaper
   hypridle
   hyprlock
-  wlogout
-  kanshi
   kitty
   sddm
   qt5-graphicaleffects

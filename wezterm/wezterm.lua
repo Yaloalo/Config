@@ -48,14 +48,23 @@ end)
 -- ── Appearance & shell ───────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = 18.0
-config.color_scheme = "tokyonight_night"
-
--- Make the retro tab bar strip transparent, while keeping the scheme's tab colors.
 config.colors = {
+  foreground = "#f3efff",
+  background = "#08070f",
+  cursor_bg = "#8be9fd",
+  cursor_fg = "#08070f",
+  cursor_border = "#8be9fd",
+  selection_fg = "#f3efff",
+  selection_bg = "#44355f",
+  ansi = { "#08070f", "#ff668c", "#74d6aa", "#ffcf70", "#75a7ff", "#b48ef7", "#8be9fd", "#d9d1eb" },
+  brights = { "#554f6f", "#ff79c6", "#9be8bd", "#ffe29a", "#9bc1ff", "#caaaff", "#b5f2ff", "#ffffff" },
   tab_bar = {
-    -- Transparent strip behind the tabs
     background = "rgba(0,0,0,0)",
-    -- We don't touch active_tab/inactive_tab, so the scheme's colors remain.
+    active_tab = { bg_color = "#b48ef7", fg_color = "#08070f", intensity = "Bold" },
+    inactive_tab = { bg_color = "#171326", fg_color = "#aaa2c7" },
+    inactive_tab_hover = { bg_color = "#2b2440", fg_color = "#f3efff" },
+    new_tab = { bg_color = "#171326", fg_color = "#8be9fd" },
+    new_tab_hover = { bg_color = "#2b2440", fg_color = "#f3efff" },
   },
 }
 
@@ -79,7 +88,6 @@ local toggle_transparency = wezterm.action_callback(function(window, _)
   else
     -- currently transparent → go opaque
     ovr.window_background_opacity = 1.0
-    -- no need to touch color_scheme here; we keep tokyonight_night
   end
 
   window:set_config_overrides(ovr)
