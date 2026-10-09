@@ -12,6 +12,7 @@ Scope {
             id: window
             required property var modelData
             property real simulationTime: 0
+            readonly property real renderScale: width > 2400 ? 0.50 : 0.68
 
             screen: modelData
             color: Theme.voidBlack
@@ -38,17 +39,33 @@ Scope {
                 mipmap: true
             }
 
-            // Real-time analytical lensing model: Einstein deflection, a warped
-            // star field, lensed accretion arcs, photon sphere and Doppler beaming.
-            ShaderEffect {
+            // The geodesic integrator is deliberately expensive. Render it into
+            // a smaller live texture, then let the GPU upscale it smoothly.
+            Item {
+                id: simulationBuffer
+                width: Math.max(2, Math.ceil(window.width * window.renderScale))
+                height: Math.max(2, Math.ceil(window.height * window.renderScale))
+
+                ShaderEffect {
+                    anchors.fill: parent
+                    property real time: window.simulationTime
+                    property vector2d resolution: Qt.vector2d(width, height)
+                    fragmentShader: Quickshell.shellPath("shaders/blackhole.frag.qsb")
+                }
+            }
+
+            ShaderEffectSource {
                 anchors.fill: parent
-                property real time: window.simulationTime
-                property vector2d resolution: Qt.vector2d(width, height)
-                fragmentShader: Quickshell.shellPath("shaders/blackhole.frag.qsb")
+                sourceItem: simulationBuffer
+                textureSize: Qt.size(simulationBuffer.width, simulationBuffer.height)
+                hideSource: true
+                live: true
+                recursive: true
+                smooth: true
             }
 
             Timer {
-                interval: 33
+                interval: 42
                 repeat: true
                 running: ShellState.motionEnabled
                 onTriggered: window.simulationTime += 0.033
@@ -58,7 +75,7 @@ Scope {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: 22
-                text: ShellState.motionEnabled ? "LENSING SIMULATION  /  ACTIVE" : "LENSING SIMULATION  /  FROZEN"
+                text: ShellState.motionEnabled ? "GEODESIC SIMULATION  /  ACTIVE" : "GEODESIC SIMULATION  /  FROZEN"
                 color: Theme.muted
                 font.family: Theme.font
                 font.pixelSize: 9
