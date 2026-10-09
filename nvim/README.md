@@ -1,7 +1,7 @@
 # Neovim
 
 This is the original full plugin setup, organised around one prefix per job and
-an orange **event horizon** visual direction. Lazy scans every file under
+a black, white, and infinity-blue visual direction. Lazy scans every file under
 `lua/plugins/`; `plugins/init.lua` intentionally stays empty to avoid loading
 the same specifications twice.
 

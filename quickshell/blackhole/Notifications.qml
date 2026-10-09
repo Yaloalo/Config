@@ -71,11 +71,15 @@ Scope {
                             spacing: 12
 
                             Image {
-                                visible: source.toString().length > 0
-                                source: notificationCard.modelData.image || Quickshell.iconPath(notificationCard.modelData.appIcon, "dialog-information")
+                                readonly property url resolvedIcon: notificationCard.modelData.image
+                                    || (notificationCard.modelData.appIcon
+                                        ? Quickshell.iconPath(notificationCard.modelData.appIcon)
+                                        : "")
+                                visible: resolvedIcon.toString().length > 0
+                                source: resolvedIcon
                                 sourceSize.width: 38
                                 sourceSize.height: 38
-                                Layout.preferredWidth: 40
+                                Layout.preferredWidth: visible ? 40 : 0
                                 Layout.preferredHeight: 40
                                 fillMode: Image.PreserveAspectFit
                             }
@@ -83,12 +87,12 @@ Scope {
                             ColumnLayout {
                                 Layout.fillWidth: true
                                 spacing: 3
-                                Text { text: notificationCard.modelData.appName || "System"; color: Theme.amber; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
+                                Text { text: notificationCard.modelData.appName || "System"; color: Theme.blue; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
                                 Text { text: notificationCard.modelData.summary; color: Theme.text; font.family: Theme.font; font.pixelSize: 11; font.bold: true; wrapMode: Text.Wrap; Layout.fillWidth: true }
                                 Text { visible: text.length > 0; text: notificationCard.modelData.body; color: Theme.muted; font.family: Theme.font; font.pixelSize: 9; textFormat: Text.PlainText; wrapMode: Text.Wrap; maximumLineCount: 3; elide: Text.ElideRight; Layout.fillWidth: true }
                             }
 
-                            Text { text: "×"; color: Theme.gold; font.pixelSize: 17; Layout.alignment: Qt.AlignTop }
+                            Text { text: "×"; color: Theme.ice; font.pixelSize: 17; Layout.alignment: Qt.AlignTop }
                         }
 
                         TapHandler { onTapped: notificationCard.modelData.dismiss() }

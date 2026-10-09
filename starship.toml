@@ -1,27 +1,27 @@
 add_newline = true
 command_timeout = 1000
-palette = "event_horizon"
+palette = "infinity"
 
 format = """
 $os$username$hostname$directory$git_branch$git_state$git_status$fill$cmd_duration$python$time
 $character"""
 
-[palettes.event_horizon]
-void = "#090603"
-mantle = "#140b07"
-surface = "#2a160c"
-outline = "#70401f"
-text = "#fff4e8"
-muted = "#b99a80"
-amber = "#ffb347"
-ember = "#ff6a1a"
-gold = "#ffd27a"
-red = "#ff4f32"
-green = "#8fbf73"
+[palettes.infinity]
+void = "#010207"
+mantle = "#0a0f19"
+surface = "#111a2a"
+outline = "#30435e"
+text = "#f7fbff"
+muted = "#8190a5"
+ice = "#dff8ff"
+blue = "#58baff"
+cobalt = "#376dff"
+red = "#ff607c"
+green = "#79c99e"
 
 [os]
 disabled = false
-format = "[](ember)[$symbol](bold void)[ ](ember)"
+format = "[](blue)[$symbol](bold void)[ ](blue)"
 
 [os.symbols]
 Arch = " "
@@ -29,7 +29,7 @@ Linux = " "
 
 [username]
 show_always = true
-format = "[$user](bold amber)"
+format = "[$user](bold ice)"
 
 [hostname]
 ssh_only = false
@@ -37,7 +37,7 @@ format = "[@$hostname](muted) "
 
 [directory]
 format = "[󰉋 $path]($style)[$read_only]($read_only_style) "
-style = "bold gold"
+style = "bold text"
 read_only = " 󰌾"
 read_only_style = "red"
 truncation_length = 4
@@ -47,15 +47,15 @@ fish_style_pwd_dir_length = 1
 [git_branch]
 symbol = " "
 format = "[$symbol$branch]($style) "
-style = "bold ember"
+style = "bold blue"
 
 [git_state]
 format = "[\\($state( $progress_current/$progress_total)\\)]($style) "
-style = "amber"
+style = "ice"
 
 [git_status]
 format = "[$all_status$ahead_behind]($style) "
-style = "amber"
+style = "blue"
 conflicted = "=${count} "
 ahead = "⇡${count} "
 behind = "⇣${count} "
@@ -76,7 +76,7 @@ format = "[󰔛 $duration](muted) "
 
 [python]
 format = "[ ${pyenv_prefix}(${version} )(\\($virtualenv\\) )]($style)"
-style = "gold"
+style = "ice"
 
 [time]
 disabled = false
@@ -84,9 +84,9 @@ time_format = "%H:%M"
 format = "[󰥔 $time](muted)"
 
 [character]
-success_symbol = "[❯](bold ember)"
+success_symbol = "[❯](bold blue)"
 error_symbol = "[❯](bold red)"
-vimcmd_symbol = "[❮](bold gold)"
-vimcmd_replace_one_symbol = "[❮](bold amber)"
+vimcmd_symbol = "[❮](bold ice)"
+vimcmd_replace_one_symbol = "[❮](bold blue)"
 vimcmd_replace_symbol = "[❮](bold red)"
-vimcmd_visual_symbol = "[❮](bold gold)"
+vimcmd_visual_symbol = "[❮](bold ice)"

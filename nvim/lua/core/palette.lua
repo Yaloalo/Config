@@ -1,17 +1,16 @@
--- Shared "event horizon" palette. UI plugins consume this table so the theme
+-- Shared "infinity" palette. UI plugins consume this table so the theme
 -- stays coherent without hiding their individual configuration.
 return {
-  void = "#090603",
-  mantle = "#140b07",
-  surface = "#211208",
-  surface_high = "#352015",
-  outline = "#70401f",
-  text = "#fff4e8",
-  muted = "#b99a80",
-  amber = "#ffb347",
-  ember = "#ff6a1a",
-  gold = "#ffd27a",
-  copper = "#c65d21",
-  red = "#ff4f32",
-  green = "#8fbf73",
+  void = "#010207",
+  mantle = "#0a0f19",
+  surface = "#111a2a",
+  surface_high = "#17243a",
+  outline = "#30435e",
+  text = "#f7fbff",
+  muted = "#8190a5",
+  ice = "#dff8ff",
+  blue = "#58baff",
+  cobalt = "#376dff",
+  red = "#ff607c",
+  green = "#79c99e",
 }

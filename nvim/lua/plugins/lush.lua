@@ -19,13 +19,13 @@ return {
         bg        = hsl(palette.void),
         bg_alt    = hsl(palette.surface),
         fg        = hsl(palette.text),
-        constant  = hsl(palette.ember),
-        string    = hsl(palette.gold),
-        func      = hsl(palette.amber),
+        constant  = hsl(palette.cobalt),
+        string    = hsl(palette.ice),
+        func      = hsl(palette.blue),
         global    = hsl(palette.text),
         comment   = hsl(palette.muted),
         linenr    = hsl(palette.outline),
-        type      = hsl(palette.copper),
+        type      = hsl(palette.cobalt),
       }
 
       -- Flag for transparency

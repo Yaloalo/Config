@@ -48,7 +48,7 @@ return {
       -- High-contrast label pill in the shared event-horizon palette.
       local normal = get_hl("Normal")
       local label_fg = normal.bg and 0x000000 or 0x000000
-      local label_bg = 0xFFB347
+      local label_bg = 0x58BAFF
 
       vim.api.nvim_set_hl(0, "FlashLabel", {
         fg = label_fg,

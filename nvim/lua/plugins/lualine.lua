@@ -12,14 +12,14 @@ return {
 
       local theme = {
         normal = {
-          a = { fg = palette.void, bg = palette.amber, gui = "bold" },
-          b = { fg = palette.gold, bg = palette.surface },
+          a = { fg = palette.void, bg = palette.ice, gui = "bold" },
+          b = { fg = palette.blue, bg = palette.surface },
           c = { fg = palette.text, bg = palette.void },
         },
-        insert = { a = { fg = palette.void, bg = palette.gold, gui = "bold" } },
-        visual = { a = { fg = palette.void, bg = palette.copper, gui = "bold" } },
+        insert = { a = { fg = palette.void, bg = palette.blue, gui = "bold" } },
+        visual = { a = { fg = palette.void, bg = palette.cobalt, gui = "bold" } },
         replace = { a = { fg = palette.void, bg = palette.red, gui = "bold" } },
-        command = { a = { fg = palette.void, bg = palette.ember, gui = "bold" } },
+        command = { a = { fg = palette.void, bg = palette.blue, gui = "bold" } },
         inactive = {
           a = { fg = palette.muted, bg = palette.void },
           b = { fg = palette.muted, bg = palette.void },

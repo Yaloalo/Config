@@ -12,6 +12,8 @@ Scope {
     id: root
 
     property var pendingNetwork: null
+    property string selectedKeyApp: "Hyprland"
+    readonly property var keyApps: ["Hyprland", "WezTerm", "Neovim", "Yazi", "Zsh"]
     readonly property var wifiDevice: Networking.devices.values.find(device => device.type === DeviceType.Wifi) ?? null
     readonly property var targetScreen: {
         const focused = Hyprland.focusedMonitor;
@@ -36,12 +38,18 @@ Scope {
         wifiPassword.forceActiveFocus();
     }
 
+    function entryCount(app) {
+        return KeybindData.entries.filter(entry => entry.app === app).length;
+    }
+
     Connections {
         target: ShellState
 
         function onOverlayChanged() {
             if (root.wifiDevice)
                 root.wifiDevice.scannerEnabled = ShellState.overlay === "wifi";
+            if (ShellState.overlay === "keybinds")
+                root.selectedKeyApp = "Hyprland";
             if (ShellState.overlay === "")
                 root.pendingNetwork = null;
         }
@@ -49,20 +57,13 @@ Scope {
 
     PanelWindow {
         id: overlay
-
         visible: ShellState.overlay !== ""
         screen: root.targetScreen
         color: "transparent"
         exclusiveZone: 0
 
-        anchors {
-            top: true
-            right: true
-            bottom: true
-            left: true
-        }
-
-        WlrLayershell.namespace: "blackhole-shell"
+        anchors { top: true; right: true; bottom: true; left: true }
+        WlrLayershell.namespace: "infinity-shell"
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.keyboardFocus: visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
@@ -75,28 +76,21 @@ Scope {
 
         Rectangle {
             anchors.fill: parent
-            color: "#99070402"
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: ShellState.close()
-            }
+            color: "#c0000105"
+            MouseArea { anchors.fill: parent; onClicked: ShellState.close() }
         }
 
         Rectangle {
             id: card
             anchors.centerIn: parent
-            width: Math.min(920, overlay.width - 72)
-            height: Math.min(ShellState.overlay === "power" ? 350 : 680, overlay.height - 72)
-            radius: 26
+            width: Math.min(ShellState.overlay === "wifi" ? 760 : ShellState.overlay === "power" ? 800 : 940, overlay.width - 72)
+            height: Math.min(ShellState.overlay === "power" ? 310 : 680, overlay.height - 72)
+            radius: 20
             color: Theme.surfaceHigh
             border.width: 1
             border.color: Theme.outline
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: event => event.accepted = true
-            }
+            MouseArea { anchors.fill: parent; onClicked: event => event.accepted = true }
 
             ColumnLayout {
                 anchors.fill: parent
@@ -107,36 +101,36 @@ Scope {
                     Layout.fillWidth: true
 
                     ColumnLayout {
-                        spacing: 1
+                        spacing: 2
                         Text {
-                            text: ShellState.overlay === "launcher" ? "APPLICATION ORBIT" : ShellState.overlay === "wifi" ? "WIRELESS SPACE" : ShellState.overlay === "keybinds" ? "SHORTCUT ATLAS" : "EVENT HORIZON"
+                            text: ShellState.overlay === "launcher" ? "APPLICATIONS"
+                                : ShellState.overlay === "wifi" ? "WIRELESS"
+                                : ShellState.overlay === "keybinds" ? "CONTROL INDEX"
+                                : "SESSION"
                             color: Theme.text
                             font.family: Theme.font
-                            font.pixelSize: 18
+                            font.pixelSize: 16
                             font.bold: true
-                            font.letterSpacing: 1.2
+                            font.letterSpacing: 1.5
                         }
                         Text {
-                            text: ShellState.overlay === "wifi" ? "Native NetworkManager control — no nmcli" : "Type to filter  •  Esc to close"
+                            text: ShellState.overlay === "wifi" ? "NetworkManager  /  direct control"
+                                : ShellState.overlay === "keybinds" ? "Choose a service, or search across everything"
+                                : "Type to filter  /  Escape to close"
                             color: Theme.muted
                             font.family: Theme.font
-                            font.pixelSize: 10
+                            font.pixelSize: 9
                         }
                     }
 
                     Item { Layout.fillWidth: true }
 
                     Rectangle {
-                        implicitWidth: 32
-                        implicitHeight: 32
-                        radius: 11
-                        color: closeHover.hovered ? "#5a2c17" : "transparent"
-                        Text {
-                            anchors.centerIn: parent
-                            text: "×"
-                            color: Theme.gold
-                            font.pixelSize: 20
-                        }
+                        implicitWidth: 30
+                        implicitHeight: 30
+                        radius: 9
+                        color: closeHover.hovered ? Theme.blueSoft : "transparent"
+                        Text { anchors.centerIn: parent; text: "×"; color: Theme.ice; font.pixelSize: 18 }
                         HoverHandler { id: closeHover }
                         TapHandler { onTapped: ShellState.close() }
                     }
@@ -146,18 +140,20 @@ Scope {
                     id: search
                     visible: ShellState.overlay === "launcher" || ShellState.overlay === "keybinds"
                     Layout.fillWidth: true
-                    implicitHeight: 44
-                    placeholderText: ShellState.overlay === "launcher" ? "Search applications…" : "Search app, key, or action…"
+                    implicitHeight: 42
+                    leftPadding: 14
+                    rightPadding: 14
+                    placeholderText: ShellState.overlay === "launcher" ? "Search applications…" : "Search every app, key, or action…"
                     color: Theme.text
                     placeholderTextColor: Theme.muted
                     font.family: Theme.font
-                    font.pixelSize: 12
+                    font.pixelSize: 11
                     selectByMouse: true
                     background: Rectangle {
-                        radius: 13
-                        color: "#aa120b07"
+                        radius: 11
+                        color: Theme.panel
                         border.width: 1
-                        border.color: search.activeFocus ? Theme.ember : Theme.outline
+                        border.color: search.activeFocus ? Theme.blue : Theme.outline
                     }
                     Keys.onEscapePressed: ShellState.close()
                     Component.onCompleted: forceActiveFocus()
@@ -166,7 +162,10 @@ Scope {
                 Loader {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    sourceComponent: ShellState.overlay === "launcher" ? launcherPage : ShellState.overlay === "wifi" ? wifiPage : ShellState.overlay === "keybinds" ? keybindPage : powerPage
+                    sourceComponent: ShellState.overlay === "launcher" ? launcherPage
+                        : ShellState.overlay === "wifi" ? wifiPage
+                        : ShellState.overlay === "keybinds" ? keybindPage
+                        : powerPage
                 }
             }
 
@@ -180,7 +179,7 @@ Scope {
         ListView {
             id: appList
             clip: true
-            spacing: 5
+            spacing: 6
             model: ScriptModel {
                 values: DesktopEntries.applications.values.filter(entry => {
                     const needle = search.text.toLowerCase().trim();
@@ -192,30 +191,32 @@ Scope {
                 id: appRow
                 required property var modelData
                 width: appList.width
-                height: 58
-                radius: 14
-                color: appHover.hovered ? "#4a2a19" : "#24120a"
+                height: 56
+                radius: 12
+                color: appHover.hovered ? Theme.surfaceHigh : Theme.panel
+                border.width: 1
+                border.color: appHover.hovered ? Theme.blue : Theme.outline
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: 14
-                    anchors.rightMargin: 14
-                    spacing: 13
+                    anchors.leftMargin: 13
+                    anchors.rightMargin: 13
+                    spacing: 12
 
                     Image {
                         source: Quickshell.iconPath(appRow.modelData.icon, "application-x-executable")
-                        sourceSize.width: 32
-                        sourceSize.height: 32
-                        Layout.preferredWidth: 34
-                        Layout.preferredHeight: 34
+                        sourceSize.width: 29
+                        sourceSize.height: 29
+                        Layout.preferredWidth: 31
+                        Layout.preferredHeight: 31
                     }
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 1
-                        Text { text: appRow.modelData.name; color: Theme.text; font.family: Theme.font; font.pixelSize: 12; font.bold: true }
+                        Text { text: appRow.modelData.name; color: Theme.text; font.family: Theme.font; font.pixelSize: 11; font.bold: true }
                         Text { text: appRow.modelData.genericName || appRow.modelData.comment; color: Theme.muted; font.family: Theme.font; font.pixelSize: 9; elide: Text.ElideRight; Layout.fillWidth: true }
                     }
-                    Text { text: "↵"; color: Theme.ember; font.family: Theme.font; font.pixelSize: 12 }
+                    Text { text: "ENTER"; color: Theme.blue; font.family: Theme.font; font.pixelSize: 8; font.bold: true }
                 }
 
                 HoverHandler { id: appHover }
@@ -235,48 +236,62 @@ Scope {
         ColumnLayout {
             spacing: 10
 
-            RowLayout {
+            Rectangle {
                 Layout.fillWidth: true
-                Text {
-                    text: Networking.wifiEnabled ? "󰖩  Wi-Fi enabled" : "󰖪  Wi-Fi disabled"
-                    color: Networking.wifiEnabled ? Theme.amber : Theme.muted
-                    font.family: Theme.font
-                    font.pixelSize: 12
-                    font.bold: true
-                }
-                Item { Layout.fillWidth: true }
-                Rectangle {
-                    implicitWidth: 92
-                    implicitHeight: 34
-                    radius: 12
-                    color: Networking.wifiEnabled ? "#66401f12" : "#2b1a10"
-                    Text { anchors.centerIn: parent; text: Networking.wifiEnabled ? "TURN OFF" : "TURN ON"; color: Theme.text; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
-                    TapHandler { onTapped: Networking.wifiEnabled = !Networking.wifiEnabled }
+                implicitHeight: 54
+                radius: 13
+                color: Theme.panel
+                border.width: 1
+                border.color: Theme.outline
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: 16
+                    anchors.rightMargin: 10
+
+                    ColumnLayout {
+                        spacing: 0
+                        Text { text: "WIRELESS RADIO"; color: Theme.text; font.family: Theme.font; font.pixelSize: 10; font.bold: true; font.letterSpacing: 0.8 }
+                        Text { text: Networking.wifiEnabled ? "enabled  /  scanning nearby networks" : "disabled"; color: Networking.wifiEnabled ? Theme.blue : Theme.muted; font.family: Theme.font; font.pixelSize: 9 }
+                    }
+                    Item { Layout.fillWidth: true }
+                    Rectangle {
+                        implicitWidth: 88
+                        implicitHeight: 32
+                        radius: 9
+                        color: Networking.wifiEnabled ? Theme.blueSoft : Theme.surfaceHigh
+                        border.width: 1
+                        border.color: Networking.wifiEnabled ? Theme.blue : Theme.outline
+                        Text { anchors.centerIn: parent; text: Networking.wifiEnabled ? "DISABLE" : "ENABLE"; color: Theme.text; font.family: Theme.font; font.pixelSize: 8; font.bold: true }
+                        TapHandler { onTapped: Networking.wifiEnabled = !Networking.wifiEnabled }
+                    }
                 }
             }
 
             Rectangle {
                 visible: root.pendingNetwork !== null
                 Layout.fillWidth: true
-                implicitHeight: 74
-                radius: 14
-                color: "#2a160c"
+                Layout.preferredHeight: visible ? 68 : 0
+                radius: 13
+                color: Theme.panel
                 border.width: 1
-                border.color: Theme.ember
+                border.color: Theme.blue
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.margins: 12
-                    Text { text: "󰌾  " + (root.pendingNetwork?.name ?? "Network"); color: Theme.text; font.family: Theme.font; font.pixelSize: 11 }
+                    anchors.margins: 11
+                    spacing: 10
+                    Text { text: root.pendingNetwork?.name ?? "Network"; color: Theme.text; font.family: Theme.font; font.pixelSize: 10; font.bold: true; Layout.preferredWidth: 150; elide: Text.ElideRight }
                     TextField {
                         id: wifiPassword
                         Layout.fillWidth: true
+                        implicitHeight: 36
                         echoMode: TextInput.Password
-                        placeholderText: "Wi-Fi password"
+                        placeholderText: "Password"
                         color: Theme.text
                         placeholderTextColor: Theme.muted
                         font.family: Theme.font
-                        background: Rectangle { radius: 10; color: "#120b07"; border.width: 1; border.color: Theme.outline }
+                        background: Rectangle { radius: 9; color: Theme.voidBlack; border.width: 1; border.color: Theme.outline }
                         onAccepted: {
                             if (root.pendingNetwork && text.length > 0) {
                                 root.pendingNetwork.connectWithPsk(text);
@@ -285,11 +300,11 @@ Scope {
                         }
                     }
                     Rectangle {
-                        implicitWidth: 86
-                        implicitHeight: 34
-                        radius: 10
-                        color: Theme.ember
-                        Text { anchors.centerIn: parent; text: "CONNECT"; color: Theme.voidBlack; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
+                        implicitWidth: 84
+                        implicitHeight: 36
+                        radius: 9
+                        color: Theme.ice
+                        Text { anchors.centerIn: parent; text: "CONNECT"; color: Theme.voidBlack; font.family: Theme.font; font.pixelSize: 8; font.bold: true }
                         TapHandler {
                             onTapped: {
                                 if (root.pendingNetwork && wifiPassword.text.length > 0) {
@@ -307,34 +322,55 @@ Scope {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 clip: true
-                spacing: 5
+                spacing: 6
                 model: root.wifiDevice?.networks ?? null
 
                 delegate: Rectangle {
                     id: networkRow
                     required property var modelData
                     width: networkList.width
-                    height: 54
-                    radius: 14
-                    color: modelData.connected ? "#66401f12" : networkHover.hovered ? "#4a2a19" : "#24120a"
+                    height: 56
+                    radius: 12
+                    color: modelData.connected ? Theme.blueSoft : networkHover.hovered ? Theme.surfaceHigh : Theme.panel
+                    border.width: 1
+                    border.color: modelData.connected ? Theme.blue : Theme.outline
 
                     RowLayout {
                         anchors.fill: parent
-                        anchors.leftMargin: 15
-                        anchors.rightMargin: 15
+                        anchors.leftMargin: 14
+                        anchors.rightMargin: 10
+                        spacing: 12
+
                         Text {
-                            text: modelData.signalStrength > 0.7 ? "󰤨" : modelData.signalStrength > 0.4 ? "󰤥" : "󰤟"
-                            color: modelData.connected ? Theme.amber : Theme.muted
+                            text: Math.round(networkRow.modelData.signalStrength * 100) + "%"
+                            color: networkRow.modelData.connected ? Theme.ice : Theme.muted
                             font.family: Theme.font
-                            font.pixelSize: 16
+                            font.pixelSize: 9
+                            font.bold: true
+                            Layout.preferredWidth: 40
                         }
                         ColumnLayout {
                             Layout.fillWidth: true
                             spacing: 0
                             Text { text: networkRow.modelData.name || "Hidden network"; color: Theme.text; font.family: Theme.font; font.pixelSize: 11; font.bold: networkRow.modelData.connected }
-                            Text { text: networkRow.modelData.connected ? "connected" : networkRow.modelData.known ? "saved" : WifiSecurityType.toString(networkRow.modelData.security); color: Theme.muted; font.family: Theme.font; font.pixelSize: 9 }
+                            Text { text: networkRow.modelData.connected ? "connected" : networkRow.modelData.known ? "saved network" : WifiSecurityType.toString(networkRow.modelData.security); color: Theme.muted; font.family: Theme.font; font.pixelSize: 8 }
                         }
-                        Text { text: networkRow.modelData.stateChanging ? "orbiting…" : networkRow.modelData.connected ? "●" : "CONNECT"; color: networkRow.modelData.connected ? Theme.amber : Theme.ember; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
+                        Rectangle {
+                            implicitWidth: 86
+                            implicitHeight: 30
+                            radius: 8
+                            color: networkRow.modelData.connected ? Theme.ice : "transparent"
+                            border.width: networkRow.modelData.connected ? 0 : 1
+                            border.color: Theme.outline
+                            Text {
+                                anchors.centerIn: parent
+                                text: networkRow.modelData.stateChanging ? "WAIT" : networkRow.modelData.connected ? "ONLINE" : "CONNECT"
+                                color: networkRow.modelData.connected ? Theme.voidBlack : Theme.blue
+                                font.family: Theme.font
+                                font.pixelSize: 8
+                                font.bold: true
+                            }
+                        }
                     }
 
                     HoverHandler { id: networkHover }
@@ -344,7 +380,7 @@ Scope {
                 Text {
                     visible: root.wifiDevice === null
                     anchors.centerIn: parent
-                    text: "No Wi-Fi adapter found"
+                    text: "No wireless adapter found"
                     color: Theme.muted
                     font.family: Theme.font
                 }
@@ -355,39 +391,91 @@ Scope {
     Component {
         id: keybindPage
 
-        ListView {
-            id: keyList
-            clip: true
-            spacing: 5
-            model: KeybindData.entries.filter(entry => {
-                const needle = search.text.toLowerCase().trim();
-                return needle.length === 0 || `${entry.app} ${entry.key} ${entry.action}`.toLowerCase().includes(needle);
-            })
+        RowLayout {
+            spacing: 12
 
-            delegate: Rectangle {
-                id: keyRow
-                required property var modelData
-                width: keyList.width
-                height: 54
-                radius: 14
-                color: keyHover.hovered ? "#4a2a19" : "#24120a"
+            ListView {
+                id: appSelector
+                visible: search.text.trim().length === 0
+                Layout.preferredWidth: visible ? 170 : 0
+                Layout.fillHeight: true
+                spacing: 6
+                clip: true
+                model: root.keyApps
 
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: 14
-                    anchors.rightMargin: 14
-                    spacing: 12
-                    Text { text: keyRow.modelData.app; color: Theme.amber; font.family: Theme.font; font.pixelSize: 9; font.bold: true; Layout.preferredWidth: 82 }
-                    Text { text: keyRow.modelData.action; color: Theme.text; font.family: Theme.font; font.pixelSize: 10; Layout.fillWidth: true; elide: Text.ElideRight }
-                    Rectangle {
-                        implicitWidth: keyText.implicitWidth + 18
-                        implicitHeight: 30
-                        radius: 9
-                        color: "#352015"
-                        Text { id: keyText; anchors.centerIn: parent; text: keyRow.modelData.key; color: Theme.ember; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
+                delegate: Rectangle {
+                    id: appChoice
+                    required property string modelData
+                    width: appSelector.width
+                    height: 52
+                    radius: 11
+                    color: root.selectedKeyApp === modelData ? Theme.blueSoft : appChoiceHover.hovered ? Theme.surfaceHigh : Theme.panel
+                    border.width: 1
+                    border.color: root.selectedKeyApp === modelData ? Theme.blue : Theme.outline
+
+                    Column {
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 13
+                        spacing: 1
+                        Text { text: appChoice.modelData; color: root.selectedKeyApp === appChoice.modelData ? Theme.ice : Theme.text; font.family: Theme.font; font.pixelSize: 10; font.bold: true }
+                        Text { text: root.entryCount(appChoice.modelData) + " shortcuts"; color: Theme.muted; font.family: Theme.font; font.pixelSize: 8 }
                     }
+                    HoverHandler { id: appChoiceHover }
+                    TapHandler { onTapped: root.selectedKeyApp = appChoice.modelData }
                 }
-                HoverHandler { id: keyHover }
+            }
+
+            ListView {
+                id: keyList
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+                spacing: 6
+                model: KeybindData.entries.filter(entry => {
+                    const needle = search.text.toLowerCase().trim();
+                    return needle.length > 0
+                        ? `${entry.app} ${entry.key} ${entry.action}`.toLowerCase().includes(needle)
+                        : entry.app === root.selectedKeyApp;
+                })
+
+                delegate: Rectangle {
+                    id: keyRow
+                    required property var modelData
+                    width: keyList.width
+                    height: 52
+                    radius: 11
+                    color: keyHover.hovered ? Theme.surfaceHigh : Theme.panel
+                    border.width: 1
+                    border.color: keyHover.hovered ? Theme.blue : Theme.outline
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.leftMargin: 13
+                        anchors.rightMargin: 10
+                        spacing: 11
+                        Text {
+                            visible: search.text.trim().length > 0
+                            text: keyRow.modelData.app
+                            color: Theme.blue
+                            font.family: Theme.font
+                            font.pixelSize: 8
+                            font.bold: true
+                            Layout.preferredWidth: 70
+                        }
+                        Text { text: keyRow.modelData.action; color: Theme.text; font.family: Theme.font; font.pixelSize: 9; Layout.fillWidth: true; elide: Text.ElideRight }
+                        Rectangle {
+                            implicitWidth: keyText.implicitWidth + 18
+                            implicitHeight: 28
+                            radius: 8
+                            color: Theme.surfaceHigh
+                            border.width: 1
+                            border.color: Theme.outline
+                            Text { id: keyText; anchors.centerIn: parent; text: keyRow.modelData.key; color: Theme.ice; font.family: Theme.font; font.pixelSize: 8; font.bold: true }
+                        }
+                    }
+                    HoverHandler { id: keyHover }
+                }
             }
         }
     }
@@ -396,15 +484,15 @@ Scope {
         id: powerPage
 
         RowLayout {
-            spacing: 14
+            spacing: 10
 
             Repeater {
                 model: [
-                    { icon: "󰌾", label: "LOCK", command: ["hyprlock", "--immediate"], colour: Theme.amber },
-                    { icon: "󰍃", label: "LOG OUT", command: ["hyprctl", "dispatch", "exit"], colour: Theme.ember },
-                    { icon: "󰒲", label: "SUSPEND", command: ["systemctl", "suspend"], colour: Theme.warning },
-                    { icon: "󰜉", label: "REBOOT", command: ["systemctl", "reboot"], colour: Theme.gold },
-                    { icon: "󰐥", label: "POWER OFF", command: ["systemctl", "poweroff"], colour: Theme.danger }
+                    { label: "LOCK", detail: "secure session", command: ["hyprlock", "--immediate"], colour: Theme.ice },
+                    { label: "LOG OUT", detail: "end Hyprland", command: ["hyprctl", "dispatch", "hl.dsp.exit()"], colour: Theme.blue },
+                    { label: "SUSPEND", detail: "sleep system", command: ["systemctl", "suspend"], colour: Theme.text },
+                    { label: "REBOOT", detail: "restart system", command: ["systemctl", "reboot"], colour: Theme.warning },
+                    { label: "POWER OFF", detail: "shut down", command: ["systemctl", "poweroff"], colour: Theme.danger }
                 ]
 
                 Rectangle {
@@ -412,16 +500,16 @@ Scope {
                     required property var modelData
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    radius: 18
-                    color: powerHover.hovered ? "#4b2917" : "#1d1009"
+                    radius: 14
+                    color: powerHover.hovered ? Theme.surfaceHigh : Theme.panel
                     border.width: 1
                     border.color: powerHover.hovered ? modelData.colour : Theme.outline
 
                     Column {
                         anchors.centerIn: parent
-                        spacing: 12
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: powerAction.modelData.icon; color: powerAction.modelData.colour; font.family: Theme.font; font.pixelSize: 34 }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: powerAction.modelData.label; color: Theme.text; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
+                        spacing: 6
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: powerAction.modelData.label; color: powerAction.modelData.colour; font.family: Theme.font; font.pixelSize: 10; font.bold: true; font.letterSpacing: 0.7 }
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: powerAction.modelData.detail; color: Theme.muted; font.family: Theme.font; font.pixelSize: 8 }
                     }
 
                     HoverHandler { id: powerHover }

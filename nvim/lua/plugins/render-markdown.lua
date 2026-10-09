@@ -235,16 +235,16 @@ return {
       -- code border colour (matches your theme or adjust as you like)
       vim.api.nvim_set_hl(0, "RenderMarkdownCodeBorder", { fg = "#888888", bg = "none" })
 
-      -- quote colours
-      local oranges = {
-        "#FFA500",
-        "#FF8C00",
-        "#FF7F50",
-        "#FF6347",
-        "#FF4500",
-        "#FF3300",
+      -- Quote colours follow the cold infinity-blue gradient.
+      local quote_blues = {
+        "#DFF8FF",
+        "#BCEBFF",
+        "#8DD1FF",
+        "#58BAFF",
+        "#527FFF",
+        "#376DFF",
       }
-      for i, color in ipairs(oranges) do
+      for i, color in ipairs(quote_blues) do
         vim.api.nvim_set_hl(0, "RenderMarkdownQuote" .. i, { fg = color, italic = true })
       end
     end,

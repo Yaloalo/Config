@@ -84,7 +84,7 @@ return {
         source = diff.gen_source.save(),
       })
 
-      vim.api.nvim_set_hl(0, "MiniDiffNumberChange", { fg = palette.amber })
+      vim.api.nvim_set_hl(0, "MiniDiffNumberChange", { fg = palette.blue })
       vim.api.nvim_set_hl(0, "MiniDiffNumberDelete", { fg = palette.red })
       vim.api.nvim_set_hl(0, "MiniDiffNumberAdd", { fg = palette.green })
 

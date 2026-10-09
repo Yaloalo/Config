@@ -18,15 +18,15 @@ return {
     local function set_groups()
       local set = vim.api.nvim_set_hl
       set(0, "RainbowDelimiterWhite"      , { fg = "#FFFFFF" })
-      set(0, "RainbowDelimiterLawnGreen"  , { fg = "#7CFC00" })
-      set(0, "RainbowDelimiterDeepSkyBlue", { fg = "#00BFFF" })
-      set(0, "RainbowDelimiterOrangeRed"  , { fg = "#FF4500" })
-      set(0, "RainbowDelimiterLime"       , { fg = "#00FF00" })
-      set(0, "RainbowDelimiterDodgerBlue" , { fg = "#1E90FF" })
-      set(0, "RainbowDelimiterRed"        , { fg = "#FF0000" })
-      set(0, "RainbowDelimiterGreen2"     , { fg = "#00CC00" })
-      set(0, "RainbowDelimiterRoyalBlue"  , { fg = "#4169E1" })
-      set(0, "RainbowDelimiterCrimson"    , { fg = "#DC143C" })
+      set(0, "RainbowDelimiterLawnGreen"  , { fg = "#DFF8FF" })
+      set(0, "RainbowDelimiterDeepSkyBlue", { fg = "#BCEBFF" })
+      set(0, "RainbowDelimiterOrangeRed"  , { fg = "#8DD1FF" })
+      set(0, "RainbowDelimiterLime"       , { fg = "#58BAFF" })
+      set(0, "RainbowDelimiterDodgerBlue" , { fg = "#527FFF" })
+      set(0, "RainbowDelimiterRed"        , { fg = "#376DFF" })
+      set(0, "RainbowDelimiterGreen2"     , { fg = "#B5C8E6" })
+      set(0, "RainbowDelimiterRoyalBlue"  , { fg = "#8190A5" })
+      set(0, "RainbowDelimiterCrimson"    , { fg = "#F7FBFF" })
     end
 
     vim.api.nvim_create_autocmd(

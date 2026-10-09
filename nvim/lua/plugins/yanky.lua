@@ -56,9 +56,9 @@ return {
         map("n", "<leader>rr", "<Cmd>YankyRingHistory<CR>", { desc = "Yank 🔍 Ring history" })
       end
 
-      -- Force bright orange flash on yank/put
-      vim.api.nvim_set_hl(0, "YankyYanked", { bg = "#FF8800", fg = nil })
-      vim.api.nvim_set_hl(0, "YankyPut",    { bg = "#FF8800", fg = nil })
+      -- Match the shared infinity-blue feedback colour.
+      vim.api.nvim_set_hl(0, "YankyYanked", { bg = "#376DFF", fg = "#F7FBFF" })
+      vim.api.nvim_set_hl(0, "YankyPut",    { bg = "#376DFF", fg = "#F7FBFF" })
     end,
   },
 }

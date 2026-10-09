@@ -56,8 +56,8 @@ return {
         vim.api.nvim_set_hl(0, group, { bg = "none" })
       end
       local palette = require("core.palette")
-      vim.api.nvim_set_hl(0, "WhichKeyBorder", { fg = palette.amber })
-      vim.api.nvim_set_hl(0, "WhichKeyTitle", { fg = palette.gold, bold = true })
+      vim.api.nvim_set_hl(0, "WhichKeyBorder", { fg = palette.blue })
+      vim.api.nvim_set_hl(0, "WhichKeyTitle", { fg = palette.ice, bold = true })
       vim.keymap.set("n", "<leader>?", function()
         require("which-key").show()
       end, { desc = "Show all Neovim keybindings" })

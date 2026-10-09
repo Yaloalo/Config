@@ -8,7 +8,8 @@ config.window_background_opacity = 0.0
 
 -- ── Tabs: show tab index + current running process (basename only) ───────────
 config.use_fancy_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = false
+config.hide_tab_bar_if_only_one_tab = true
+config.tab_max_width = 24
 
 wezterm.on("format-tab-title", function(tab, _, _, _, _, max_width)
   -- Full process path (e.g. "/usr/bin/nvim")
@@ -47,32 +48,32 @@ end)
 
 -- ── Appearance & shell ───────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size = 18.0
+config.font_size = 13.5
 config.colors = {
-  foreground = "#fff4e8",
-  background = "#090603",
-  cursor_bg = "#ffb347",
-  cursor_fg = "#090603",
-  cursor_border = "#ffb347",
-  selection_fg = "#fff4e8",
-  selection_bg = "#70401f",
-  ansi = { "#090603", "#ff4f32", "#8fbf73", "#ffc857", "#d8893f", "#c65d21", "#ffb347", "#e8d8c8" },
-  brights = { "#70401f", "#ff745c", "#aed091", "#ffd27a", "#e9a868", "#df7c3a", "#ffc870", "#fffaf5" },
+  foreground = "#f7fbff",
+  background = "#010207",
+  cursor_bg = "#dff8ff",
+  cursor_fg = "#010207",
+  cursor_border = "#58baff",
+  selection_fg = "#f7fbff",
+  selection_bg = "#30435e",
+  ansi = { "#010207", "#ff607c", "#79c99e", "#e8d79c", "#58baff", "#6685ff", "#9eeaff", "#dce7f2" },
+  brights = { "#30435e", "#ff89a0", "#a0ddb8", "#f5e9b8", "#8dd1ff", "#91a6ff", "#dff8ff", "#ffffff" },
   tab_bar = {
     background = "rgba(0,0,0,0)",
-    active_tab = { bg_color = "#ff6a1a", fg_color = "#090603", intensity = "Bold" },
-    inactive_tab = { bg_color = "#140b07", fg_color = "#b99a80" },
-    inactive_tab_hover = { bg_color = "#352015", fg_color = "#fff4e8" },
-    new_tab = { bg_color = "#140b07", fg_color = "#ffb347" },
-    new_tab_hover = { bg_color = "#352015", fg_color = "#fff4e8" },
+    active_tab = { bg_color = "#dff8ff", fg_color = "#010207", intensity = "Bold" },
+    inactive_tab = { bg_color = "#0a0f19", fg_color = "#8190a5" },
+    inactive_tab_hover = { bg_color = "#111a2a", fg_color = "#f7fbff" },
+    new_tab = { bg_color = "#0a0f19", fg_color = "#58baff" },
+    new_tab_hover = { bg_color = "#111a2a", fg_color = "#f7fbff" },
   },
 }
 
 config.window_padding = {
-  left = "0pt",
-  right = "0pt",
-  top = "0pt",
-  bottom = "0pt",
+  left = "3pt",
+  right = "3pt",
+  top = "2pt",
+  bottom = "2pt",
 }
 
 config.default_prog = { "/usr/bin/zsh", "-l" }

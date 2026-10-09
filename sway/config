@@ -45,10 +45,10 @@ gaps outer 5
 default_border pixel 6
 
 # Focused window: bright blue border (and matching indicator/child borders)
-client.focused   #FF6A1AFF  #09060300  #FFF4E8FF  #FFB347FF  #FF6A1AFF
+client.focused   #58BAFFFF  #01020700  #F7FBFFFF  #DFF8FFFF  #376DFFFF
 
 # Unfocused windows: solid black border (and matching indicator/child borders)
-client.unfocused #352015FF  #09060300  #C2A58DFF  #352015FF  #352015FF
+client.unfocused #30435EFF  #01020700  #8190A5FF  #30435EFF  #30435EFF
 
 
 # =============================

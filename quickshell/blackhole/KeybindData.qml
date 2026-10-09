@@ -7,7 +7,7 @@ Singleton {
         { app: "Hyprland", key: "Super R", action: "Open the Quickshell app launcher" },
         { app: "Hyprland", key: "Super G", action: "Open the all-program shortcut atlas" },
         { app: "Hyprland", key: "Super I", action: "Open the Quickshell power menu" },
-        { app: "Hyprland", key: "Super B", action: "Pause or resume the black-hole motion" },
+        { app: "Hyprland", key: "Super B", action: "Freeze or resume the lensing simulation" },
         { app: "Hyprland", key: "Super M", action: "Arrange, mirror, or extend displays" },
         { app: "Hyprland", key: "Super T", action: "Open WezTerm" },
         { app: "Hyprland", key: "Super A", action: "Open Yazi" },
