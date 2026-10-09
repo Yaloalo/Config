@@ -3,6 +3,8 @@
 # ─── 1. Oh My Zsh core setup ─────────────────────────────────────────────────────
 export ZSH="${ZDOTDIR:-$HOME/.config/zsh}/oh-my-zsh"
 ZSH_THEME=""  # Disable oh-my-zsh theme; Starship will handle prompt
+ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
+mkdir -p "${ZSH_COMPDUMP:h}"
 plugins=(
   fzf
   extract
@@ -19,8 +21,8 @@ else
 fi
 
 # ─── 2. zoxide & NVM initialization ─────────────────────────────────────────────
-eval "$(zoxide init zsh --cmd j)"
-eval "$(direnv hook zsh)"
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh --cmd j)"
+command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ]         && source "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
@@ -46,15 +48,21 @@ colors() {
 }
 
 # ─── 4. Aliases ─────────────────────────────────────────────────────────────────
-alias l='eza'
+alias l='eza --group-directories-first --icons=auto'
+alias ll='eza -lah --group-directories-first --icons=auto'
+alias la='eza -a --group-directories-first --icons=auto'
+alias lt='eza --tree --level=2 --group-directories-first --icons=auto'
 alias y='yazi'
 alias c='wl-copy'
 alias notes='nvim /home/yaloalo/notes/life200/Planung/Tagesplan.md'
 alias n='nvim'
 alias f='clear'
 alias m='mpv --hwdec=vaapi --vo=gpu --gpu-context=wayland'
-
-
+alias g='git'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias reload='exec zsh'
+alias dots='git -C "$HOME/.config"'
 
 # ─── 5. PATH & broot hook ─────────────────────────────────────────────────────────
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -65,21 +73,18 @@ fi
 
 # ─── 6. History configuration & auto-repair ────────────────────────────────────
 export HISTFILE="$HOME/.histfile"
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=100000
+SAVEHIST=50000
 setopt appendhistory        # append, don’t overwrite
 setopt incappendhistory     # write immediately
 setopt sharehistory         # share across sessions
-
-# Auto-repair corrupt history on startup
-if [[ -s "$HISTFILE" ]]; then
-  fc -R "$HISTFILE" 2>/dev/null && fc -W "$HISTFILE" 2>/dev/null
-fi
+setopt hist_ignore_all_dups
+setopt hist_reduce_blanks
 
 # ─── 7. Keybindings & completion ─────────────────────────────────────────────────
 bindkey -e
-autoload -Uz compinit
-compinit
+KEYTIMEOUT=1
+zstyle ':completion:*' menu select
 
 # ─── FZF-based History Search Widget ─────────────────────────────────────────────
 fzf-history-widget() {
@@ -92,11 +97,9 @@ fzf-history-widget() {
 zle -N fzf-history-widget
 bindkey '^R' fzf-history-widget
 
-# tell Starship exactly where your config lives
+# Starship is the only prompt renderer.
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 
-#source "$HOME/projects/job/volcanite/vulkan/1.4.313.0/setup-env.sh"
-# …later, your existing Starship init…
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
@@ -105,4 +108,3 @@ fi
 
 # Optional extras (expected to exist)
 [[ -f "$HOME/.ghcup/env" ]] && source "$HOME/.ghcup/env"
-[[ -s "$HOME/.config/broot/launcher/bash/br" ]] && source "$HOME/.config/broot/launcher/bash/br"

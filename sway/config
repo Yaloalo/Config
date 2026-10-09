@@ -45,10 +45,10 @@ gaps outer 5
 default_border pixel 6
 
 # Focused window: bright blue border (and matching indicator/child borders)
-client.focused   #005FBBFF  #00000000  #FFFFFFFF  #005FBBFF  #005FBBFF
+client.focused   #FF6A1AFF  #09060300  #FFF4E8FF  #FFB347FF  #FF6A1AFF
 
 # Unfocused windows: solid black border (and matching indicator/child borders)
-client.unfocused #000000FF  #00000000  #FFFFFFFF  #000000FF  #000000FF
+client.unfocused #352015FF  #09060300  #C2A58DFF  #352015FF  #352015FF
 
 
 # =============================
@@ -70,7 +70,7 @@ exec_always swayidle -w \
 # Keybindings
 # =============================
 # Searchable shortcut cheat sheet
-bindsym $mod+F1 exec qs -c blackhole ipc call shell toggleKeybinds
+bindsym $mod+g exec qs -c blackhole ipc call shell toggleKeybinds
 
 # Monitor setup script
 bindsym $mod+m exec nwg-displays

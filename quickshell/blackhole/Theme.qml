@@ -4,16 +4,17 @@ import Quickshell
 import QtQuick
 
 Singleton {
-    readonly property color voidBlack: "#08070f"
-    readonly property color surface: "#dd11101d"
-    readonly property color surfaceHigh: "#ee1c1930"
-    readonly property color outline: "#554f6f"
-    readonly property color text: "#f3efff"
-    readonly property color muted: "#aaa2c7"
-    readonly property color cyan: "#8be9fd"
-    readonly property color violet: "#b48ef7"
-    readonly property color pink: "#ff79c6"
-    readonly property color warning: "#ffcf70"
-    readonly property color danger: "#ff668c"
+    readonly property color voidBlack: "#090603"
+    readonly property color surface: "#e6120b07"
+    readonly property color surfaceHigh: "#f21b1008"
+    readonly property color outline: "#70401f"
+    readonly property color text: "#fff4e8"
+    readonly property color muted: "#c2a58d"
+    readonly property color amber: "#ffb347"
+    readonly property color ember: "#ff6a1a"
+    readonly property color gold: "#ffd27a"
+    readonly property color copper: "#c65d21"
+    readonly property color warning: "#ffc857"
+    readonly property color danger: "#ff4f32"
     readonly property string font: "JetBrainsMono Nerd Font"
 }

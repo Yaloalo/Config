@@ -83,12 +83,12 @@ Scope {
                             ColumnLayout {
                                 Layout.fillWidth: true
                                 spacing: 3
-                                Text { text: notificationCard.modelData.appName || "System"; color: Theme.cyan; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
+                                Text { text: notificationCard.modelData.appName || "System"; color: Theme.amber; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
                                 Text { text: notificationCard.modelData.summary; color: Theme.text; font.family: Theme.font; font.pixelSize: 11; font.bold: true; wrapMode: Text.Wrap; Layout.fillWidth: true }
                                 Text { visible: text.length > 0; text: notificationCard.modelData.body; color: Theme.muted; font.family: Theme.font; font.pixelSize: 9; textFormat: Text.PlainText; wrapMode: Text.Wrap; maximumLineCount: 3; elide: Text.ElideRight; Layout.fillWidth: true }
                             }
 
-                            Text { text: "×"; color: Theme.pink; font.pixelSize: 17; Layout.alignment: Qt.AlignTop }
+                            Text { text: "×"; color: Theme.gold; font.pixelSize: 17; Layout.alignment: Qt.AlignTop }
                         }
 
                         TapHandler { onTapped: notificationCard.modelData.dismiss() }

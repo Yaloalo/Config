@@ -3,8 +3,7 @@ local shell = "qs -c blackhole ipc call shell "
 
 -- Shell and desktop tools.
 hl.bind(mod .. " + R", hl.dsp.exec_cmd(shell .. "toggleLauncher"), { description = "App launcher" })
-hl.bind(mod .. " + F1", hl.dsp.exec_cmd(shell .. "toggleKeybinds"), { description = "Shortcut atlas" })
-hl.bind(mod .. " + SHIFT + M", hl.dsp.exec_cmd(shell .. "toggleKeybinds"), { description = "Shortcut atlas" })
+hl.bind(mod .. " + G", hl.dsp.exec_cmd(shell .. "toggleKeybinds"), { description = "Shortcut atlas" })
 hl.bind(mod .. " + I", hl.dsp.exec_cmd(shell .. "togglePower"), { description = "Power menu" })
 hl.bind(mod .. " + B", hl.dsp.exec_cmd(shell .. "toggleMotion"), { description = "Pause wallpaper motion" })
 hl.bind(mod .. " + M", hl.dsp.exec_cmd("uwsm app -- nwg-displays"), { description = "Arrange displays" })
@@ -39,6 +38,8 @@ for workspace = 1, 10 do
 end
 hl.bind(mod .. " + Q", hl.dsp.focus({ workspace = 11 }), { description = "External workspace" })
 hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.move({ workspace = 11, silent = true }))
+hl.bind(mod .. " + W", hl.dsp.focus({ workspace = 10 }), { description = "Laptop workspace" })
+hl.bind(mod .. " + SHIFT + W", hl.dsp.window.move({ workspace = 10, silent = true }))
 hl.bind(mod .. " + E", hl.dsp.workspace.toggle_special("term"), { description = "Terminal scratchpad" })
 hl.bind(mod .. " + SHIFT + E", hl.dsp.window.move({ workspace = "special:term", silent = true }))
 hl.bind(mod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))

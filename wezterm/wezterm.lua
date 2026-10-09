@@ -49,22 +49,22 @@ end)
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = 18.0
 config.colors = {
-  foreground = "#f3efff",
-  background = "#08070f",
-  cursor_bg = "#8be9fd",
-  cursor_fg = "#08070f",
-  cursor_border = "#8be9fd",
-  selection_fg = "#f3efff",
-  selection_bg = "#44355f",
-  ansi = { "#08070f", "#ff668c", "#74d6aa", "#ffcf70", "#75a7ff", "#b48ef7", "#8be9fd", "#d9d1eb" },
-  brights = { "#554f6f", "#ff79c6", "#9be8bd", "#ffe29a", "#9bc1ff", "#caaaff", "#b5f2ff", "#ffffff" },
+  foreground = "#fff4e8",
+  background = "#090603",
+  cursor_bg = "#ffb347",
+  cursor_fg = "#090603",
+  cursor_border = "#ffb347",
+  selection_fg = "#fff4e8",
+  selection_bg = "#70401f",
+  ansi = { "#090603", "#ff4f32", "#8fbf73", "#ffc857", "#d8893f", "#c65d21", "#ffb347", "#e8d8c8" },
+  brights = { "#70401f", "#ff745c", "#aed091", "#ffd27a", "#e9a868", "#df7c3a", "#ffc870", "#fffaf5" },
   tab_bar = {
     background = "rgba(0,0,0,0)",
-    active_tab = { bg_color = "#b48ef7", fg_color = "#08070f", intensity = "Bold" },
-    inactive_tab = { bg_color = "#171326", fg_color = "#aaa2c7" },
-    inactive_tab_hover = { bg_color = "#2b2440", fg_color = "#f3efff" },
-    new_tab = { bg_color = "#171326", fg_color = "#8be9fd" },
-    new_tab_hover = { bg_color = "#2b2440", fg_color = "#f3efff" },
+    active_tab = { bg_color = "#ff6a1a", fg_color = "#090603", intensity = "Bold" },
+    inactive_tab = { bg_color = "#140b07", fg_color = "#b99a80" },
+    inactive_tab_hover = { bg_color = "#352015", fg_color = "#fff4e8" },
+    new_tab = { bg_color = "#140b07", fg_color = "#ffb347" },
+    new_tab_hover = { bg_color = "#352015", fg_color = "#fff4e8" },
   },
 }
 

@@ -75,7 +75,7 @@ Scope {
 
         Rectangle {
             anchors.fill: parent
-            color: "#9905040c"
+            color: "#99070402"
 
             MouseArea {
                 anchors.fill: parent
@@ -130,11 +130,11 @@ Scope {
                         implicitWidth: 32
                         implicitHeight: 32
                         radius: 11
-                        color: closeHover.hovered ? "#553149" : "transparent"
+                        color: closeHover.hovered ? "#5a2c17" : "transparent"
                         Text {
                             anchors.centerIn: parent
                             text: "×"
-                            color: Theme.pink
+                            color: Theme.gold
                             font.pixelSize: 20
                         }
                         HoverHandler { id: closeHover }
@@ -155,9 +155,9 @@ Scope {
                     selectByMouse: true
                     background: Rectangle {
                         radius: 13
-                        color: "#aa0d0c18"
+                        color: "#aa120b07"
                         border.width: 1
-                        border.color: search.activeFocus ? Theme.violet : Theme.outline
+                        border.color: search.activeFocus ? Theme.ember : Theme.outline
                     }
                     Keys.onEscapePressed: ShellState.close()
                     Component.onCompleted: forceActiveFocus()
@@ -194,7 +194,7 @@ Scope {
                 width: appList.width
                 height: 58
                 radius: 14
-                color: appHover.hovered ? "#332b4c" : "#160f1d2b"
+                color: appHover.hovered ? "#4a2a19" : "#24120a"
 
                 RowLayout {
                     anchors.fill: parent
@@ -215,7 +215,7 @@ Scope {
                         Text { text: appRow.modelData.name; color: Theme.text; font.family: Theme.font; font.pixelSize: 12; font.bold: true }
                         Text { text: appRow.modelData.genericName || appRow.modelData.comment; color: Theme.muted; font.family: Theme.font; font.pixelSize: 9; elide: Text.ElideRight; Layout.fillWidth: true }
                     }
-                    Text { text: "↵"; color: Theme.violet; font.family: Theme.font; font.pixelSize: 12 }
+                    Text { text: "↵"; color: Theme.ember; font.family: Theme.font; font.pixelSize: 12 }
                 }
 
                 HoverHandler { id: appHover }
@@ -239,7 +239,7 @@ Scope {
                 Layout.fillWidth: true
                 Text {
                     text: Networking.wifiEnabled ? "󰖩  Wi-Fi enabled" : "󰖪  Wi-Fi disabled"
-                    color: Networking.wifiEnabled ? Theme.cyan : Theme.muted
+                    color: Networking.wifiEnabled ? Theme.amber : Theme.muted
                     font.family: Theme.font
                     font.pixelSize: 12
                     font.bold: true
@@ -249,7 +249,7 @@ Scope {
                     implicitWidth: 92
                     implicitHeight: 34
                     radius: 12
-                    color: Networking.wifiEnabled ? "#354d5570" : "#2b2637"
+                    color: Networking.wifiEnabled ? "#66401f12" : "#2b1a10"
                     Text { anchors.centerIn: parent; text: Networking.wifiEnabled ? "TURN OFF" : "TURN ON"; color: Theme.text; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
                     TapHandler { onTapped: Networking.wifiEnabled = !Networking.wifiEnabled }
                 }
@@ -260,9 +260,9 @@ Scope {
                 Layout.fillWidth: true
                 implicitHeight: 74
                 radius: 14
-                color: "#2a233d"
+                color: "#2a160c"
                 border.width: 1
-                border.color: Theme.violet
+                border.color: Theme.ember
 
                 RowLayout {
                     anchors.fill: parent
@@ -276,7 +276,7 @@ Scope {
                         color: Theme.text
                         placeholderTextColor: Theme.muted
                         font.family: Theme.font
-                        background: Rectangle { radius: 10; color: "#0d0c18"; border.width: 1; border.color: Theme.outline }
+                        background: Rectangle { radius: 10; color: "#120b07"; border.width: 1; border.color: Theme.outline }
                         onAccepted: {
                             if (root.pendingNetwork && text.length > 0) {
                                 root.pendingNetwork.connectWithPsk(text);
@@ -288,7 +288,7 @@ Scope {
                         implicitWidth: 86
                         implicitHeight: 34
                         radius: 10
-                        color: Theme.violet
+                        color: Theme.ember
                         Text { anchors.centerIn: parent; text: "CONNECT"; color: Theme.voidBlack; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
                         TapHandler {
                             onTapped: {
@@ -316,7 +316,7 @@ Scope {
                     width: networkList.width
                     height: 54
                     radius: 14
-                    color: modelData.connected ? "#283d4d55" : networkHover.hovered ? "#332b4c" : "#160f1d2b"
+                    color: modelData.connected ? "#66401f12" : networkHover.hovered ? "#4a2a19" : "#24120a"
 
                     RowLayout {
                         anchors.fill: parent
@@ -324,7 +324,7 @@ Scope {
                         anchors.rightMargin: 15
                         Text {
                             text: modelData.signalStrength > 0.7 ? "󰤨" : modelData.signalStrength > 0.4 ? "󰤥" : "󰤟"
-                            color: modelData.connected ? Theme.cyan : Theme.muted
+                            color: modelData.connected ? Theme.amber : Theme.muted
                             font.family: Theme.font
                             font.pixelSize: 16
                         }
@@ -334,7 +334,7 @@ Scope {
                             Text { text: networkRow.modelData.name || "Hidden network"; color: Theme.text; font.family: Theme.font; font.pixelSize: 11; font.bold: networkRow.modelData.connected }
                             Text { text: networkRow.modelData.connected ? "connected" : networkRow.modelData.known ? "saved" : WifiSecurityType.toString(networkRow.modelData.security); color: Theme.muted; font.family: Theme.font; font.pixelSize: 9 }
                         }
-                        Text { text: networkRow.modelData.stateChanging ? "orbiting…" : networkRow.modelData.connected ? "●" : "CONNECT"; color: networkRow.modelData.connected ? Theme.cyan : Theme.violet; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
+                        Text { text: networkRow.modelData.stateChanging ? "orbiting…" : networkRow.modelData.connected ? "●" : "CONNECT"; color: networkRow.modelData.connected ? Theme.amber : Theme.ember; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
                     }
 
                     HoverHandler { id: networkHover }
@@ -370,21 +370,21 @@ Scope {
                 width: keyList.width
                 height: 54
                 radius: 14
-                color: keyHover.hovered ? "#332b4c" : "#160f1d2b"
+                color: keyHover.hovered ? "#4a2a19" : "#24120a"
 
                 RowLayout {
                     anchors.fill: parent
                     anchors.leftMargin: 14
                     anchors.rightMargin: 14
                     spacing: 12
-                    Text { text: keyRow.modelData.app; color: Theme.cyan; font.family: Theme.font; font.pixelSize: 9; font.bold: true; Layout.preferredWidth: 82 }
+                    Text { text: keyRow.modelData.app; color: Theme.amber; font.family: Theme.font; font.pixelSize: 9; font.bold: true; Layout.preferredWidth: 82 }
                     Text { text: keyRow.modelData.action; color: Theme.text; font.family: Theme.font; font.pixelSize: 10; Layout.fillWidth: true; elide: Text.ElideRight }
                     Rectangle {
                         implicitWidth: keyText.implicitWidth + 18
                         implicitHeight: 30
                         radius: 9
-                        color: "#2b2440"
-                        Text { id: keyText; anchors.centerIn: parent; text: keyRow.modelData.key; color: Theme.violet; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
+                        color: "#352015"
+                        Text { id: keyText; anchors.centerIn: parent; text: keyRow.modelData.key; color: Theme.ember; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
                     }
                 }
                 HoverHandler { id: keyHover }
@@ -400,10 +400,10 @@ Scope {
 
             Repeater {
                 model: [
-                    { icon: "󰌾", label: "LOCK", command: ["hyprlock", "--immediate"], colour: Theme.cyan },
-                    { icon: "󰍃", label: "LOG OUT", command: ["hyprctl", "dispatch", "exit"], colour: Theme.violet },
+                    { icon: "󰌾", label: "LOCK", command: ["hyprlock", "--immediate"], colour: Theme.amber },
+                    { icon: "󰍃", label: "LOG OUT", command: ["hyprctl", "dispatch", "exit"], colour: Theme.ember },
                     { icon: "󰒲", label: "SUSPEND", command: ["systemctl", "suspend"], colour: Theme.warning },
-                    { icon: "󰜉", label: "REBOOT", command: ["systemctl", "reboot"], colour: Theme.pink },
+                    { icon: "󰜉", label: "REBOOT", command: ["systemctl", "reboot"], colour: Theme.gold },
                     { icon: "󰐥", label: "POWER OFF", command: ["systemctl", "poweroff"], colour: Theme.danger }
                 ]
 
@@ -413,7 +413,7 @@ Scope {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     radius: 18
-                    color: powerHover.hovered ? "#392e50" : "#1b1728"
+                    color: powerHover.hovered ? "#4b2917" : "#1d1009"
                     border.width: 1
                     border.color: powerHover.hovered ? modelData.colour : Theme.outline
 

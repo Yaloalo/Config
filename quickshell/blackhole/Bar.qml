@@ -41,6 +41,16 @@ Scope {
         PanelWindow {
             id: window
             required property var modelData
+            readonly property var hyprMonitor: Hyprland.monitorFor(modelData)
+            readonly property var localWorkspaces: Hyprland.workspaces.values
+                .filter(workspace => workspace.id > 0
+                    && workspace.id < 10
+                    && workspace.monitor === hyprMonitor)
+                .sort((left, right) => left.id - right.id)
+            readonly property bool terminalVisible: Hyprland.workspaces.values
+                .some(workspace => workspace.name === "special:term"
+                    && workspace.active
+                    && workspace.monitor === hyprMonitor)
 
             screen: modelData
             color: "transparent"
@@ -76,12 +86,12 @@ Scope {
                         implicitWidth: 32
                         implicitHeight: 28
                         radius: 10
-                        color: logoHover.hovered ? "#44355f" : "#2b203e"
+                        color: logoHover.hovered ? "#4b2917" : "#2a160c"
 
                         Text {
                             anchors.centerIn: parent
                             text: "󰚩"
-                            color: Theme.violet
+                            color: Theme.ember
                             font.family: Theme.font
                             font.pixelSize: 17
                         }
@@ -90,26 +100,45 @@ Scope {
                         TapHandler { onTapped: ShellState.toggle("launcher") }
                     }
 
+                    Rectangle {
+                        implicitWidth: monitorText.implicitWidth + 18
+                        implicitHeight: 28
+                        radius: 10
+                        color: window.hyprMonitor?.focused ? "#3b210f" : "#24140b"
+                        border.width: 1
+                        border.color: window.hyprMonitor?.focused ? Theme.amber : Theme.outline
+
+                        Text {
+                            id: monitorText
+                            anchors.centerIn: parent
+                            text: (window.hyprMonitor?.name ?? window.modelData.name)
+                                + "  ·  " + (window.hyprMonitor?.activeWorkspace?.name ?? "—")
+                            color: window.hyprMonitor?.focused ? Theme.gold : Theme.muted
+                            font.family: Theme.font
+                            font.pixelSize: 10
+                            font.bold: window.hyprMonitor?.focused ?? false
+                        }
+                    }
+
                     RowLayout {
                         spacing: 3
 
                         Repeater {
-                            model: 10
+                            model: window.localWorkspaces
 
                             Rectangle {
                                 id: workspace
-                                required property int index
-                                readonly property int number: index + 1
-                                readonly property bool active: Hyprland.focusedWorkspace?.id === number
+                                required property var modelData
+                                readonly property bool active: modelData.active
 
                                 implicitWidth: active ? 28 : 20
                                 implicitHeight: 25
                                 radius: 9
-                                color: active ? Theme.violet : workspaceHover.hovered ? "#302945" : "transparent"
+                                color: active ? Theme.ember : workspaceHover.hovered ? "#352015" : "transparent"
 
                                 Text {
                                     anchors.centerIn: parent
-                                    text: workspace.number
+                                    text: workspace.modelData.id
                                     color: workspace.active ? Theme.voidBlack : Theme.muted
                                     font.family: Theme.font
                                     font.pixelSize: 11
@@ -119,7 +148,47 @@ Scope {
                                 Behavior on implicitWidth { NumberAnimation { duration: 140 } }
                                 Behavior on color { ColorAnimation { duration: 140 } }
                                 HoverHandler { id: workspaceHover }
-                                TapHandler { onTapped: Hyprland.dispatch("workspace " + workspace.number) }
+                                TapHandler {
+                                    onTapped: Hyprland.dispatch("hl.dsp.focus({ workspace = "
+                                        + workspace.modelData.id + " })")
+                                }
+                            }
+                        }
+
+                        Repeater {
+                            model: [
+                                { label: "E", target: "special:term", active: window.terminalVisible },
+                                { label: "W", target: "10", active: window.hyprMonitor?.activeWorkspace?.id === 10 },
+                                { label: "Q", target: "11", active: window.hyprMonitor?.activeWorkspace?.id === 11 }
+                            ]
+
+                            Rectangle {
+                                id: namedWorkspace
+                                required property var modelData
+
+                                implicitWidth: 24
+                                implicitHeight: 25
+                                radius: 9
+                                color: modelData.active ? Theme.amber : namedHover.hovered ? "#352015" : "transparent"
+                                border.width: modelData.label === "E" ? 1 : 0
+                                border.color: modelData.active ? Theme.gold : Theme.outline
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: namedWorkspace.modelData.label
+                                    color: namedWorkspace.modelData.active ? Theme.voidBlack : Theme.muted
+                                    font.family: Theme.font
+                                    font.pixelSize: 10
+                                    font.bold: true
+                                }
+
+                                Behavior on color { ColorAnimation { duration: 140 } }
+                                HoverHandler { id: namedHover }
+                                TapHandler {
+                                    onTapped: Hyprland.dispatch(namedWorkspace.modelData.label === "E"
+                                        ? "hl.dsp.workspace.toggle_special(\"term\")"
+                                        : "hl.dsp.focus({ workspace = " + namedWorkspace.modelData.target + " })")
+                                }
                             }
                         }
                     }
@@ -170,13 +239,13 @@ Scope {
                             implicitWidth: wifiText.implicitWidth + 18
                             implicitHeight: 28
                             radius: 10
-                            color: wifiHover.hovered ? "#302945" : "transparent"
+                            color: wifiHover.hovered ? "#352015" : "transparent"
 
                             Text {
                                 id: wifiText
                                 anchors.centerIn: parent
                                 text: root.activeNetwork ? "󰖩  " + root.activeNetwork.name : "󰖪  offline"
-                                color: root.activeNetwork ? Theme.cyan : Theme.muted
+                                color: root.activeNetwork ? Theme.amber : Theme.muted
                                 font.family: Theme.font
                                 font.pixelSize: 11
                             }
@@ -189,13 +258,13 @@ Scope {
                             implicitWidth: volumeText.implicitWidth + 16
                             implicitHeight: 28
                             radius: 10
-                            color: volumeHover.hovered ? "#302945" : "transparent"
+                            color: volumeHover.hovered ? "#352015" : "transparent"
 
                             Text {
                                 id: volumeText
                                 anchors.centerIn: parent
                                 text: (root.muted ? "󰖁" : root.volume > 0.55 ? "󰕾" : "󰖀") + "  " + Math.round(root.volume * 100) + "%"
-                                color: root.muted ? Theme.danger : Theme.violet
+                                color: root.muted ? Theme.danger : Theme.ember
                                 font.family: Theme.font
                                 font.pixelSize: 11
                             }
@@ -217,7 +286,7 @@ Scope {
                             implicitWidth: batteryText.implicitWidth + 16
                             implicitHeight: 28
                             radius: 10
-                            color: batteryHover.hovered ? "#302945" : "transparent"
+                            color: batteryHover.hovered ? "#352015" : "transparent"
 
                             Text {
                                 id: batteryText
@@ -235,12 +304,12 @@ Scope {
                             implicitWidth: 29
                             implicitHeight: 28
                             radius: 10
-                            color: helpHover.hovered ? "#44355f" : "transparent"
+                            color: helpHover.hovered ? "#4b2917" : "transparent"
 
                             Text {
                                 anchors.centerIn: parent
                                 text: "󰌌"
-                                color: Theme.pink
+                                color: Theme.gold
                                 font.family: Theme.font
                                 font.pixelSize: 14
                             }

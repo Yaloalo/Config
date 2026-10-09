@@ -1,84 +1,92 @@
-# ~/.config/starship.toml
+add_newline = true
+command_timeout = 1000
+palette = "event_horizon"
 
-# ── Prompt Layout ──────────────────────────────────────────────────────────────
 format = """
-󰄛 \
-(#FFFFFF) $username\
-(#FFFFFF)$hostname\
-[ | ](#FFFFFF)$directory [ | ](#FFFFFF)\
-$git_branch\
-$git_state\
-$git_status\
-$python\
-[ | ](#FFFFFF) $time\
-$line_break\
+$os$username$hostname$directory$git_branch$git_state$git_status$fill$cmd_duration$python$time
 $character"""
 
-# ── Custom Cat Icon ────────────────────────────────────────────────────────────
-[custom.cat]
-command = 'echo 󰄛'
-when    = true
-format  = '[$output]($style) '
-style   = "#FFFFFF"
+[palettes.event_horizon]
+void = "#090603"
+mantle = "#140b07"
+surface = "#2a160c"
+outline = "#70401f"
+text = "#fff4e8"
+muted = "#b99a80"
+amber = "#ffb347"
+ember = "#ff6a1a"
+gold = "#ffd27a"
+red = "#ff4f32"
+green = "#8fbf73"
 
-# ── Username (navy blue) ───────────────────────────────────────────────────────
+[os]
+disabled = false
+format = "[](ember)[$symbol](bold void)[ ](ember)"
+
+[os.symbols]
+Arch = " "
+Linux = " "
+
 [username]
-style_user = "#3B4D63"
+show_always = true
+format = "[$user](bold amber)"
 
-# ── Hostname (slate blue) ──────────────────────────────────────────────────────
 [hostname]
-style = "#4F5E77"
+ssh_only = false
+format = "[@$hostname](muted) "
 
-# ── Directory (steel blue) ────────────────────────────────────────────────────
 [directory]
-style               = "#5F728D"
-# 1) Replace your home path with nothing (no '~' either)
-home_symbol         = ""
-# 2) Strip out the literal '/home/youruser/' prefix
-substitutions       = { "/home/youruser/" = "" }
-# 3) Disable truncation so you always see the full subpath
-truncation_length   = 0
-# 4) Don’t force truncation at repo root
-truncate_to_repo    = false
-# (leave format/read_only/etc at their defaults)
+format = "[󰉋 $path]($style)[$read_only]($read_only_style) "
+style = "bold gold"
+read_only = " 󰌾"
+read_only_style = "red"
+truncation_length = 4
+truncate_to_repo = false
+fish_style_pwd_dir_length = 1
 
-# ── Git Branch (desaturated sky blue) ─────────────────────────────────────────
 [git_branch]
-format = "[$branch]($style)"
-style  = "#6B88A6"
+symbol = " "
+format = "[$symbol$branch]($style) "
+style = "bold ember"
 
-# ── Git State (icy blue) ──────────────────────────────────────────────────────
 [git_state]
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style  = "#7A9BB7"
+format = "[\\($state( $progress_current/$progress_total)\\)]($style) "
+style = "amber"
 
-# ── Git Status (near white-blue) ──────────────────────────────────────────────
 [git_status]
-format     = " [$ahead_behind$stashed]($style)"
-style      = "#9EB7CC"
-conflicted = ""
-untracked  = ""
-modified   = ""
-staged     = ""
-renamed    = ""
-deleted    = ""
-stashed    = "≡"
+format = "[$all_status$ahead_behind]($style) "
+style = "amber"
+conflicted = "=${count} "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+stashed = "*${count} "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
 
-# ── Python Virtualenv (powder blue) ──────────────────────────────────────────
+[fill]
+symbol = " "
+
+[cmd_duration]
+min_time = 1500
+format = "[󰔛 $duration](muted) "
+
 [python]
-format = "[$virtualenv]($style) "
-style  = "#87AFCB"
+format = "[ ${pyenv_prefix}(${version} )(\\($virtualenv\\) )]($style)"
+style = "gold"
 
-# ── Time (bright sky blue) ────────────────────────────────────────────────────
 [time]
-disabled     = false
-time_format  = "%Y-%m-%d %H:%M:%S"
-format       = "[$time]($style) "
-style        = "#73C0D5"
+disabled = false
+time_format = "%H:%M"
+format = "[󰥔 $time](muted)"
 
-# ── Character Symbols ─────────────────────────────────────────────────────────
 [character]
-success_symbol = "[❯](#5F728D)"
-error_symbol   = "[❯](#E06C75)"
-vimcmd_symbol  = "[❮](#73C0D8)"
-
+success_symbol = "[❯](bold ember)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold gold)"
+vimcmd_replace_one_symbol = "[❮](bold amber)"
+vimcmd_replace_symbol = "[❮](bold red)"
+vimcmd_visual_symbol = "[❮](bold gold)"

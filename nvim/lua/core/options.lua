@@ -3,6 +3,9 @@ local o = vim.opt
 
 o.number = true
 o.relativenumber = true
+o.expandtab = true
+o.tabstop = 4
+o.shiftwidth = 4
 o.mouse = 'a'
 o.showmode = false
 o.clipboard = 'unnamedplus'
@@ -22,6 +25,6 @@ o.cursorline = true
 o.scrolloff = 10
 o.confirm = true
 o.termguicolors = true
-o.completeopt = { 'menuone', 'noselect', 'popup' }
+o.completeopt = { 'menu', 'menuone', 'noselect' }
 o.pumheight = 12
 o.winborder = 'rounded'

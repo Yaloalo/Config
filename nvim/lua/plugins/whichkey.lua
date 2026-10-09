@@ -1,0 +1,66 @@
+return {
+
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      win = {
+        no_overlap = true,
+        padding = { 1, 2 },
+        border = "rounded",
+        title = true,
+        title_pos = "center",
+        zindex = 1000,
+        wo = { winblend = 0 },
+      },
+      plugins = {
+        marks = true,
+        registers = true,
+        spelling = { enabled = true, suggestions = 20 },
+        presets = {
+          operators = true,
+          motions = true,
+          text_objects = true,
+          windows = true,
+          nav = true,
+          z = true,
+          g = true,
+        },
+      },
+      layout = { width = { min = 20 }, spacing = 3 },
+      icons = { breadcrumb = "»", separator = "➜", group = "+", mappings = true },
+      spec = {
+        { "<leader>s", group = "󰈞  [S]earch" },
+        { "<leader>c", group = "󰈞  [C]ompiler" },
+        { "<leader>o", group = "󰏆  [O]il" },
+        { "<leader>g", group = "  [G]rug" },
+        { "<leader>h", group = "  [H]arpoon" },
+        { "<leader>l", group = "󰒋  [L]SP" },
+        { "<leader>r", group = "󰍉  [R]ing" },
+        { "<leader>x", group = "󰆍  LaTe[X]" },
+      },
+    },
+    config = function(_, opts)
+      require("which-key").setup(opts)
+      for _, group in ipairs({
+        "NormalFloat",
+        "FloatBorder",
+        "WhichKeyFloat",
+        "WhichKeyBorder",
+        "WhichKeyNormal",
+        "WhichKeyTitle",
+        "WinBar",
+        "WinBarNC",
+        "FloatTitle",
+      }) do
+        vim.api.nvim_set_hl(0, group, { bg = "none" })
+      end
+      local palette = require("core.palette")
+      vim.api.nvim_set_hl(0, "WhichKeyBorder", { fg = palette.amber })
+      vim.api.nvim_set_hl(0, "WhichKeyTitle", { fg = palette.gold, bold = true })
+      vim.keymap.set("n", "<leader>?", function()
+        require("which-key").show()
+      end, { desc = "Show all Neovim keybindings" })
+    end,
+  },
+}
