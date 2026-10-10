@@ -1,8 +1,9 @@
 local map = vim.keymap.set
-map("n", "<leader>wq", "<cmd>close<CR>", { desc = "Close window" })
-map("n", "<leader>ww", "<cmd>write<CR>", { desc = "Write file" })
+-- Keep Space w for the original directory picker; new window actions use Space v.
+map("n", "<leader>vq", "<cmd>close<CR>", { desc = "Close window" })
+map("n", "<leader>vw", "<cmd>write<CR>", { desc = "Write file" })
 for key, direction in pairs({ h = "h", j = "j", k = "k", l = "l" }) do
-  map("n", "<leader>w" .. key, "<C-w>" .. direction, { desc = "Focus window " .. key })
+  map("n", "<leader>v" .. key, "<C-w>" .. direction, { desc = "Focus window " .. key })
 end
 
 -- track whether diagnostics are currently shown
@@ -15,12 +16,13 @@ vim.keymap.set("v", "<C-c>", "<Esc>")
 -- Clear search highlights
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
--- Window actions live under Space W; standard Ctrl-N / Enter remain available.
-map("n", "<leader>ws", "<cmd>split<CR>", {
+map("n", "<C-n>", "<cmd>split<CR>", { desc = "Horizontal split" })
+map("n", "<C-m>", "<cmd>vsplit<CR>", { desc = "Vertical split" })
+map("n", "<leader>vs", "<cmd>split<CR>", {
   desc = "Horizontal split",
 })
 
-map("n", "<leader>wv", "<cmd>vsplit<CR>", {
+map("n", "<leader>vv", "<cmd>vsplit<CR>", {
   desc = "Vertical split",
 })
 
@@ -42,7 +44,7 @@ map("i", "<C-l>", "<Right>")
 
 
 -- Epic Root dir Search
-map("n", "<leader>sd", function()
+local function find_directory()
   local actions = require("telescope.actions")
   local action_state = require("telescope.actions.state")
 
@@ -64,4 +66,6 @@ map("n", "<leader>sd", function()
       return true
     end,
   })
-end, { desc = "Fuzzy-find directory from / and cd" })
+end
+map("n", "<leader>w", find_directory, { desc = "Fuzzy-find directory from / and cd" })
+map("n", "<leader>sd", find_directory, { desc = "Fuzzy-find directory from / and cd" })

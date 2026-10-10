@@ -19,11 +19,17 @@ Scope {
         }
     }
     Timer {
-        id: settle; interval: 100
+        // IPC reports final geometry during a window's opening animation.
+        // Let that animation settle before drawing on its actual outer border.
+        id: settle; interval: 320
         onTriggered: {
             if (root.target && Preferences.focusComet && !Preferences.ecoMode
                     && root.geometry.size && !root.geometry.fullscreen) sweep.restart();
         }
+    }
+    Timer {
+        interval: 32; repeat: true; running: sweep.running
+        onTriggered: Hyprland.refreshToplevels()
     }
     NumberAnimation {
         id: sweep; target: root; property: "progress"
@@ -52,6 +58,8 @@ Scope {
                     if (!g.at || !g.size || root.progress >= 1) return;
                     const x = g.at[0] - (window.monitor?.x ?? 0) - 1;
                     const y = g.at[1] - (window.monitor?.y ?? 0) - 1;
+                    // Hyprland's 2px border sits OUTSIDE the client rectangle.
+                    // A 2px stroke centered 1px out never paints inside it.
                     const w = g.size[0] + 2, h = g.size[1] + 2, r = 15;
                     const a = w - 2*r, b = h - 2*r, arc = Math.PI*r/2;
                     const perimeter = 2*a + 2*b + 4*arc;
@@ -73,7 +81,7 @@ Scope {
                         const p = point(head-tail+i*tail/60), q = point(head-tail+(i+1)*tail/60);
                         const alpha = Math.pow(i/60, 1.8) * (1-root.progress);
                         c.strokeStyle = "rgba(255,218,80," + alpha + ")";
-                        c.lineWidth = 3; c.beginPath(); c.moveTo(p[0],p[1]); c.lineTo(q[0],q[1]); c.stroke();
+                        c.lineWidth = 2; c.beginPath(); c.moveTo(p[0],p[1]); c.lineTo(q[0],q[1]); c.stroke();
                     }
                 }
             }

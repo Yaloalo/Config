@@ -11,22 +11,31 @@ black-hole assets are retained but are not loaded by the desktop.
 - Super Escape: manual lock. Type the login password and press Enter. The lock
   intentionally shows no input, errors, dots, clock, or authentication feedback.
   Escape clears the invisible input. Failed authentication stays locked.
-- Super T/B/O/N: terminal/browser/files/Neovim.
-- Super F: fullscreen; Super Shift F: floating; Super Shift C: close.
+- Super T / Shift B / A / N: terminal/browser/files/Neovim (Super O also opens files).
+- Super F: close; Super X: floating; Super Y: fake fullscreen. New aliases
+  Super Shift C (close) and Super Shift F (floating) remain available.
 - Super H/J/K/L: focus; add Shift to swap. E/W/Q keep their scratchpad/laptop/
   external-workspace meanings; Shift sends a window there.
-- Super Pause: freeze/resume stars.
+- Super B or Super Pause: freeze/resume stars. Super I also opens power.
 - WezTerm: Ctrl Shift T/W creates a tab/closes a pane; S/D stacks/divides panes;
-  H/J/K/L focuses panes; O changes opacity; E edits scrollback; F searches;
+  H/J/K/L focuses panes; B/O changes opacity; R/E edits scrollback; Alt F searches;
   P opens the command palette. Ctrl PageUp/PageDown switches tabs, adding Shift
   reorders. Ctrl =/-/0 changes/resets font size.
-- Neovim: Space W groups window actions (S/V split, Q close, H/J/K/L focus,
+- WezTerm's original Ctrl Shift N/M splits, Ctrl Shift arrows switch tabs,
+  Ctrl arrows reorder tabs, Ctrl Shift F closes a tab, and Ctrl Shift (/)/=
+  font controls are restored. New non-conflicting aliases remain.
+- Neovim: Space V groups new window actions (S/V split, Q close, H/J/K/L focus,
   W save). Ctrl S saves. Space U O changes opacity. Existing plugin shortcuts
   stay under their search, LSP, Harpoon, compiler and other mnemonic groups.
+  Original Ctrl N/M splits, Space W directory picker and Ctrl B opacity return.
 
 ## Settings and extensions
 
 The sliders button at the top right opens settings. `SettingsPage.qml` contains
+an immediately visible Keybindings button opening the same guide as Super G.
+The display arranger uses `scripts/space-displays.py` to apply process-local
+black-glass GTK styling, retaining upstream dragging and apply/revert behavior.
+No global GTK theme or installed package files are changed. The settings page contains
 data-driven control and device-action lists. Add a control there and a property
 to `Preferences.qml` plus its `fields` list to persist it in `preferences.json`.
 `SpaceField.qml` is independent of the desktop shell so the lock process can use

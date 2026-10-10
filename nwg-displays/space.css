@@ -1,0 +1,58 @@
+/* Applied only by space-displays.py, never to unrelated GTK applications. */
+* {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    text-shadow: none;
+    -gtk-icon-shadow: none;
+}
+window, dialog { background: rgba(0, 0, 0, 0.94); color: #eeeeee; }
+window > box { padding: 16px; }
+label { color: #dddddd; }
+viewport, scrolledwindow { background: transparent; border: none; }
+button, entry, spinbutton, combobox button {
+    background-image: none;
+    background-color: #080808;
+    color: #eeeeee;
+    border: 1px solid #3c3c3c;
+    border-radius: 10px;
+    box-shadow: none;
+    min-height: 26px;
+    padding: 4px 10px;
+}
+button:hover, button:focus, entry:focus, spinbutton:focus {
+    background-color: #101010;
+    border-color: #dddddd;
+}
+button:active, button:checked { background-color: #202020; border-color: white; }
+button:disabled, label:disabled { color: #666666; }
+spinbutton entry { border: none; background: transparent; padding: 0; }
+spinbutton button { border: none; border-radius: 6px; padding: 0 6px; }
+check { background: #080808; border: 1px solid #666666; border-radius: 5px; color: white; }
+check:checked { background: #eeeeee; color: black; }
+checkbutton { padding: 4px; }
+menu, popover { background: #080808; color: white; border: 1px solid #555555; border-radius: 10px; }
+menuitem:hover { background: #242424; }
+separator { background: #303030; min-height: 1px; }
+scrollbar { background: transparent; }
+scrollbar slider { background: #555555; min-width: 4px; min-height: 20px; border-radius: 8px; }
+#wrapper {
+    background-color: black;
+    background-image: url("stars.svg");
+    background-repeat: repeat;
+    border: 1px solid #303030;
+    border-radius: 16px;
+}
+#output, #selected-output, #inactive-output {
+    background-image: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid #666666;
+    border-radius: 12px;
+    color: #dddddd;
+    box-shadow: none;
+    text-shadow: none;
+}
+#output:hover { background-color: rgba(24, 24, 24, 0.8); border-color: white; }
+#selected-output { border: 2px solid white; color: white; font-weight: bold; }
+#inactive-output { border-style: dashed; border-color: #333333; color: #666666; }
+#indicator { background: black; border: 1px solid white; border-radius: 14px; color: white; }
+#indicator-label { font-size: 24px; }

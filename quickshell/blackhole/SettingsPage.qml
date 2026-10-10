@@ -41,6 +41,24 @@ ScrollView {
     ColumnLayout {
         width: root.availableWidth
         spacing: 12
+        Button {
+            id: guideButton
+            text: "Keybindings  ·  Super G"
+            Layout.fillWidth: true
+            implicitHeight: 42
+            hoverEnabled: true
+            background: Rectangle {
+                radius: 12; color: "#b0000000"
+                border.color: guideButton.hovered || guideButton.activeFocus ? "white" : "#444444"
+                SpaceField { anchors.fill: parent; anchors.margins: 5; preferences: Preferences; moving: ShellState.motionEnabled; starCount: 16; strength: .35 }
+            }
+            contentItem: Text {
+                text: guideButton.text; color: "white"
+                font.family: Theme.font; font.pixelSize: 11
+                horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+            }
+            onClicked: ShellState.overlay = "keybinds"
+        }
         SpaceSwitch {
             text: "Eco mode"
             checked: Preferences.ecoMode
@@ -109,7 +127,7 @@ ScrollView {
             Repeater {
                 model: [
                     {label: "Wi-Fi", panel: "wifi"},
-                    {label: "Displays / scale / mirror", command: ["nwg-displays"]},
+                    {label: "Displays / scale / mirror", command: ["python3", Quickshell.shellPath("../../scripts/space-displays.py")]},
                     {label: "Audio inputs and outputs", command: ["pavucontrol"]},
                     {label: "Bluetooth", command: ["blueman-manager"]},
                     {label: "Network connections", command: ["nm-connection-editor"]},

@@ -26,6 +26,9 @@
 !/quickshell/
 !/quickshell/blackhole/
 !/quickshell/blackhole/**
+!/nwg-displays/
+!/nwg-displays/space.css
+!/nwg-displays/stars.svg
 !/gtk-3.0
 !/gtk-4.0
 !/gtk-3.0/**

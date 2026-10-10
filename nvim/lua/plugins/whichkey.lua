@@ -30,7 +30,7 @@ return {
       layout = { width = { min = 20 }, spacing = 3 },
       icons = { breadcrumb = "»", separator = "➜", group = "+", mappings = true },
       spec = {
-        { "<leader>w", group = "Windows" },
+        { "<leader>v", group = "Windows" },
         { "<leader>u", group = "UI" },
         { "<leader>s", group = "󰈞  [S]earch" },
         { "<leader>c", group = "󰈞  [C]ompiler" },

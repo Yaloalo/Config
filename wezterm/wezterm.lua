@@ -100,6 +100,19 @@ config.adjust_window_size_when_changing_font_size = true
 -- ── Keybindings ──────────────────────────────────────────────────────────────
 config.disable_default_key_bindings = true
 config.keys = {
+  -- Restore familiar bindings; newer non-conflicting shortcuts remain aliases.
+  { key = "R", mods = "CTRL|SHIFT", action = act.EmitEvent("edit-scrollback") },
+  { key = "(", mods = "CTRL|SHIFT", action = act.IncreaseFontSize },
+  { key = ")", mods = "CTRL|SHIFT", action = act.DecreaseFontSize },
+  { key = "=", mods = "CTRL|SHIFT", action = act.ResetFontSize },
+  { key = "RightArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(1) },
+  { key = "LeftArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+  { key = "RightArrow", mods = "CTRL", action = act.MoveTabRelative(1) },
+  { key = "LeftArrow", mods = "CTRL", action = act.MoveTabRelative(-1) },
+  { key = "F", mods = "CTRL|SHIFT", action = act.CloseCurrentTab({ confirm = false }) },
+  { key = "N", mods = "CTRL|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  { key = "M", mods = "CTRL|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  { key = "B", mods = "CTRL|SHIFT", action = toggle_transparency },
   { key = "T", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
   { key = "W", mods = "CTRL|SHIFT", action = act.CloseCurrentPane({ confirm = true }) },
   { key = "PageDown", mods = "CTRL", action = act.ActivateTabRelative(1) },
@@ -118,7 +131,7 @@ config.keys = {
   { key = "L", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 1 }) },
   { key = "C", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
   { key = "V", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
-  { key = "F", mods = "CTRL|SHIFT", action = act.Search({ CaseInSensitiveString = "" }) },
+  { key = "F", mods = "CTRL|SHIFT|ALT", action = act.Search({ CaseInSensitiveString = "" }) },
   { key = "P", mods = "CTRL|SHIFT", action = act.ActivateCommandPalette },
   { key = "E", mods = "CTRL|SHIFT", action = act.EmitEvent("edit-scrollback") },
   { key = "O", mods = "CTRL|SHIFT", action = toggle_transparency },
