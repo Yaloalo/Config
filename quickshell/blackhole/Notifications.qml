@@ -63,6 +63,14 @@ Scope {
                         color: Theme.surfaceHigh
                         border.width: 1
                         border.color: modelData.urgency === NotificationUrgency.Critical ? Theme.danger : Theme.outline
+                        clip: true
+
+                        SpaceField { preferences: Preferences; moving: ShellState.motionEnabled;
+                            anchors.fill: parent
+                            starCount: 24
+                            seed: notificationCard.modelData.id ?? 9
+                            strength: 0.56
+                        }
 
                         RowLayout {
                             id: content

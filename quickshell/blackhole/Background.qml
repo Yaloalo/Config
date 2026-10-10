@@ -11,8 +11,6 @@ Scope {
         PanelWindow {
             id: window
             required property var modelData
-            property real simulationTime: 0
-            readonly property real renderScale: width > 2400 ? 0.50 : 0.68
 
             screen: modelData
             color: Theme.voidBlack
@@ -29,57 +27,52 @@ Scope {
             WlrLayershell.layer: WlrLayer.Background
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
-            // A physically styled static frame is kept behind the shader so the
-            // desktop still looks correct if the graphics backend is unavailable.
-            Image {
+            Rectangle {
                 anchors.fill: parent
-                source: Quickshell.shellPath("assets/black-hole.png")
-                fillMode: Image.PreserveAspectCrop
-                smooth: true
-                mipmap: true
+                color: Theme.voidBlack
             }
 
-            // The geodesic integrator is deliberately expensive. Render it into
-            // a smaller live texture, then let the GPU upscale it smoothly.
-            Item {
-                id: simulationBuffer
-                width: Math.max(2, Math.ceil(window.width * window.renderScale))
-                height: Math.max(2, Math.ceil(window.height * window.renderScale))
-
-                ShaderEffect {
-                    anchors.fill: parent
-                    property real time: window.simulationTime
-                    property vector2d resolution: Qt.vector2d(width, height)
-                    fragmentShader: Quickshell.shellPath("shaders/blackhole.frag.qsb")
-                }
-            }
-
-            ShaderEffectSource {
+            // The desktop and shell surfaces now share one visual language: an
+            // unbounded, sparse field with slow parallax and no central object.
+            SpaceField { preferences: Preferences; moving: ShellState.motionEnabled;
                 anchors.fill: parent
-                sourceItem: simulationBuffer
-                textureSize: Qt.size(simulationBuffer.width, simulationBuffer.height)
-                hideSource: true
-                live: true
-                recursive: true
-                smooth: true
+                starCount: 320
+                seed: 3
+                strength: 0.55
+                tint: Theme.ice
             }
 
-            Timer {
-                interval: 42
-                repeat: true
-                running: ShellState.motionEnabled
-                onTriggered: window.simulationTime += 0.033
+            SpaceField { preferences: Preferences; moving: ShellState.motionEnabled;
+                anchors.fill: parent
+                starCount: 96
+                seed: 47
+                strength: 0.42
+                tint: Theme.blue
             }
 
-            Text {
+            Rectangle {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: 22
-                text: ShellState.motionEnabled ? "GEODESIC SIMULATION  /  ACTIVE" : "GEODESIC SIMULATION  /  FROZEN"
-                color: Theme.muted
-                font.family: Theme.font
-                font.pixelSize: 9
-                font.letterSpacing: 1.4
+                width: deepFieldLabel.implicitWidth + 22
+                height: 26
+                radius: 9
+                color: Theme.panel
+                border.width: 1
+                border.color: Theme.outline
+                clip: true
+
+                SpaceField { preferences: Preferences; moving: ShellState.motionEnabled; anchors.fill: parent; starCount: 8; seed: 81; strength: 0.5 }
+
+                Text {
+                    id: deepFieldLabel
+                    anchors.centerIn: parent
+                    text: ShellState.motionEnabled ? "DEEP FIELD  /  DRIFT" : "DEEP FIELD  /  STILL"
+                    color: Theme.muted
+                    font.family: Theme.font
+                    font.pixelSize: 9
+                    font.letterSpacing: 1.4
+                }
             }
         }
     }

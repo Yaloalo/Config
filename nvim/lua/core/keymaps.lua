@@ -1,4 +1,9 @@
 local map = vim.keymap.set
+map("n", "<leader>wq", "<cmd>close<CR>", { desc = "Close window" })
+map("n", "<leader>ww", "<cmd>write<CR>", { desc = "Write file" })
+for key, direction in pairs({ h = "h", j = "j", k = "k", l = "l" }) do
+  map("n", "<leader>w" .. key, "<C-w>" .. direction, { desc = "Focus window " .. key })
+end
 
 -- track whether diagnostics are currently shown
 local diagnostics_on = false
@@ -10,21 +15,18 @@ vim.keymap.set("v", "<C-c>", "<Esc>")
 -- Clear search highlights
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
--- Horizontal split on <leader>s
-map("n", "<C-n>", "<cmd>split<CR>", {
+-- Window actions live under Space W; standard Ctrl-N / Enter remain available.
+map("n", "<leader>ws", "<cmd>split<CR>", {
   desc = "Horizontal split",
 })
 
--- Vertical split on <leader>d
-map("n", "<C-m>", "<cmd>vsplit<CR>", {
+map("n", "<leader>wv", "<cmd>vsplit<CR>", {
   desc = "Vertical split",
 })
 
--- 1) disable Ctrl-S in all modes (normal, insert, visual, term)
-map({ "n","i","v","t" }, "<C-s>", "<Nop>", { silent = true, desc = "Disable Ctrl-S" })
+-- Save without changing mode.
+map({ "n", "i", "v" }, "<C-s>", "<cmd>write<CR>", { silent = true, desc = "Save file" })
 
--- 2) disable Ctrl-H everywhere except Normal (so only your <C-h> → window-left still works)
-map({ "i","v","t","c","o" }, "<C-h>", "<Nop>", { silent = true, desc = "Disable Ctrl-H outside Normal" })
 
 -- Window navigation
 map("n", "<C-h>", "<C-w><C-h>", { desc = "Move to left window" })
@@ -40,7 +42,7 @@ map("i", "<C-l>", "<Right>")
 
 
 -- Epic Root dir Search
-map("n", "<leader>w", function()
+map("n", "<leader>sd", function()
   local actions = require("telescope.actions")
   local action_state = require("telescope.actions.state")
 

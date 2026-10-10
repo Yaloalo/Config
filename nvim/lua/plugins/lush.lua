@@ -123,8 +123,8 @@ return {
       apply_theme()
 
       -- 5) Keymap: toggle transparency with Ctrl+b
-      -- Note: terminals usually don't distinguish Ctrl+Shift+b, so we just use <C-b>.
-      vim.keymap.set("n", "<C-b>", function()
+      -- UI / opacity; leave Ctrl-B available for Vim's page navigation.
+      vim.keymap.set("n", "<leader>uo", function()
         transparent_enabled = not transparent_enabled
         apply_theme()
       end, { desc = "Toggle background transparency (lush theme)" })

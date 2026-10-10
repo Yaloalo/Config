@@ -1,0 +1,10 @@
+{
+  "ecoMode": false,
+  "ecoPauseStars": true,
+  "ecoDisableBlur": true,
+  "ecoDisableAnimations": true,
+  "ecoBrightness": 35,
+  "starDensity": 1.5,
+  "starSpeed": 1,
+  "focusComet": true
+}

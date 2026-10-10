@@ -48,7 +48,7 @@ end)
 
 -- ── Appearance & shell ───────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size = 13.5
+config.font_size = 13.0
 config.colors = {
   foreground = "#f7fbff",
   background = "#010207",
@@ -100,61 +100,34 @@ config.adjust_window_size_when_changing_font_size = true
 -- ── Keybindings ──────────────────────────────────────────────────────────────
 config.disable_default_key_bindings = true
 config.keys = {
-  -- scrollback → editor
-  { key = "R", mods = "CTRL|SHIFT", action = act.EmitEvent("edit-scrollback") },
-
-  -- font size
-  { key = "(", mods = "CTRL|SHIFT", action = act.IncreaseFontSize },
-  { key = ")", mods = "CTRL|SHIFT", action = act.DecreaseFontSize },
-  { key = "=", mods = "CTRL|SHIFT", action = act.ResetFontSize },
-
-  -- tabs
   { key = "T", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
-  { key = "RightArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(1) },
-  { key = "LeftArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
-  { key = "RightArrow", mods = "CTRL", action = act.MoveTabRelative(1) },
-  { key = "LeftArrow", mods = "CTRL", action = act.MoveTabRelative(-1) },
-  { key = "F", mods = "CTRL|SHIFT", action = act.CloseCurrentTab({ confirm = false }) },
-
-  -- direct tab selection: CTRL|SHIFT + number
-  { key = "1", mods = "CTRL|SHIFT", action = act.ActivateTab(0) },
-  { key = "2", mods = "CTRL|SHIFT", action = act.ActivateTab(1) },
-  { key = "3", mods = "CTRL|SHIFT", action = act.ActivateTab(2) },
-  { key = "4", mods = "CTRL|SHIFT", action = act.ActivateTab(3) },
-  { key = "5", mods = "CTRL|SHIFT", action = act.ActivateTab(4) },
-  { key = "6", mods = "CTRL|SHIFT", action = act.ActivateTab(5) },
-  { key = "7", mods = "CTRL|SHIFT", action = act.ActivateTab(6) },
-  { key = "8", mods = "CTRL|SHIFT", action = act.ActivateTab(7) },
-  { key = "9", mods = "CTRL|SHIFT", action = act.ActivateTab(8) },
-  -- optional: 0 for 10th tab
-  { key = "0", mods = "CTRL|SHIFT", action = act.ActivateTab(9) },
-
-  -- splits & pane movement
-  {
-    key = "N",
-    mods = "CTRL|SHIFT",
-    action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
-  },
-  {
-    key = "M",
-    mods = "CTRL|SHIFT",
-    action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
-  },
+  { key = "W", mods = "CTRL|SHIFT", action = act.CloseCurrentPane({ confirm = true }) },
+  { key = "PageDown", mods = "CTRL", action = act.ActivateTabRelative(1) },
+  { key = "PageUp", mods = "CTRL", action = act.ActivateTabRelative(-1) },
+  { key = "PageDown", mods = "CTRL|SHIFT", action = act.MoveTabRelative(1) },
+  { key = "PageUp", mods = "CTRL|SHIFT", action = act.MoveTabRelative(-1) },
+  { key = "S", mods = "CTRL|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  { key = "D", mods = "CTRL|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   { key = "H", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Left") },
-  { key = "L", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Right") },
-  { key = "K", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Up") },
   { key = "J", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Down") },
+  { key = "K", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Up") },
+  { key = "L", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Right") },
   { key = "H", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Left", 1 }) },
-  { key = "L", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 1 }) },
-  { key = "K", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Up", 1 }) },
   { key = "J", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Down", 1 }) },
-
-  -- copy/paste
+  { key = "K", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Up", 1 }) },
+  { key = "L", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 1 }) },
   { key = "C", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
   { key = "V", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
-
-  -- toggle transparency
-  { key = "B", mods = "CTRL|SHIFT", action = toggle_transparency },
+  { key = "F", mods = "CTRL|SHIFT", action = act.Search({ CaseInSensitiveString = "" }) },
+  { key = "P", mods = "CTRL|SHIFT", action = act.ActivateCommandPalette },
+  { key = "E", mods = "CTRL|SHIFT", action = act.EmitEvent("edit-scrollback") },
+  { key = "O", mods = "CTRL|SHIFT", action = toggle_transparency },
+  { key = "=", mods = "CTRL", action = act.IncreaseFontSize },
+  { key = "-", mods = "CTRL", action = act.DecreaseFontSize },
+  { key = "0", mods = "CTRL", action = act.ResetFontSize },
 }
+for index = 1, 10 do
+  table.insert(config.keys, {key = tostring(index % 10), mods = "CTRL|SHIFT", action = act.ActivateTab(index - 1)})
+end
 
 return config

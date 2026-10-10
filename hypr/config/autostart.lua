@@ -1,6 +1,9 @@
 hl.on("hyprland.start", function()
+    -- Quickshell owns notifications; prevent the legacy daemon from claiming
+    -- org.freedesktop.Notifications before the space-shell starts.
+    hl.exec_cmd("pkill -x mako")
     hl.exec_cmd("qs -c blackhole -n -d")
-    hl.exec_cmd("hypridle")
+    -- Idle locking is intentionally disabled; manual lock and lid sleep are binds.
 
     -- Local activity tracking, kept from the existing setup.
     hl.exec_cmd("/home/yaloalo/git/activewatcher/.venv/bin/activewatcher server --host 127.0.0.1 --port 8712")

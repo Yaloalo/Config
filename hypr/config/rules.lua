@@ -24,5 +24,12 @@ hl.layer_rule({
     name = "blackhole-shell-blur",
     match = { namespace = "blackhole-shell" },
     blur = true,
-    ignore_alpha = 0.18,
+    ignore_alpha = 0.08,
+})
+
+hl.layer_rule({
+    name = "infinity-shell-blur",
+    match = { namespace = "infinity-shell" },
+    blur = true,
+    ignore_alpha = 0.06,
 })

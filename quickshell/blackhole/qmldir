@@ -1,7 +1,12 @@
 Background 1.0 Background.qml
+FocusComet 1.0 FocusComet.qml
 Bar 1.0 Bar.qml
 singleton KeybindData 1.0 KeybindData.qml
 Notifications 1.0 Notifications.qml
 Overlay 1.0 Overlay.qml
+SettingsPage 1.0 SettingsPage.qml
+SpaceField 1.0 SpaceField.qml
+StatusIcon 1.0 StatusIcon.qml
+singleton Preferences 1.0 Preferences.qml
 singleton ShellState 1.0 ShellState.qml
 singleton Theme 1.0 Theme.qml

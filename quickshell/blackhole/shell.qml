@@ -9,6 +9,7 @@ ShellRoot {
     Bar {}
     Overlay {}
     Notifications {}
+    FocusComet {}
 
     IpcHandler {
         target: "shell"
@@ -17,6 +18,7 @@ ShellRoot {
         function toggleKeybinds() { ShellState.toggle("keybinds"); }
         function togglePower() { ShellState.toggle("power"); }
         function toggleWifi() { ShellState.toggle("wifi"); }
+        function toggleSettings() { ShellState.toggle("settings"); }
         function close() { ShellState.close(); }
         function toggleMotion() { ShellState.motionEnabled = !ShellState.motionEnabled; }
     }

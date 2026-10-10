@@ -13,6 +13,11 @@ Scope {
 
     property var pendingNetwork: null
     property string selectedKeyApp: "Hyprland"
+    property int launcherIndex: 0
+    property int keyAppIndex: 0
+    property int keyEntryIndex: 0
+    property int keyPane: 0
+    property bool keySearchMode: false
     readonly property var keyApps: ["Hyprland", "WezTerm", "Neovim", "Yazi", "Zsh"]
     readonly property var wifiDevice: Networking.devices.values.find(device => device.type === DeviceType.Wifi) ?? null
     readonly property var targetScreen: {
@@ -34,12 +39,103 @@ Scope {
             return;
         }
         pendingNetwork = network;
-        wifiPassword.text = "";
-        wifiPassword.forceActiveFocus();
     }
 
     function entryCount(app) {
         return KeybindData.entries.filter(entry => entry.app === app).length;
+    }
+
+    function filteredApps() {
+        const needle = search.text.toLowerCase().trim();
+        return DesktopEntries.applications.values.filter(entry =>
+            needle.length === 0
+                || `${entry.name} ${entry.genericName} ${entry.comment}`.toLowerCase().includes(needle)
+        ).slice(0, 80);
+    }
+
+    function filteredKeys() {
+        const needle = search.text.toLowerCase().trim();
+        return KeybindData.entries.filter(entry => needle.length > 0
+            ? `${entry.app} ${entry.key} ${entry.action}`.toLowerCase().includes(needle)
+            : entry.app === selectedKeyApp);
+    }
+
+    function wrapped(index, count, delta) {
+        if (count <= 0)
+            return 0;
+        return (index + delta + count) % count;
+    }
+
+    function moveLauncher(delta) {
+        launcherIndex = wrapped(launcherIndex, filteredApps().length, delta);
+    }
+
+    function launchSelected() {
+        const apps = filteredApps();
+        if (apps.length === 0)
+            return;
+        launcherIndex = Math.max(0, Math.min(launcherIndex, apps.length - 1));
+        apps[launcherIndex].execute();
+        ShellState.close();
+    }
+
+    function selectKeyApp(index) {
+        keyAppIndex = wrapped(index, keyApps.length, 0);
+        selectedKeyApp = keyApps[keyAppIndex];
+        keyEntryIndex = 0;
+    }
+
+    function moveKeySelection(delta) {
+        if (keyPane === 0 && search.text.trim().length === 0)
+            selectKeyApp(wrapped(keyAppIndex, keyApps.length, delta));
+        else
+            keyEntryIndex = wrapped(keyEntryIndex, filteredKeys().length, delta);
+    }
+
+    function handleSearchKey(event) {
+        const launcher = ShellState.overlay === "launcher";
+        const keybinds = ShellState.overlay === "keybinds";
+        const emptyQuery = search.text.trim().length === 0;
+        const navigating = keybinds && !keySearchMode;
+
+        if (keybinds && event.key === Qt.Key_Slash && !keySearchMode) {
+            keySearchMode = true;
+            event.accepted = true;
+            return;
+        }
+        if (keybinds && event.key === Qt.Key_Escape && keySearchMode) {
+            search.text = "";
+            keySearchMode = false;
+            keyPane = 0;
+            event.accepted = true;
+            return;
+        }
+        if (event.key === Qt.Key_Escape) {
+            ShellState.close();
+            event.accepted = true;
+            return;
+        }
+
+        if (launcher && (event.key === Qt.Key_Down || event.key === Qt.Key_Up)) {
+            moveLauncher(event.key === Qt.Key_Down ? 1 : -1);
+            event.accepted = true;
+        } else if (launcher && (event.key === Qt.Key_Return || event.key === Qt.Key_Enter)) {
+            launchSelected();
+            event.accepted = true;
+        } else if (keybinds && (event.key === Qt.Key_Down || event.key === Qt.Key_Up
+                || (navigating && (event.key === Qt.Key_J || event.key === Qt.Key_K)))) {
+            moveKeySelection(event.key === Qt.Key_Down || event.key === Qt.Key_J ? 1 : -1);
+            event.accepted = true;
+        } else if (navigating && emptyQuery
+                && (event.key === Qt.Key_Left || event.key === Qt.Key_H)) {
+            keyPane = 0;
+            event.accepted = true;
+        } else if (navigating && emptyQuery
+                && (event.key === Qt.Key_Right || event.key === Qt.Key_L
+                    || event.key === Qt.Key_Return || event.key === Qt.Key_Enter)) {
+            keyPane = 1;
+            event.accepted = true;
+        }
     }
 
     Connections {
@@ -48,8 +144,15 @@ Scope {
         function onOverlayChanged() {
             if (root.wifiDevice)
                 root.wifiDevice.scannerEnabled = ShellState.overlay === "wifi";
-            if (ShellState.overlay === "keybinds")
-                root.selectedKeyApp = "Hyprland";
+            if (ShellState.overlay !== "") {
+                search.text = "";
+                root.launcherIndex = 0;
+                root.keyPane = 0;
+                root.keySearchMode = false;
+                root.keyEntryIndex = 0;
+                root.selectKeyApp(0);
+                Qt.callLater(() => search.visible ? search.forceActiveFocus() : card.forceActiveFocus());
+            }
             if (ShellState.overlay === "")
                 root.pendingNetwork = null;
         }
@@ -68,15 +171,9 @@ Scope {
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.keyboardFocus: visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
-        HyprlandFocusGrab {
-            active: overlay.visible
-            windows: [overlay]
-            onCleared: ShellState.close()
-        }
-
         Rectangle {
             anchors.fill: parent
-            color: "#c0000105"
+            color: "#78000105"
             MouseArea { anchors.fill: parent; onClicked: ShellState.close() }
         }
 
@@ -89,6 +186,14 @@ Scope {
             color: Theme.surfaceHigh
             border.width: 1
             border.color: Theme.outline
+            clip: true
+
+            SpaceField { preferences: Preferences; moving: ShellState.motionEnabled;
+                anchors.fill: parent
+                starCount: 110
+                seed: 17
+                strength: 0.62
+            }
 
             MouseArea { anchors.fill: parent; onClicked: event => event.accepted = true }
 
@@ -106,6 +211,7 @@ Scope {
                             text: ShellState.overlay === "launcher" ? "APPLICATIONS"
                                 : ShellState.overlay === "wifi" ? "WIRELESS"
                                 : ShellState.overlay === "keybinds" ? "CONTROL INDEX"
+                                : ShellState.overlay === "settings" ? "SETTINGS"
                                 : "SESSION"
                             color: Theme.text
                             font.family: Theme.font
@@ -115,8 +221,9 @@ Scope {
                         }
                         Text {
                             text: ShellState.overlay === "wifi" ? "NetworkManager  /  direct control"
-                                : ShellState.overlay === "keybinds" ? "Choose a service, or search across everything"
-                                : "Type to filter  /  Escape to close"
+                                : ShellState.overlay === "settings" ? "Appearance, energy, devices and session"
+                                : ShellState.overlay === "keybinds" ? "↑↓ or J/K navigate  /  H/L change pane  /  / search  /  Esc back"
+                                : "Type to filter  /  ↑↓ select  /  Enter launch  /  Escape close"
                             color: Theme.muted
                             font.family: Theme.font
                             font.pixelSize: 9
@@ -143,7 +250,8 @@ Scope {
                     implicitHeight: 42
                     leftPadding: 14
                     rightPadding: 14
-                    placeholderText: ShellState.overlay === "launcher" ? "Search applications…" : "Search every app, key, or action…"
+                    placeholderText: ShellState.overlay === "launcher" ? "Search applications…"
+                        : root.keySearchMode ? "Search every app, key, or action…" : "Press / to search; H/J/K/L navigate"
                     color: Theme.text
                     placeholderTextColor: Theme.muted
                     font.family: Theme.font
@@ -154,9 +262,16 @@ Scope {
                         color: Theme.panel
                         border.width: 1
                         border.color: search.activeFocus ? Theme.blue : Theme.outline
+                        clip: true
+                        SpaceField { preferences: Preferences; moving: ShellState.motionEnabled; anchors.fill: parent; starCount: 14; seed: 31; strength: 0.34 }
                     }
-                    Keys.onEscapePressed: ShellState.close()
-                    Component.onCompleted: forceActiveFocus()
+                    Keys.onPressed: event => root.handleSearchKey(event)
+                    onTextChanged: {
+                        root.launcherIndex = 0;
+                        root.keyEntryIndex = 0;
+                        if (text.trim().length > 0)
+                            root.keyPane = 1;
+                    }
                 }
 
                 Loader {
@@ -165,12 +280,18 @@ Scope {
                     sourceComponent: ShellState.overlay === "launcher" ? launcherPage
                         : ShellState.overlay === "wifi" ? wifiPage
                         : ShellState.overlay === "keybinds" ? keybindPage
+                        : ShellState.overlay === "settings" ? settingsPage
                         : powerPage
                 }
             }
 
             Keys.onEscapePressed: ShellState.close()
         }
+    }
+
+    Component {
+        id: settingsPage
+        SettingsPage {}
     }
 
     Component {
@@ -181,21 +302,22 @@ Scope {
             clip: true
             spacing: 6
             model: ScriptModel {
-                values: DesktopEntries.applications.values.filter(entry => {
-                    const needle = search.text.toLowerCase().trim();
-                    return needle.length === 0 || `${entry.name} ${entry.genericName} ${entry.comment}`.toLowerCase().includes(needle);
-                }).slice(0, 80)
+                values: root.filteredApps()
             }
+            currentIndex: root.launcherIndex
+            onCurrentIndexChanged: positionViewAtIndex(currentIndex, ListView.Contain)
 
             delegate: Rectangle {
                 id: appRow
                 required property var modelData
+                required property int index
+                readonly property bool selected: appList.currentIndex === index
                 width: appList.width
                 height: 56
                 radius: 12
-                color: appHover.hovered ? Theme.surfaceHigh : Theme.panel
+                color: selected ? Theme.blueSoft : appHover.hovered ? Theme.surfaceHigh : Theme.panel
                 border.width: 1
-                border.color: appHover.hovered ? Theme.blue : Theme.outline
+                border.color: selected || appHover.hovered ? Theme.blue : Theme.outline
 
                 RowLayout {
                     anchors.fill: parent
@@ -203,12 +325,20 @@ Scope {
                     anchors.rightMargin: 13
                     spacing: 12
 
-                    Image {
-                        source: Quickshell.iconPath(appRow.modelData.icon, "application-x-executable")
-                        sourceSize.width: 29
-                        sourceSize.height: 29
+                    Rectangle {
                         Layout.preferredWidth: 31
                         Layout.preferredHeight: 31
+                        radius: 9
+                        color: Theme.blueSoft
+                        border.width: 1
+                        border.color: Theme.outline
+                        Text {
+                            anchors.centerIn: parent
+                            text: appRow.modelData.name.slice(0, 2).toUpperCase()
+                            color: Theme.ice
+                            font.family: Theme.font
+                            font.pixelSize: 10
+                        }
                     }
                     ColumnLayout {
                         Layout.fillWidth: true
@@ -222,10 +352,20 @@ Scope {
                 HoverHandler { id: appHover }
                 TapHandler {
                     onTapped: {
-                        appRow.modelData.execute();
-                        ShellState.close();
+                        root.launcherIndex = appRow.index;
+                        root.launchSelected();
                     }
                 }
+            }
+
+            Text {
+                visible: appList.count === 0
+                anchors.centerIn: parent
+                text: "NO APPLICATIONS IN THIS ORBIT"
+                color: Theme.muted
+                font.family: Theme.font
+                font.pixelSize: 9
+                font.letterSpacing: 1.1
             }
         }
     }
@@ -284,6 +424,7 @@ Scope {
                     Text { text: root.pendingNetwork?.name ?? "Network"; color: Theme.text; font.family: Theme.font; font.pixelSize: 10; font.bold: true; Layout.preferredWidth: 150; elide: Text.ElideRight }
                     TextField {
                         id: wifiPassword
+                        onVisibleChanged: if (visible) { text = ""; forceActiveFocus(); }
                         Layout.fillWidth: true
                         implicitHeight: 36
                         echoMode: TextInput.Password
@@ -402,27 +543,32 @@ Scope {
                 spacing: 6
                 clip: true
                 model: root.keyApps
+                currentIndex: root.keyAppIndex
+                onCurrentIndexChanged: positionViewAtIndex(currentIndex, ListView.Contain)
 
                 delegate: Rectangle {
                     id: appChoice
                     required property string modelData
+                    required property int index
+                    readonly property bool selected: root.selectedKeyApp === modelData
                     width: appSelector.width
                     height: 52
                     radius: 11
-                    color: root.selectedKeyApp === modelData ? Theme.blueSoft : appChoiceHover.hovered ? Theme.surfaceHigh : Theme.panel
+                    color: selected ? Theme.blueSoft : appChoiceHover.hovered ? Theme.surfaceHigh : Theme.panel
                     border.width: 1
-                    border.color: root.selectedKeyApp === modelData ? Theme.blue : Theme.outline
+                    border.color: selected && root.keyPane === 0 ? Theme.comet
+                        : selected ? Theme.blue : Theme.outline
 
                     Column {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: 13
                         spacing: 1
-                        Text { text: appChoice.modelData; color: root.selectedKeyApp === appChoice.modelData ? Theme.ice : Theme.text; font.family: Theme.font; font.pixelSize: 10; font.bold: true }
+                        Text { text: appChoice.modelData; color: appChoice.selected ? Theme.ice : Theme.text; font.family: Theme.font; font.pixelSize: 10; font.bold: true }
                         Text { text: root.entryCount(appChoice.modelData) + " shortcuts"; color: Theme.muted; font.family: Theme.font; font.pixelSize: 8 }
                     }
                     HoverHandler { id: appChoiceHover }
-                    TapHandler { onTapped: root.selectedKeyApp = appChoice.modelData }
+                    TapHandler { onTapped: { root.selectKeyApp(appChoice.index); root.keyPane = 0; } }
                 }
             }
 
@@ -432,22 +578,21 @@ Scope {
                 Layout.fillHeight: true
                 clip: true
                 spacing: 6
-                model: KeybindData.entries.filter(entry => {
-                    const needle = search.text.toLowerCase().trim();
-                    return needle.length > 0
-                        ? `${entry.app} ${entry.key} ${entry.action}`.toLowerCase().includes(needle)
-                        : entry.app === root.selectedKeyApp;
-                })
+                model: root.filteredKeys()
+                currentIndex: root.keyEntryIndex
+                onCurrentIndexChanged: positionViewAtIndex(currentIndex, ListView.Contain)
 
                 delegate: Rectangle {
                     id: keyRow
                     required property var modelData
+                    required property int index
+                    readonly property bool selected: keyList.currentIndex === index && root.keyPane === 1
                     width: keyList.width
                     height: 52
                     radius: 11
-                    color: keyHover.hovered ? Theme.surfaceHigh : Theme.panel
+                    color: selected ? Theme.blueSoft : keyHover.hovered ? Theme.surfaceHigh : Theme.panel
                     border.width: 1
-                    border.color: keyHover.hovered ? Theme.blue : Theme.outline
+                    border.color: selected ? Theme.comet : keyHover.hovered ? Theme.blue : Theme.outline
 
                     RowLayout {
                         anchors.fill: parent
@@ -475,6 +620,7 @@ Scope {
                         }
                     }
                     HoverHandler { id: keyHover }
+                    TapHandler { onTapped: { root.keyEntryIndex = keyRow.index; root.keyPane = 1; } }
                 }
             }
         }
@@ -488,7 +634,7 @@ Scope {
 
             Repeater {
                 model: [
-                    { label: "LOCK", detail: "secure session", command: ["hyprlock", "--immediate"], colour: Theme.ice },
+                    { label: "LOCK", detail: "secure session", command: ["qs", "-p", Quickshell.shellPath("lock.qml"), "-d"], colour: Theme.ice },
                     { label: "LOG OUT", detail: "end Hyprland", command: ["hyprctl", "dispatch", "hl.dsp.exit()"], colour: Theme.blue },
                     { label: "SUSPEND", detail: "sleep system", command: ["systemctl", "suspend"], colour: Theme.text },
                     { label: "REBOOT", detail: "restart system", command: ["systemctl", "reboot"], colour: Theme.warning },

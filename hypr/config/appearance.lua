@@ -5,10 +5,12 @@ hl.config({
         border_size = 2,
         col = {
             active_border = {
-                colors = { "rgba(dff8ffff)", "rgba(58baffff)", "rgba(376dffee)" },
-                angle = 45,
+                colors = {
+                    "rgba(000000ff)", "rgba(ffffffff)", "rgba(000000ff)"
+                },
+                angle = 25,
             },
-            inactive_border = "rgba(30435e99)",
+            inactive_border = "rgba(303030aa)",
         },
         resize_on_border = true,
         extend_border_grab_area = 8,
