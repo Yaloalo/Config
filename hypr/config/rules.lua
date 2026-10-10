@@ -20,6 +20,13 @@ hl.window_rule({
     center = true,
 })
 
+-- Sample the wallpaper for terminal blur, not windows below the E overlay.
+hl.window_rule({
+    name = "terminal-wallpaper-glass",
+    match = { class = "^(org.wezfurlong.wezterm|global-term)$" },
+    xray = true,
+})
+
 hl.layer_rule({
     name = "blackhole-shell-blur",
     match = { namespace = "blackhole-shell" },

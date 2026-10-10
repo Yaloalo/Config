@@ -41,6 +41,19 @@ to `Preferences.qml` plus its `fields` list to persist it in `preferences.json`.
 `SpaceField.qml` is independent of the desktop shell so the lock process can use
 it without loading desktop panels or services.
 
+Wi-Fi: select a network, enter its password if needed, choose Connect
+automatically, then Connect (or Enter). Saved profiles reuse their credentials;
+the checkbox updates NetworkManager's per-network autoconnect setting, not the
+whole adapter. Passwords are cleared from the input after submission and never
+written to this repository. NetworkManager handles credential storage. Advanced
+enterprise/WEP setup opens Network connections. Rows keep fixed icon/action
+columns and put connected/stronger networks first.
+
+WezTerm starts transparent; Ctrl Shift B/O toggles opaque black. Hyprland uses
+light blur (size 1, one pass) to preserve wallpaper stars. Terminal-specific
+xray blur samples the wallpaper instead of other windows under the E overlay.
+An existing window with an opaque override needs one transparency toggle.
+
 Eco can freeze stars, disable blur/window animations and cap brightness. The
 previous brightness and effect states are saved in the user runtime directory
 and restored on exit. CPU power-saver is used only when `powerprofilesctl` is

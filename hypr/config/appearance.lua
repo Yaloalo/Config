@@ -39,12 +39,13 @@ hl.config({
         },
         blur = {
             enabled = true,
-            size = 7,
-            passes = 3,
+            -- Preserve small wallpaper stars instead of blurring them to black.
+            size = 1,
+            passes = 1,
             new_optimizations = true,
             ignore_opacity = true,
-            brightness = 0.72,
-            contrast = 1.08,
+            brightness = 1.0,
+            contrast = 1.0,
             vibrancy = 0.24,
             popups = true,
         },

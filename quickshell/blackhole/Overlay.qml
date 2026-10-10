@@ -11,7 +11,6 @@ import QtQuick.Layouts
 Scope {
     id: root
 
-    property var pendingNetwork: null
     property string selectedKeyApp: "Hyprland"
     property int launcherIndex: 0
     property int keyAppIndex: 0
@@ -29,16 +28,6 @@ Scope {
             }
         }
         return Quickshell.screens.length > 0 ? Quickshell.screens[0] : null;
-    }
-
-    function chooseNetwork(network) {
-        if (network.connected || network.stateChanging)
-            return;
-        if (network.known || network.security === WifiSecurityType.Open) {
-            network.connect();
-            return;
-        }
-        pendingNetwork = network;
     }
 
     function entryCount(app) {
@@ -153,8 +142,6 @@ Scope {
                 root.selectKeyApp(0);
                 Qt.callLater(() => search.visible ? search.forceActiveFocus() : card.forceActiveFocus());
             }
-            if (ShellState.overlay === "")
-                root.pendingNetwork = null;
         }
     }
 
@@ -372,161 +359,7 @@ Scope {
 
     Component {
         id: wifiPage
-
-        ColumnLayout {
-            spacing: 10
-
-            Rectangle {
-                Layout.fillWidth: true
-                implicitHeight: 54
-                radius: 13
-                color: Theme.panel
-                border.width: 1
-                border.color: Theme.outline
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: 16
-                    anchors.rightMargin: 10
-
-                    ColumnLayout {
-                        spacing: 0
-                        Text { text: "WIRELESS RADIO"; color: Theme.text; font.family: Theme.font; font.pixelSize: 10; font.bold: true; font.letterSpacing: 0.8 }
-                        Text { text: Networking.wifiEnabled ? "enabled  /  scanning nearby networks" : "disabled"; color: Networking.wifiEnabled ? Theme.blue : Theme.muted; font.family: Theme.font; font.pixelSize: 9 }
-                    }
-                    Item { Layout.fillWidth: true }
-                    Rectangle {
-                        implicitWidth: 88
-                        implicitHeight: 32
-                        radius: 9
-                        color: Networking.wifiEnabled ? Theme.blueSoft : Theme.surfaceHigh
-                        border.width: 1
-                        border.color: Networking.wifiEnabled ? Theme.blue : Theme.outline
-                        Text { anchors.centerIn: parent; text: Networking.wifiEnabled ? "DISABLE" : "ENABLE"; color: Theme.text; font.family: Theme.font; font.pixelSize: 8; font.bold: true }
-                        TapHandler { onTapped: Networking.wifiEnabled = !Networking.wifiEnabled }
-                    }
-                }
-            }
-
-            Rectangle {
-                visible: root.pendingNetwork !== null
-                Layout.fillWidth: true
-                Layout.preferredHeight: visible ? 68 : 0
-                radius: 13
-                color: Theme.panel
-                border.width: 1
-                border.color: Theme.blue
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 11
-                    spacing: 10
-                    Text { text: root.pendingNetwork?.name ?? "Network"; color: Theme.text; font.family: Theme.font; font.pixelSize: 10; font.bold: true; Layout.preferredWidth: 150; elide: Text.ElideRight }
-                    TextField {
-                        id: wifiPassword
-                        onVisibleChanged: if (visible) { text = ""; forceActiveFocus(); }
-                        Layout.fillWidth: true
-                        implicitHeight: 36
-                        echoMode: TextInput.Password
-                        placeholderText: "Password"
-                        color: Theme.text
-                        placeholderTextColor: Theme.muted
-                        font.family: Theme.font
-                        background: Rectangle { radius: 9; color: Theme.voidBlack; border.width: 1; border.color: Theme.outline }
-                        onAccepted: {
-                            if (root.pendingNetwork && text.length > 0) {
-                                root.pendingNetwork.connectWithPsk(text);
-                                root.pendingNetwork = null;
-                            }
-                        }
-                    }
-                    Rectangle {
-                        implicitWidth: 84
-                        implicitHeight: 36
-                        radius: 9
-                        color: Theme.ice
-                        Text { anchors.centerIn: parent; text: "CONNECT"; color: Theme.voidBlack; font.family: Theme.font; font.pixelSize: 8; font.bold: true }
-                        TapHandler {
-                            onTapped: {
-                                if (root.pendingNetwork && wifiPassword.text.length > 0) {
-                                    root.pendingNetwork.connectWithPsk(wifiPassword.text);
-                                    root.pendingNetwork = null;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            ListView {
-                id: networkList
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                clip: true
-                spacing: 6
-                model: root.wifiDevice?.networks ?? null
-
-                delegate: Rectangle {
-                    id: networkRow
-                    required property var modelData
-                    width: networkList.width
-                    height: 56
-                    radius: 12
-                    color: modelData.connected ? Theme.blueSoft : networkHover.hovered ? Theme.surfaceHigh : Theme.panel
-                    border.width: 1
-                    border.color: modelData.connected ? Theme.blue : Theme.outline
-
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.leftMargin: 14
-                        anchors.rightMargin: 10
-                        spacing: 12
-
-                        Text {
-                            text: Math.round(networkRow.modelData.signalStrength * 100) + "%"
-                            color: networkRow.modelData.connected ? Theme.ice : Theme.muted
-                            font.family: Theme.font
-                            font.pixelSize: 9
-                            font.bold: true
-                            Layout.preferredWidth: 40
-                        }
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 0
-                            Text { text: networkRow.modelData.name || "Hidden network"; color: Theme.text; font.family: Theme.font; font.pixelSize: 11; font.bold: networkRow.modelData.connected }
-                            Text { text: networkRow.modelData.connected ? "connected" : networkRow.modelData.known ? "saved network" : WifiSecurityType.toString(networkRow.modelData.security); color: Theme.muted; font.family: Theme.font; font.pixelSize: 8 }
-                        }
-                        Rectangle {
-                            implicitWidth: 86
-                            implicitHeight: 30
-                            radius: 8
-                            color: networkRow.modelData.connected ? Theme.ice : "transparent"
-                            border.width: networkRow.modelData.connected ? 0 : 1
-                            border.color: Theme.outline
-                            Text {
-                                anchors.centerIn: parent
-                                text: networkRow.modelData.stateChanging ? "WAIT" : networkRow.modelData.connected ? "ONLINE" : "CONNECT"
-                                color: networkRow.modelData.connected ? Theme.voidBlack : Theme.blue
-                                font.family: Theme.font
-                                font.pixelSize: 8
-                                font.bold: true
-                            }
-                        }
-                    }
-
-                    HoverHandler { id: networkHover }
-                    TapHandler { onTapped: root.chooseNetwork(networkRow.modelData) }
-                }
-
-                Text {
-                    visible: root.wifiDevice === null
-                    anchors.centerIn: parent
-                    text: "No wireless adapter found"
-                    color: Theme.muted
-                    font.family: Theme.font
-                }
-            }
-        }
+        WifiPage {}
     }
 
     Component {
