@@ -74,7 +74,9 @@ ScrollView {
                 {key: "ecoPauseStars", label: "Eco: freeze star animation"},
                 {key: "ecoDisableBlur", label: "Eco: disable compositor blur"},
                 {key: "ecoDisableAnimations", label: "Eco: disable window animations"},
-                {key: "focusComet", label: "Yellow focus trail"}
+                {key: "focusComet", label: "Yellow focus trail"},
+                {key: "warpMode", label: "Warp speed (desktop stars)"},
+                {key: "thermalSpeed", label: "Desktop stars speed up with CPU temp and fans"}
             ]
             SpaceSwitch {
                 required property var modelData
@@ -86,6 +88,14 @@ ScrollView {
                     if (Preferences.ecoMode) Preferences.applyEco();
                 }
             }
+        }
+        Text {
+            visible: Preferences.thermalSpeed
+            text: !ThermalState.available ? "Reading sensors…"
+                : Math.round(ThermalState.temp) + " °C" + (ThermalState.hasFan ? "  ·  fan " + Math.round(ThermalState.fan) + " rpm" : "  ·  no fan sensor")
+                  + "  →  " + (0.5 + ThermalState.heat * 3.5).toFixed(1) + "× speed"
+            color: Theme.muted; font.family: Theme.font; font.pixelSize: 10
+            Layout.fillWidth: true
         }
         Repeater {
             model: [

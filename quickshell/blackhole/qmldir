@@ -11,4 +11,5 @@ SpaceField 1.0 SpaceField.qml
 StatusIcon 1.0 StatusIcon.qml
 singleton Preferences 1.0 Preferences.qml
 singleton ShellState 1.0 ShellState.qml
+singleton ThermalState 1.0 ThermalState.qml
 singleton Theme 1.0 Theme.qml

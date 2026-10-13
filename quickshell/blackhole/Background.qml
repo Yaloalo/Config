@@ -36,6 +36,8 @@ Scope {
             // unbounded, sparse field with slow parallax and no central object.
             SpaceField { preferences: Preferences; moving: ShellState.motionEnabled;
                 anchors.fill: parent
+                starModes: true
+                heat: Preferences.thermalSpeed && ThermalState.available ? ThermalState.heat : -1
                 starCount: 320
                 seed: 3
                 strength: 0.55
@@ -44,6 +46,8 @@ Scope {
 
             SpaceField { preferences: Preferences; moving: ShellState.motionEnabled;
                 anchors.fill: parent
+                starModes: true
+                heat: Preferences.thermalSpeed && ThermalState.available ? ThermalState.heat : -1
                 starCount: 96
                 seed: 47
                 strength: 0.42
@@ -67,7 +71,8 @@ Scope {
                 Text {
                     id: deepFieldLabel
                     anchors.centerIn: parent
-                    text: ShellState.motionEnabled ? "DEEP FIELD  /  DRIFT" : "DEEP FIELD  /  STILL"
+                    text: "DEEP FIELD  /  " + (!ShellState.motionEnabled ? "STILL" : Preferences.warpMode ? "WARP" : "DRIFT")
+                        + (Preferences.thermalSpeed && ThermalState.available ? "  /  " + Math.round(ThermalState.temp) + "°C" : "")
                     color: Theme.muted
                     font.family: Theme.font
                     font.pixelSize: 9

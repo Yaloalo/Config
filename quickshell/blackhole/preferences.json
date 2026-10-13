@@ -3,8 +3,10 @@
   "ecoPauseStars": true,
   "ecoDisableBlur": true,
   "ecoDisableAnimations": true,
-  "ecoBrightness": 35,
-  "starDensity": 1.5,
-  "starSpeed": 1,
-  "focusComet": true
+  "ecoBrightness": 50,
+  "starDensity": 3,
+  "starSpeed": 2,
+  "focusComet": true,
+  "warpMode": false,
+  "thermalSpeed": true
 }

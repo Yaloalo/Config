@@ -13,8 +13,10 @@ Singleton {
     property real starDensity: 1.5
     property real starSpeed: 1
     property bool focusComet: true
+    property bool warpMode: false
+    property bool thermalSpeed: false
     property string status: ""
-    readonly property var fields: ["ecoMode", "ecoPauseStars", "ecoDisableBlur", "ecoDisableAnimations", "ecoBrightness", "starDensity", "starSpeed", "focusComet"]
+    readonly property var fields: ["ecoMode", "ecoPauseStars", "ecoDisableBlur", "ecoDisableAnimations", "ecoBrightness", "starDensity", "starSpeed", "focusComet", "warpMode", "thermalSpeed"]
     function save() {
         const data = {};
         for (const name of fields) data[name] = root[name];

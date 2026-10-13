@@ -60,6 +60,12 @@ and restored on exit. CPU power-saver is used only when `powerprofilesctl` is
 installed; otherwise the panel reports that it is unavailable. Bluetooth and
 Wi-Fi are never silently disabled. Star speed 1 includes the requested 10%
 longer animation cycle; density and speed are independently adjustable.
+Desktop-only star options (menus and the bar keep the normal drift): "Warp
+speed" ramps to 12x speed and stretches stars into radial streaks, easing off
+while stars are frozen (Super B or eco). "Desktop stars speed up with CPU temp
+and fans" polls the k10temp/coretemp sensor and the fastest fan every 3 s (only
+while enabled) and scales star speed from 0.5x (45 °C, fans idle) to 4x
+(85 °C, 5500 rpm); it stacks with warp and the star speed slider.
 
 The persistent window border is monochrome. `FocusComet.qml` draws a separate
 input-transparent yellow trail for one 1.05-second lap, fading to zero. It is
