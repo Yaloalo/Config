@@ -1,0 +1,210 @@
+# deepfield: star-mode boot splash. The desktop's star field flying outward
+# from the centre, a quiet title and a hairline progress bar.
+#
+# Assets are rendered at 2x by gen-assets.py and scaled down here. Plymouth
+# drops sprites nobody references, so every sprite lives in a global.
+
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+OX = Window.GetX();
+OY = Window.GetY();
+W = Window.GetWidth();
+H = Window.GetHeight();
+s = Math.Min(W / 1920, H / 1080);
+k = s / 2;
+CX = OX + W / 2;
+CY = OY + H / 2;
+
+mode = Plymouth.GetMode();
+halting = (mode == "shutdown" || mode == "reboot");
+
+fun S(v) { return Math.Max(1, Math.Int(v * global.s + 0.5)); }
+
+fun asset(name) {
+  img = Image(name);
+  return img.Scale(Math.Max(1, Math.Int(img.GetWidth() * global.k + 0.5)),
+                   Math.Max(1, Math.Int(img.GetHeight() * global.k + 0.5)));
+}
+
+fun px(name, w, h) {
+  return Image(name).Scale(Math.Max(1, Math.Int(w)), Math.Max(1, Math.Int(h)));
+}
+
+fun centered(img, y, z) {
+  spr = Sprite(img);
+  spr.SetPosition(Math.Int(global.CX - img.GetWidth() / 2), Math.Int(y), z);
+  return spr;
+}
+
+# ---- star field ---------------------------------------------------------------
+
+star_img[0] = asset("star-0.png");
+star_img[1] = asset("star-1.png");
+star_img[2] = asset("star-2.png");
+stars = 220;
+
+fun respawn(i, far) {
+  global.ux[i] = Math.Random() - 0.5;
+  global.uy[i] = Math.Random() - 0.5;
+  if (far) global.depth[i] = 2.0;
+  else global.depth[i] = 0.15 + Math.Random() * 1.85;
+  global.base[i] = 0.3 + Math.Random() * 0.7;
+}
+
+for (i = 0; i < stars; i++) {
+  respawn(i, 0);
+  star[i] = Sprite(star_img[0]);
+  star[i].SetZ(1);
+  bucket[i] = 0;
+}
+
+# ---- title, stage, progress -------------------------------------------------------
+
+title = centered(asset("title.png"), OY + H * 0.42, 10);
+if (mode == "reboot") stage_img = asset("stage-reboot.png");
+else if (halting) stage_img = asset("stage-halt.png");
+else stage_img = asset("stage-boot.png");
+stage = centered(stage_img, OY + H * 0.42 + S(46), 10);
+
+bar_w = S(260);
+bar_y = OY + H * 0.42 + S(96);
+bar_bg = Sprite(px("px-line.png", bar_w, 1));
+bar_bg.SetPosition(Math.Int(CX - bar_w / 2), Math.Int(bar_y), 10);
+bar_fill = Sprite(px("px-white.png", 1, 1));
+bar_fill.SetPosition(Math.Int(CX - bar_w / 2), Math.Int(bar_y), 11);
+bar_fill.SetOpacity(0);
+progress = 0;
+shown = 0;
+
+# ---- passphrase panel ---------------------------------------------------------------
+
+panel_w = S(520);
+panel_h = S(130);
+panel_y = OY + H * 0.62;
+panel = Sprite(px("px-glass.png", panel_w, panel_h));
+panel.SetPosition(Math.Int(CX - panel_w / 2), Math.Int(panel_y), 20);
+edge_top = Sprite(px("px-line.png", panel_w, 1));
+edge_top.SetPosition(Math.Int(CX - panel_w / 2), Math.Int(panel_y), 21);
+edge_bot = Sprite(px("px-line.png", panel_w, 1));
+edge_bot.SetPosition(Math.Int(CX - panel_w / 2), Math.Int(panel_y + panel_h - 1), 21);
+pass_label = centered(asset("pass.png"), panel_y + S(18), 22);
+prompt_spr = Sprite();
+prompt_spr.SetZ(22);
+dots_n = 0;
+asking = 0;
+
+fun show_panel(on) {
+  if (on) o = 1; else o = 0;
+  global.panel.SetOpacity(o);
+  global.edge_top.SetOpacity(o);
+  global.edge_bot.SetOpacity(o);
+  global.pass_label.SetOpacity(o);
+  global.prompt_spr.SetOpacity(o);
+  for (i = 0; i < global.dots_n; i++) global.dot[i].SetOpacity(o);
+}
+show_panel(0);
+
+message_spr = Sprite();
+message_spr.SetZ(30);
+
+# ---- callbacks ------------------------------------------------------------------------
+
+frame = 0;
+fun refresh_cb() {
+  global.frame = global.frame + 1;
+  # Halting drifts slowly; booting rushes in.
+  if (global.halting) speed = 0.004; else speed = 0.009;
+  for (i = 0; i < global.stars; i++) {
+    d = global.depth[i] - speed;
+    x = global.CX + global.ux[i] * global.W / d;
+    y = global.CY + global.uy[i] * global.H / d;
+    if (d < 0.15 || x < global.OX || x > global.OX + global.W || y < global.OY || y > global.OY + global.H) {
+      respawn(i, 1);
+      d = global.depth[i];
+      x = global.CX + global.ux[i] * global.W / d;
+      y = global.CY + global.uy[i] * global.H / d;
+    }
+    global.depth[i] = d;
+    if (d > 1.2) b = 0; else if (d > 0.55) b = 1; else b = 2;
+    if (b != global.bucket[i]) { global.star[i].SetImage(global.star_img[b]); global.bucket[i] = b; }
+    img = global.star_img[b];
+    global.star[i].SetPosition(Math.Int(x - img.GetWidth() / 2), Math.Int(y - img.GetHeight() / 2), 1);
+    fade = Math.Min(1, (2.0 - d) * 3);
+    global.star[i].SetOpacity(fade * global.base[i]);
+  }
+
+  if (!global.halting) {
+    global.shown = global.shown + (global.progress - global.shown) * 0.08;
+    w = Math.Int(global.shown * global.bar_w);
+    if (w > 0) {
+      global.bar_fill.SetImage(px("px-white.png", w, 1));
+      global.bar_fill.SetOpacity(1);
+    }
+  } else {
+    # No progress on the way down: a short highlight sweeps the line.
+    pos = (global.frame * 4) % (global.bar_w + S(40));
+    global.bar_fill.SetImage(px("px-white.png", S(40), 1));
+    global.bar_fill.SetX(Math.Int(global.CX - global.bar_w / 2 + pos - S(40)));
+    global.bar_fill.SetOpacity(1);
+  }
+}
+
+fun progress_cb(duration, progress) {
+  global.progress = progress;
+}
+
+fun set_dots(n) {
+  for (i = 0; i < global.dots_n; i++) global.dot[i].SetOpacity(0);
+  global.dots_n = Math.Min(n, 32);
+  gap = S(16);
+  x0 = global.CX - (global.dots_n - 1) * gap / 2;
+  for (i = 0; i < global.dots_n; i++) {
+    if (!global.dot[i]) global.dot[i] = Sprite(global.star_img[1]);
+    img = global.star_img[1];
+    global.dot[i].SetPosition(Math.Int(x0 + i * gap - img.GetWidth() / 2), Math.Int(global.panel_y + S(92) - img.GetHeight() / 2), 23);
+    global.dot[i].SetOpacity(1);
+  }
+}
+
+fun password_cb(prompt, bullets) {
+  global.asking = 1;
+  img = Image.Text(prompt, 0.97, 0.98, 1, 1, "Mono 11");
+  global.prompt_spr.SetImage(img);
+  global.prompt_spr.SetPosition(Math.Int(global.CX - img.GetWidth() / 2), Math.Int(global.panel_y + S(50)), 22);
+  set_dots(bullets);
+  show_panel(1);
+}
+
+fun question_cb(prompt, entry) {
+  global.asking = 1;
+  img = Image.Text(prompt + "  " + entry, 0.97, 0.98, 1, 1, "Mono 11");
+  global.prompt_spr.SetImage(img);
+  global.prompt_spr.SetPosition(Math.Int(global.CX - img.GetWidth() / 2), Math.Int(global.panel_y + S(50)), 22);
+  set_dots(0);
+  show_panel(1);
+}
+
+fun normal_cb() {
+  global.asking = 0;
+  show_panel(0);
+}
+
+fun message_cb(text) {
+  img = Image.Text(text, 0.51, 0.56, 0.65, 1, "Mono 10");
+  global.message_spr.SetImage(img);
+  global.message_spr.SetPosition(Math.Int(global.CX - img.GetWidth() / 2), Math.Int(global.OY + global.H - S(60)), 30);
+  global.message_spr.SetOpacity(1);
+}
+
+fun hide_message_cb(text) {
+  global.message_spr.SetOpacity(0);
+}
+
+Plymouth.SetRefreshFunction(refresh_cb);
+Plymouth.SetBootProgressFunction(progress_cb);
+Plymouth.SetDisplayPasswordFunction(password_cb);
+Plymouth.SetDisplayQuestionFunction(question_cb);
+Plymouth.SetDisplayNormalFunction(normal_cb);
+Plymouth.SetDisplayMessageFunction(message_cb);
+Plymouth.SetHideMessageFunction(hide_message_cb);

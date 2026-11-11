@@ -20,6 +20,14 @@ hl.window_rule({
     center = true,
 })
 
+-- Documents stay fully opaque: in the E overlay the workspace below would
+-- otherwise bleed through the page.
+hl.window_rule({
+    name = "opaque-documents",
+    match = { class = "^(ai.storyteller.pdfcraft|okular|org.kde.okular|org.pwmt.zathura|evince|org.gnome.Papers)$" },
+    opaque = true,
+})
+
 -- Sample the wallpaper for terminal blur, not windows below the E overlay.
 hl.window_rule({
     name = "terminal-wallpaper-glass",

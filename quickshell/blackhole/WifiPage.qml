@@ -15,13 +15,13 @@ ColumnLayout {
         implicitHeight: 34
         hoverEnabled: true
         background: Rectangle {
-            radius: 9; color: button.down ? "#242424" : "#b0000000"
-            border.color: button.hovered || button.activeFocus ? "white" : "#555555"
+            radius: Theme.r(9); color: button.down ? Theme.fill : Theme.glass
+            border.color: button.hovered || button.activeFocus ? Theme.fg : Theme.edge
             opacity: button.enabled ? 1 : .4
         }
         contentItem: Text {
-            text: button.text; color: button.enabled ? "white" : "#777777"
-            font.family: Theme.font; font.pixelSize: 10
+            text: button.text; color: button.enabled ? Theme.fg : Theme.edgeMid
+            font.family: Theme.font; font.pixelSize: Theme.fs(10)
             horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
         }
     }
@@ -30,50 +30,50 @@ ColumnLayout {
         implicitHeight: 30
         indicator: Rectangle {
             x: 0; y: (check.height-height)/2
-            width: 18; height: 18; radius: 5
-            color: check.checked ? "white" : "black"
-            border.color: check.activeFocus ? "white" : "#777777"
-            Text { anchors.centerIn: parent; text: check.checked ? "✓" : ""; color: "black"; font.pixelSize: 12 }
+            width: 18; height: 18; radius: Theme.r(5)
+            color: check.checked ? Theme.fg : Theme.onFg
+            border.color: check.activeFocus ? Theme.fg : Theme.edgeMid
+            Text { anchors.centerIn: parent; text: check.checked ? "✓" : ""; color: Theme.onFg; font.pixelSize: Theme.fs(12) }
         }
         contentItem: Text {
-            text: check.text; leftPadding: 28; color: "white"
-            font.family: Theme.font; font.pixelSize: 10; verticalAlignment: Text.AlignVCenter
+            text: check.text; leftPadding: 28; color: Theme.fg
+            font.family: Theme.font; font.pixelSize: Theme.fs(10); verticalAlignment: Text.AlignVCenter
         }
     }
     RowLayout {
         Layout.fillWidth: true
         StatusIcon { kind: "wifi"; Layout.preferredWidth: 24; Layout.preferredHeight: 24 }
-        Text { text: Networking.wifiEnabled ? "Wi-Fi on" : "Wi-Fi off"; color: "white"; font.family: Theme.font; Layout.fillWidth: true }
+        Text { text: Networking.wifiEnabled ? "Wi-Fi on" : "Wi-Fi off"; color: Theme.fg; font.family: Theme.font; Layout.fillWidth: true }
         SpaceButton { text: Networking.wifiEnabled ? "Turn off" : "Turn on"; Layout.preferredWidth: 110; onClicked: Networking.wifiEnabled = !Networking.wifiEnabled }
     }
     Rectangle {
         visible: WifiState.selected !== null && Networking.wifiEnabled
         Layout.fillWidth: true
         implicitHeight: details.implicitHeight + 28
-        radius: 13; color: Theme.panel; border.color: "#777777"
+        radius: Theme.r(13); color: Theme.panel; border.color: Theme.edgeMid
         ColumnLayout {
             id: details
             anchors.fill: parent; anchors.margins: 14; spacing: 8
             Text {
                 text: WifiState.selected?.name ?? ""
                 Layout.fillWidth: true; elide: Text.ElideRight
-                color: "white"; font.family: Theme.font; font.bold: true; font.pixelSize: 12
+                color: Theme.fg; font.family: Theme.font; font.bold: true; font.pixelSize: Theme.fs(12)
             }
             Text {
                 text: WifiState.advanced ? "This network needs advanced authentication. Open Network connections to configure it."
                     : WifiState.message || (WifiState.selected?.connected ? "Connected" : WifiState.askPassword ? "Enter the network security key" : WifiState.openNetwork ? "No password required" : "Saved credentials will be used")
                 Layout.fillWidth: true; wrapMode: Text.Wrap
-                color: Theme.muted; font.family: Theme.font; font.pixelSize: 10
+                color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(10)
             }
             TextField {
                 id: password
                 visible: WifiState.askPassword && !WifiState.advanced && !WifiState.selected?.connected
                 Layout.fillWidth: true; implicitHeight: 38
-                placeholderText: "Wi-Fi password"; color: "white"; placeholderTextColor: "#888888"
+                placeholderText: "Wi-Fi password"; color: Theme.fg; placeholderTextColor: Theme.placeholder
                 echoMode: showPassword.checked ? TextInput.Normal : TextInput.Password
                 inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
-                font.family: Theme.font; font.pixelSize: 11
-                background: Rectangle { radius: 9; color: "black"; border.color: password.activeFocus ? "white" : "#555555" }
+                font.family: Theme.font; font.pixelSize: Theme.fs(11)
+                background: Rectangle { radius: Theme.r(9); color: Theme.onFg; border.color: password.activeFocus ? Theme.fg : Theme.edge }
                 onAccepted: root.submit()
                 onVisibleChanged: if (visible) forceActiveFocus()
             }
@@ -114,9 +114,9 @@ ColumnLayout {
         delegate: Rectangle {
             id: row
             required property var modelData
-            width: networks.width; height: 64; radius: 12
-            color: hover.hovered ? "#d0000000" : Theme.panel
-            border.color: WifiState.selected === modelData ? "white" : "#404040"
+            width: networks.width; height: 64; radius: Theme.r(12)
+            color: hover.hovered ? Theme.glassHover : Theme.panel
+            border.color: WifiState.selected === modelData ? Theme.fg : Theme.edge
             RowLayout {
                 anchors.fill: parent; anchors.margins: 12; spacing: 12
                 StatusIcon { kind: "wifi"; Layout.preferredWidth: 24; Layout.preferredHeight: 24 }
@@ -125,18 +125,18 @@ ColumnLayout {
                     Text {
                         text: row.modelData.name || "Hidden network"
                         Layout.fillWidth: true; elide: Text.ElideRight
-                        color: "white"; font.family: Theme.font; font.pixelSize: 11
+                        color: Theme.fg; font.family: Theme.font; font.pixelSize: Theme.fs(11)
                     }
                     Text {
                         text: row.modelData.connected ? "Connected" : row.modelData.stateChanging ? "Connecting…" : row.modelData.known ? "Saved" : WifiSecurityType.toString(row.modelData.security)
                         Layout.fillWidth: true; elide: Text.ElideRight
-                        color: Theme.muted; font.family: Theme.font; font.pixelSize: 9
+                        color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(9)
                     }
                 }
                 Text {
                     text: Math.round(row.modelData.signalStrength * 100) + "%"
                     Layout.minimumWidth: 40; Layout.maximumWidth: 40; Layout.preferredWidth: 40
-                    horizontalAlignment: Text.AlignRight; color: Theme.muted; font.family: Theme.font; font.pixelSize: 9
+                    horizontalAlignment: Text.AlignRight; color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(9)
                 }
                 SpaceButton {
                     text: row.modelData.connected ? "Connected" : "Select"
@@ -152,7 +152,7 @@ ColumnLayout {
             anchors.centerIn: parent
             visible: networks.count === 0
             text: !root.device ? "No wireless adapter found" : !Networking.wifiEnabled ? "Wi-Fi is turned off" : "Scanning for networks…"
-            color: Theme.muted; font.family: Theme.font; font.pixelSize: 11
+            color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(11)
         }
     }
     Component.onDestruction: password.clear()

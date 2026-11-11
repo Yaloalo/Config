@@ -5,6 +5,7 @@ import Quickshell.Hyprland
 import Quickshell.Networking
 import Quickshell.Wayland
 import QtQuick
+import qs.common
 import QtQuick.Controls
 import QtQuick.Layouts
 
@@ -160,7 +161,7 @@ Scope {
 
         Rectangle {
             anchors.fill: parent
-            color: "#78000105"
+            color: Theme.scrim
             MouseArea { anchors.fill: parent; onClicked: ShellState.close() }
         }
 
@@ -169,7 +170,7 @@ Scope {
             anchors.centerIn: parent
             width: Math.min(ShellState.overlay === "wifi" ? 760 : ShellState.overlay === "power" ? 800 : 940, overlay.width - 72)
             height: Math.min(ShellState.overlay === "power" ? 310 : 680, overlay.height - 72)
-            radius: 20
+            radius: Theme.r(20)
             color: Theme.surfaceHigh
             border.width: 1
             border.color: Theme.outline
@@ -202,7 +203,7 @@ Scope {
                                 : "SESSION"
                             color: Theme.text
                             font.family: Theme.font
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fs(16)
                             font.bold: true
                             font.letterSpacing: 1.5
                         }
@@ -213,7 +214,7 @@ Scope {
                                 : "Type to filter  /  ↑↓ select  /  Enter launch  /  Escape close"
                             color: Theme.muted
                             font.family: Theme.font
-                            font.pixelSize: 9
+                            font.pixelSize: Theme.fs(9)
                         }
                     }
 
@@ -222,9 +223,9 @@ Scope {
                     Rectangle {
                         implicitWidth: 30
                         implicitHeight: 30
-                        radius: 9
+                        radius: Theme.r(9)
                         color: closeHover.hovered ? Theme.blueSoft : "transparent"
-                        Text { anchors.centerIn: parent; text: "×"; color: Theme.ice; font.pixelSize: 18 }
+                        Text { anchors.centerIn: parent; text: "×"; color: Theme.ice; font.pixelSize: Theme.fs(18) }
                         HoverHandler { id: closeHover }
                         TapHandler { onTapped: ShellState.close() }
                     }
@@ -242,10 +243,10 @@ Scope {
                     color: Theme.text
                     placeholderTextColor: Theme.muted
                     font.family: Theme.font
-                    font.pixelSize: 11
+                    font.pixelSize: Theme.fs(11)
                     selectByMouse: true
                     background: Rectangle {
-                        radius: 11
+                        radius: Theme.r(11)
                         color: Theme.panel
                         border.width: 1
                         border.color: search.activeFocus ? Theme.blue : Theme.outline
@@ -301,7 +302,7 @@ Scope {
                 readonly property bool selected: appList.currentIndex === index
                 width: appList.width
                 height: 56
-                radius: 12
+                radius: Theme.r(12)
                 color: selected ? Theme.blueSoft : appHover.hovered ? Theme.surfaceHigh : Theme.panel
                 border.width: 1
                 border.color: selected || appHover.hovered ? Theme.blue : Theme.outline
@@ -315,7 +316,7 @@ Scope {
                     Rectangle {
                         Layout.preferredWidth: 31
                         Layout.preferredHeight: 31
-                        radius: 9
+                        radius: Theme.r(9)
                         color: Theme.blueSoft
                         border.width: 1
                         border.color: Theme.outline
@@ -324,16 +325,16 @@ Scope {
                             text: appRow.modelData.name.slice(0, 2).toUpperCase()
                             color: Theme.ice
                             font.family: Theme.font
-                            font.pixelSize: 10
+                            font.pixelSize: Theme.fs(10)
                         }
                     }
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 1
-                        Text { text: appRow.modelData.name; color: Theme.text; font.family: Theme.font; font.pixelSize: 11; font.bold: true }
-                        Text { text: appRow.modelData.genericName || appRow.modelData.comment; color: Theme.muted; font.family: Theme.font; font.pixelSize: 9; elide: Text.ElideRight; Layout.fillWidth: true }
+                        Text { text: appRow.modelData.name; color: Theme.text; font.family: Theme.font; font.pixelSize: Theme.fs(11); font.bold: true }
+                        Text { text: appRow.modelData.genericName || appRow.modelData.comment; color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(9); elide: Text.ElideRight; Layout.fillWidth: true }
                     }
-                    Text { text: "ENTER"; color: Theme.blue; font.family: Theme.font; font.pixelSize: 8; font.bold: true }
+                    Text { text: "ENTER"; color: Theme.blue; font.family: Theme.font; font.pixelSize: Theme.fs(8); font.bold: true }
                 }
 
                 HoverHandler { id: appHover }
@@ -351,7 +352,7 @@ Scope {
                 text: "NO APPLICATIONS IN THIS ORBIT"
                 color: Theme.muted
                 font.family: Theme.font
-                font.pixelSize: 9
+                font.pixelSize: Theme.fs(9)
                 font.letterSpacing: 1.1
             }
         }
@@ -386,7 +387,7 @@ Scope {
                     readonly property bool selected: root.selectedKeyApp === modelData
                     width: appSelector.width
                     height: 52
-                    radius: 11
+                    radius: Theme.r(11)
                     color: selected ? Theme.blueSoft : appChoiceHover.hovered ? Theme.surfaceHigh : Theme.panel
                     border.width: 1
                     border.color: selected && root.keyPane === 0 ? Theme.comet
@@ -397,8 +398,8 @@ Scope {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: 13
                         spacing: 1
-                        Text { text: appChoice.modelData; color: appChoice.selected ? Theme.ice : Theme.text; font.family: Theme.font; font.pixelSize: 10; font.bold: true }
-                        Text { text: root.entryCount(appChoice.modelData) + " shortcuts"; color: Theme.muted; font.family: Theme.font; font.pixelSize: 8 }
+                        Text { text: appChoice.modelData; color: appChoice.selected ? Theme.ice : Theme.text; font.family: Theme.font; font.pixelSize: Theme.fs(10); font.bold: true }
+                        Text { text: root.entryCount(appChoice.modelData) + " shortcuts"; color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(8) }
                     }
                     HoverHandler { id: appChoiceHover }
                     TapHandler { onTapped: { root.selectKeyApp(appChoice.index); root.keyPane = 0; } }
@@ -422,7 +423,7 @@ Scope {
                     readonly property bool selected: keyList.currentIndex === index && root.keyPane === 1
                     width: keyList.width
                     height: 52
-                    radius: 11
+                    radius: Theme.r(11)
                     color: selected ? Theme.blueSoft : keyHover.hovered ? Theme.surfaceHigh : Theme.panel
                     border.width: 1
                     border.color: selected ? Theme.comet : keyHover.hovered ? Theme.blue : Theme.outline
@@ -437,19 +438,19 @@ Scope {
                             text: keyRow.modelData.app
                             color: Theme.blue
                             font.family: Theme.font
-                            font.pixelSize: 8
+                            font.pixelSize: Theme.fs(8)
                             font.bold: true
                             Layout.preferredWidth: 70
                         }
-                        Text { text: keyRow.modelData.action; color: Theme.text; font.family: Theme.font; font.pixelSize: 9; Layout.fillWidth: true; elide: Text.ElideRight }
+                        Text { text: keyRow.modelData.action; color: Theme.text; font.family: Theme.font; font.pixelSize: Theme.fs(9); Layout.fillWidth: true; elide: Text.ElideRight }
                         Rectangle {
                             implicitWidth: keyText.implicitWidth + 18
                             implicitHeight: 28
-                            radius: 8
+                            radius: Theme.r(8)
                             color: Theme.surfaceHigh
                             border.width: 1
                             border.color: Theme.outline
-                            Text { id: keyText; anchors.centerIn: parent; text: keyRow.modelData.key; color: Theme.ice; font.family: Theme.font; font.pixelSize: 8; font.bold: true }
+                            Text { id: keyText; anchors.centerIn: parent; text: keyRow.modelData.key; color: Theme.ice; font.family: Theme.font; font.pixelSize: Theme.fs(8); font.bold: true }
                         }
                     }
                     HoverHandler { id: keyHover }
@@ -479,7 +480,7 @@ Scope {
                     required property var modelData
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    radius: 14
+                    radius: Theme.r(14)
                     color: powerHover.hovered ? Theme.surfaceHigh : Theme.panel
                     border.width: 1
                     border.color: powerHover.hovered ? modelData.colour : Theme.outline
@@ -487,8 +488,8 @@ Scope {
                     Column {
                         anchors.centerIn: parent
                         spacing: 6
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: powerAction.modelData.label; color: powerAction.modelData.colour; font.family: Theme.font; font.pixelSize: 10; font.bold: true; font.letterSpacing: 0.7 }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: powerAction.modelData.detail; color: Theme.muted; font.family: Theme.font; font.pixelSize: 8 }
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: powerAction.modelData.label; color: powerAction.modelData.colour; font.family: Theme.font; font.pixelSize: Theme.fs(10); font.bold: true; font.letterSpacing: 0.7 }
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: powerAction.modelData.detail; color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(8) }
                     }
 
                     HoverHandler { id: powerHover }

@@ -33,13 +33,11 @@ return {
         { "<leader>v", group = "Windows" },
         { "<leader>u", group = "UI" },
         { "<leader>s", group = "󰈞  [S]earch" },
-        { "<leader>c", group = "󰈞  [C]ompiler" },
         { "<leader>o", group = "󰏆  [O]il" },
-        { "<leader>g", group = "  [G]rug" },
-        { "<leader>h", group = "  [H]arpoon" },
-        { "<leader>l", group = "󰒋  [L]SP" },
+        { "<leader>g", group = "  [G]it" },
+        { "<leader>n", group = "󰠮  [N]otes" },
+        { "<leader>q", group = "󰆓  Session" },
         { "<leader>r", group = "󰍉  [R]ing" },
-        { "<leader>x", group = "󰆍  LaTe[X]" },
       },
     },
     config = function(_, opts)
@@ -60,9 +58,7 @@ return {
       local palette = require("core.palette")
       vim.api.nvim_set_hl(0, "WhichKeyBorder", { fg = palette.blue })
       vim.api.nvim_set_hl(0, "WhichKeyTitle", { fg = palette.ice, bold = true })
-      vim.keymap.set("n", "<leader>?", function()
-        require("which-key").show()
-      end, { desc = "Show all Neovim keybindings" })
+      -- <leader>? is the full keybinding list in telescope.lua.
     end,
   },
 }

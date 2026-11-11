@@ -5,7 +5,7 @@ local fn = vim.fn
 local lp = fn.stdpath('data') .. '/lazy/lazy.nvim'
 
 -- 1) Clone lazy.nvim if not already installed
-if not vim.loop.fs_stat(lp) then
+if not vim.uv.fs_stat(lp) then
   local result = fn.system {
     'git',
     'clone',

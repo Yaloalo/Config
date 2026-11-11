@@ -1,0 +1,9 @@
+singleton Mode 1.0 Mode.qml
+singleton Nerv 1.0 Nerv.qml
+SpaceField 1.0 SpaceField.qml
+NervLabel 1.0 NervLabel.qml
+NervSquash 1.0 NervSquash.qml
+NervBrackets 1.0 NervBrackets.qml
+MagiPanel 1.0 MagiPanel.qml
+LampBank 1.0 LampBank.qml
+EvaConsole 1.0 EvaConsole.qml

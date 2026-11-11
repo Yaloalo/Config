@@ -29,6 +29,14 @@
 - Screenshots/clipboard: grim + slurp + wl-clipboard; hypr screenshot helper.
 - Utilities: brightnessctl, playerctl, fastfetch, btop, ripgrep/fd/fzf, nerd font (JetBrains Mono NF).
 
+## Star / Eva modes
+
+The whole machine has two looks: **star** (deep space, the default) and **eva**
+(NERV / MAGI). Settings -> THEME switches desktop shell, lock screen, Hyprland
+borders, WezTerm, and through a small root service the login screen, boot
+splash and boot menu. One-time system setup: `scripts/desktop-mode-install.sh`
+(details in `boot/README.md`). Shared QML lives in `quickshell/common/`.
+
 ## Desktop controls
 
 - `Super+R`: application launcher

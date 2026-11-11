@@ -5,8 +5,8 @@
   "ecoDisableAnimations": true,
   "ecoBrightness": 50,
   "starDensity": 3,
-  "starSpeed": 2,
-  "focusComet": true,
+  "starSpeed": 1.25,
   "warpMode": false,
-  "thermalSpeed": true
+  "thermalSpeed": false,
+  "starsPaused": true
 }

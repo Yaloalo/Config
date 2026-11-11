@@ -2,10 +2,13 @@
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "md", "mkd", "markdown.mdx" },
+    ft = { "markdown" },
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
-      "echasnovski/mini.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    keys = {
+      { "<leader>um", "<cmd>RenderMarkdown toggle<CR>", desc = "Toggle Markdown rendering" },
     },
     opts = {
       enabled = true,
@@ -52,8 +55,9 @@ return {
 
       padding = { highlight = "Normal" },
 
+      -- needs a latex2text converter, which is not installed
       latex = {
-        enabled = true,
+        enabled = false,
         render_modes = false,
         converter = "latex2text",
         highlight = "RenderMarkdownMath",
@@ -84,7 +88,7 @@ return {
       },
 
       -- CODE BLOCKS: no fill, thin box (top/bottom borders + show fences as side borders)
-      ode = {
+      code = {
         -- Turn on / off code block & inline code rendering.
         enabled = true,
         -- Additional modes to render code blocks.

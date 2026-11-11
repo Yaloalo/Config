@@ -1,0 +1,18 @@
+#!/bin/bash
+# mkinitcpio install hook: ship every desktop-mode splash in the initramfs, not
+# just plymouth's default one, so `plymouth.splash=<theme>` on the kernel
+# command line can pick star (deepfield) or eva (nerv) without a rebuild.
+# Installed to /etc/initcpio/install/ by scripts/desktop-mode-install.sh.
+
+build() {
+    local theme
+    for theme in deepfield nerv; do
+        if [[ -d /usr/share/plymouth/themes/$theme ]]; then
+            add_full_dir "/usr/share/plymouth/themes/$theme"
+        fi
+    done
+}
+
+help() {
+    echo "Adds the deepfield and nerv plymouth themes for desktop-mode switching."
+}

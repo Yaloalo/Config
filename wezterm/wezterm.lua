@@ -49,25 +49,60 @@ end)
 -- ── Appearance & shell ───────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = 13.0
-config.colors = {
-  foreground = "#f7fbff",
-  background = "#000000",
-  cursor_bg = "#dff8ff",
-  cursor_fg = "#010207",
-  cursor_border = "#58baff",
-  selection_fg = "#f7fbff",
-  selection_bg = "#30435e",
-  ansi = { "#010207", "#ff607c", "#79c99e", "#e8d79c", "#58baff", "#6685ff", "#9eeaff", "#dce7f2" },
-  brights = { "#30435e", "#ff89a0", "#a0ddb8", "#f5e9b8", "#8dd1ff", "#91a6ff", "#dff8ff", "#ffffff" },
-  tab_bar = {
-    background = "rgba(0,0,0,0)",
-    active_tab = { bg_color = "#dff8ff", fg_color = "#010207", intensity = "Bold" },
-    inactive_tab = { bg_color = "#0a0f19", fg_color = "#8190a5" },
-    inactive_tab_hover = { bg_color = "#111a2a", fg_color = "#f7fbff" },
-    new_tab = { bg_color = "#0a0f19", fg_color = "#58baff" },
-    new_tab_hover = { bg_color = "#111a2a", fg_color = "#f7fbff" },
+-- Star or eva palette, from the desktop mode file shared with Quickshell and
+-- Hyprland. WezTerm reloads by itself when the settings toggle rewrites it.
+local mode_file = (os.getenv("XDG_STATE_HOME") or (wezterm.home_dir .. "/.local/state")) .. "/desktop-mode"
+wezterm.add_to_config_reload_watch_list(mode_file)
+local function desktop_mode()
+  local file = io.open(mode_file)
+  if not file then return "star" end
+  local mode = file:read("*l")
+  file:close()
+  return mode == "eva" and "eva" or "star"
+end
+
+local palettes = {
+  star = {
+    foreground = "#f7fbff",
+    background = "#000000",
+    cursor_bg = "#dff8ff",
+    cursor_fg = "#010207",
+    cursor_border = "#58baff",
+    selection_fg = "#f7fbff",
+    selection_bg = "#30435e",
+    ansi = { "#010207", "#ff607c", "#79c99e", "#e8d79c", "#58baff", "#6685ff", "#9eeaff", "#dce7f2" },
+    brights = { "#30435e", "#ff89a0", "#a0ddb8", "#f5e9b8", "#8dd1ff", "#91a6ff", "#dff8ff", "#ffffff" },
+    tab_bar = {
+      background = "rgba(0,0,0,0)",
+      active_tab = { bg_color = "#dff8ff", fg_color = "#010207", intensity = "Bold" },
+      inactive_tab = { bg_color = "#0a0f19", fg_color = "#8190a5" },
+      inactive_tab_hover = { bg_color = "#111a2a", fg_color = "#f7fbff" },
+      new_tab = { bg_color = "#0a0f19", fg_color = "#58baff" },
+      new_tab_hover = { bg_color = "#111a2a", fg_color = "#f7fbff" },
+    },
+  },
+  -- NERV terminal: nerv-boot's orange/amber/red/green plus Unit-01 purple.
+  eva = {
+    foreground = "#fff1e2",
+    background = "#000000",
+    cursor_bg = "#ff7e1a",
+    cursor_fg = "#000000",
+    cursor_border = "#ff7e1a",
+    selection_fg = "#fff1e2",
+    selection_bg = "#5c2508",
+    ansi = { "#0a0402", "#f0141e", "#3ce07c", "#ff7e1a", "#e8a33c", "#9a6cff", "#ffb36b", "#fff1e2" },
+    brights = { "#5c2508", "#ff4a52", "#7cf0a6", "#ffa04d", "#ffc278", "#b894ff", "#ffd2a0", "#ffffff" },
+    tab_bar = {
+      background = "rgba(0,0,0,0)",
+      active_tab = { bg_color = "#ff7e1a", fg_color = "#000000", intensity = "Bold" },
+      inactive_tab = { bg_color = "#1a0b04", fg_color = "#b35a12" },
+      inactive_tab_hover = { bg_color = "#2e1406", fg_color = "#fff1e2" },
+      new_tab = { bg_color = "#1a0b04", fg_color = "#ff7e1a" },
+      new_tab_hover = { bg_color = "#2e1406", fg_color = "#fff1e2" },
+    },
   },
 }
+config.colors = palettes[desktop_mode()]
 
 config.window_padding = {
   left = "3pt",

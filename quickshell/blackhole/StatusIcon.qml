@@ -2,11 +2,13 @@ import QtQuick
 Canvas {
     id: root
     property string kind: "wifi"
-    property color color: "white"
+    property color color: Theme.fg
     property real level: 1
+    property bool charging: false
     onKindChanged: requestPaint()
     onColorChanged: requestPaint()
     onLevelChanged: requestPaint()
+    onChargingChanged: requestPaint()
     onPaint: {
         const c = getContext("2d");
         c.reset(); c.scale(width / 24, height / 24);
@@ -17,6 +19,13 @@ Canvas {
         } else if (kind === "battery") {
             c.strokeRect(2, 6, 18, 12); c.fillRect(21, 10, 2, 4);
             c.fillRect(4, 8, 14 * Math.max(0, Math.min(1, level)), 8);
+            if (charging) {
+                // xor keeps the bolt readable over both the filled and empty part.
+                c.globalCompositeOperation = "xor";
+                c.beginPath(); c.moveTo(12.5, 7); c.lineTo(7.5, 12.8); c.lineTo(10.8, 12.8);
+                c.lineTo(9.5, 17); c.lineTo(14.5, 11.2); c.lineTo(11.2, 11.2); c.closePath(); c.fill();
+                c.globalCompositeOperation = "source-over";
+            }
         } else if (kind === "settings") {
             for (let x of [5, 12, 19]) { c.beginPath(); c.moveTo(x, 3); c.lineTo(x, 21); c.stroke(); }
             for (let p of [[5, 8], [12, 16], [19, 6]]) { c.fillRect(p[0] - 3, p[1] - 2, 6, 4); }

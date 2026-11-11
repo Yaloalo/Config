@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Services.Notifications
 import Quickshell.Wayland
 import QtQuick
+import qs.common
 import QtQuick.Layouts
 
 Scope {
@@ -59,7 +60,7 @@ Scope {
                         required property var modelData
                         width: cards.width
                         height: Math.max(92, content.implicitHeight + 28)
-                        radius: 16
+                        radius: Theme.r(16)
                         color: Theme.surfaceHigh
                         border.width: 1
                         border.color: modelData.urgency === NotificationUrgency.Critical ? Theme.danger : Theme.outline
@@ -95,12 +96,12 @@ Scope {
                             ColumnLayout {
                                 Layout.fillWidth: true
                                 spacing: 3
-                                Text { text: notificationCard.modelData.appName || "System"; color: Theme.blue; font.family: Theme.font; font.pixelSize: 9; font.bold: true }
-                                Text { text: notificationCard.modelData.summary; color: Theme.text; font.family: Theme.font; font.pixelSize: 11; font.bold: true; wrapMode: Text.Wrap; Layout.fillWidth: true }
-                                Text { visible: text.length > 0; text: notificationCard.modelData.body; color: Theme.muted; font.family: Theme.font; font.pixelSize: 9; textFormat: Text.PlainText; wrapMode: Text.Wrap; maximumLineCount: 3; elide: Text.ElideRight; Layout.fillWidth: true }
+                                Text { text: notificationCard.modelData.appName || "System"; color: Theme.blue; font.family: Theme.font; font.pixelSize: Theme.fs(9); font.bold: true }
+                                Text { text: notificationCard.modelData.summary; color: Theme.text; font.family: Theme.font; font.pixelSize: Theme.fs(11); font.bold: true; wrapMode: Text.Wrap; Layout.fillWidth: true }
+                                Text { visible: text.length > 0; text: notificationCard.modelData.body; color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(9); textFormat: Text.PlainText; wrapMode: Text.Wrap; maximumLineCount: 3; elide: Text.ElideRight; Layout.fillWidth: true }
                             }
 
-                            Text { text: "×"; color: Theme.ice; font.pixelSize: 17; Layout.alignment: Qt.AlignTop }
+                            Text { text: "×"; color: Theme.ice; font.pixelSize: Theme.fs(17); Layout.alignment: Qt.AlignTop }
                         }
 
                         TapHandler { onTapped: notificationCard.modelData.dismiss() }

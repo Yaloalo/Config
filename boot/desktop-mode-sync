@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Mirror the desktop mode (star | eva) to the parts that live outside the user
+# session: the nerv-boot menu theme, the plymouth splash on the kernel command
+# line, and the login screen. Runs as root from desktop-mode-sync.service
+# whenever the user's mode file changes. Installed to /usr/local/lib/desktop-mode/.
+#   desktop-mode-sync <user mode file>
+set -euo pipefail
+
+src=${1:?usage: desktop-mode-sync <mode file>}
+nerv_conf=/boot/EFI/nerv/nerv.conf
+greeter_mode=/etc/greetd/desktop/mode
+
+# The file is user-writable: never follow links, read a few bytes, accept two words.
+[[ -f $src && ! -L $src ]] || exit 0
+mode=$(head -c 16 -- "$src" | tr -d '[:space:]')
+case $mode in
+    star) splash=deepfield ;;
+    eva) splash=nerv ;;
+    *) exit 0 ;;
+esac
+
+if [[ -f $nerv_conf ]]; then
+    if grep -q '^theme ' "$nerv_conf"; then
+        sed -i "s/^theme .*/theme $mode/" "$nerv_conf"
+    else
+        printf 'theme %s\n' "$mode" >> "$nerv_conf"
+    fi
+fi
+
+for entry in /boot/loader/entries/*.conf; do
+    [[ -f $entry ]] || continue
+    grep -q '^options ' "$entry" || continue
+    if grep -q 'plymouth\.splash=' "$entry"; then
+        sed -i -E "s/plymouth\.splash=[^ ]*/plymouth.splash=$splash/" "$entry"
+    else
+        sed -i -E "s/^(options .*)$/\1 plymouth.splash=$splash/" "$entry"
+    fi
+done
+
+if [[ -d ${greeter_mode%/*} ]]; then
+    printf '%s\n' "$mode" > "$greeter_mode"
+    chmod 0644 "$greeter_mode"
+fi
+echo "desktop mode synced: $mode (splash $splash)"

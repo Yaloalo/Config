@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
+import qs.common
 
 Scope {
     Variants {
@@ -51,7 +52,44 @@ Scope {
                 starCount: 96
                 seed: 47
                 strength: 0.42
-                tint: Theme.blue
+                tint: Theme.eva ? Nerv.amber : Theme.blue
+            }
+
+            // Eva mode turns the desktop into a NERV standby terminal: hex grid,
+            // a faint 待機 watermark, a hazard stripe and a MAGI lamp bank.
+            Item {
+                anchors.fill: parent
+                visible: Theme.eva
+                Image { anchors.fill: parent; source: Nerv.assets + "/hex.png"; fillMode: Image.Tile; opacity: 0.7 }
+                NervSquash {
+                    x: 60
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 30
+                    size: parent.height * 0.3
+                    text: "待機"
+                    color: Nerv.line
+                    opacity: 0.55
+                }
+                Item {
+                    anchors.bottom: parent.bottom
+                    width: parent.width
+                    height: 8
+                    clip: true
+                    Image { width: parent.width; height: 32; source: Nerv.assets + "/hazard-orange.png"; fillMode: Image.Tile }
+                }
+                LampBank {
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.rightMargin: 22
+                    anchors.bottomMargin: 62
+                    columns: 10
+                    count: 30
+                    cellWidth: 18
+                    cellHeight: 7
+                    spacing: 4
+                    tone: ShellState.motionEnabled ? "idle" : "deny"
+                }
+                Image { anchors.fill: parent; source: Nerv.assets + "/scan.png"; fillMode: Image.Tile; opacity: 0.35 }
             }
 
             Rectangle {
@@ -59,11 +97,11 @@ Scope {
                 anchors.bottom: parent.bottom
                 anchors.margins: 22
                 width: deepFieldLabel.implicitWidth + 22
-                height: 26
-                radius: 9
+                height: Theme.eva ? 30 : 26
+                radius: Theme.r(9)
                 color: Theme.panel
-                border.width: 1
-                border.color: Theme.outline
+                border.color: Theme.eva ? Nerv.orange : Theme.outline
+                border.width: Theme.eva ? 2 : 1
                 clip: true
 
                 SpaceField { preferences: Preferences; moving: ShellState.motionEnabled; anchors.fill: parent; starCount: 8; seed: 81; strength: 0.5 }
@@ -71,11 +109,11 @@ Scope {
                 Text {
                     id: deepFieldLabel
                     anchors.centerIn: parent
-                    text: "DEEP FIELD  /  " + (!ShellState.motionEnabled ? "STILL" : Preferences.warpMode ? "WARP" : "DRIFT")
+                    text: (Theme.eva ? "MAGI  /  " : "DEEP FIELD  /  ") + (!ShellState.motionEnabled ? "STILL" : Preferences.warpMode ? "WARP" : "DRIFT")
                         + (Preferences.thermalSpeed && ThermalState.available ? "  /  " + Math.round(ThermalState.temp) + "°C" : "")
                     color: Theme.muted
                     font.family: Theme.font
-                    font.pixelSize: 9
+                    font.pixelSize: Theme.fs(9)
                     font.letterSpacing: 1.4
                 }
             }

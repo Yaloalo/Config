@@ -1,18 +1,19 @@
 pragma ComponentBehavior: Bound
 import Quickshell
 import QtQuick
+import qs.common
 import QtQuick.Controls
 import QtQuick.Layouts
 
 ScrollView {
     id: root
     clip: true
-    palette.window: "black"
-    palette.windowText: "white"
-    palette.text: "white"
-    palette.button: "#000000"
-    palette.buttonText: "white"
-    palette.highlight: "#aaaaaa"
+    palette.window: Theme.onFg
+    palette.windowText: Theme.fg
+    palette.text: Theme.fg
+    palette.button: Theme.voidBlack
+    palette.buttonText: Theme.fg
+    palette.highlight: Theme.edgeHi
     contentWidth: availableWidth
     component SpaceSwitch: Switch {
         id: toggle
@@ -21,13 +22,13 @@ ScrollView {
         indicator: Rectangle {
             x: toggle.leftPadding
             y: (toggle.height - height) / 2
-            width: 36; height: 20; radius: 10
-            color: toggle.checked ? "#303030" : "#080808"
-            border.color: toggle.checked ? "#aaaaaa" : "#444444"
+            width: 36; height: 20; radius: Theme.r(10)
+            color: toggle.checked ? Theme.fill : Theme.glass
+            border.color: toggle.checked ? Theme.edgeHi : Theme.edge
             Rectangle {
                 x: toggle.checked ? 19 : 3; y: 3
-                width: 14; height: 14; radius: 7
-                color: toggle.checked ? "white" : "#666666"
+                width: 14; height: 14; radius: Theme.r(7)
+                color: toggle.checked ? Theme.fg : Theme.knobOff
                 Behavior on x { NumberAnimation { duration: 120 } }
             }
         }
@@ -35,12 +36,73 @@ ScrollView {
             text: toggle.text
             leftPadding: 48
             verticalAlignment: Text.AlignVCenter
-            color: "white"; font.family: Theme.font; font.pixelSize: 11
+            color: Theme.fg; font.family: Theme.font; font.pixelSize: Theme.fs(11)
         }
     }
     ColumnLayout {
         width: root.availableWidth
         spacing: 12
+        Text { text: "THEME"; color: Theme.fg; font.family: Theme.font; font.bold: true; font.pixelSize: Theme.fs(11) }
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 10
+            Repeater {
+                model: [
+                    { mode: "star", label: "STAR", sub: "deep space" },
+                    { mode: "eva", label: "EVA", sub: "NERV / MAGI" }
+                ]
+                Button {
+                    id: modeButton
+                    required property var modelData
+                    readonly property bool selected: Mode.mode === modelData.mode
+                    Layout.fillWidth: true
+                    implicitHeight: 54
+                    hoverEnabled: true
+                    background: Rectangle {
+                        radius: Theme.r(12)
+                        color: modeButton.selected ? Theme.fill : Theme.glass
+                        border.width: modeButton.selected ? 2 : 1
+                        border.color: modeButton.selected ? Theme.ice : modeButton.hovered || modeButton.activeFocus ? Theme.edgeHi : Theme.edge
+                        clip: true
+                        SpaceField {
+                            anchors.fill: parent; anchors.margins: 5
+                            visible: modeButton.modelData.mode === "star"
+                            preferences: Preferences; moving: ShellState.motionEnabled; starCount: 16; strength: .45
+                        }
+                        Image {
+                            anchors.fill: parent
+                            visible: modeButton.modelData.mode === "eva"
+                            source: Nerv.assets + "/hex.png"; fillMode: Image.Tile; opacity: 0.8
+                        }
+                    }
+                    contentItem: Column {
+                        spacing: 2
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: modeButton.modelData.label
+                            color: modeButton.modelData.mode === "eva" ? Nerv.orange : "white"
+                            font.family: modeButton.modelData.mode === "eva" ? Nerv.sans : "JetBrainsMono Nerd Font"
+                            font.pixelSize: modeButton.modelData.mode === "eva" ? 18 : 13
+                            font.bold: true
+                            font.letterSpacing: 2
+                        }
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: modeButton.modelData.sub
+                            color: modeButton.modelData.mode === "eva" ? Nerv.amber : "#8190a5"
+                            font.family: modeButton.modelData.mode === "eva" ? Nerv.sans : "JetBrainsMono Nerd Font"
+                            font.pixelSize: modeButton.modelData.mode === "eva" ? 13 : 9
+                        }
+                    }
+                    onClicked: ShellState.setMode(modelData.mode)
+                }
+            }
+        }
+        Text {
+            text: "Switches desktop, terminal, lock screen, login screen, boot splash and boot menu."
+            color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(10)
+            wrapMode: Text.Wrap; Layout.fillWidth: true
+        }
         Button {
             id: guideButton
             text: "Keybindings  ·  Super G"
@@ -48,16 +110,24 @@ ScrollView {
             implicitHeight: 42
             hoverEnabled: true
             background: Rectangle {
-                radius: 12; color: "#b0000000"
-                border.color: guideButton.hovered || guideButton.activeFocus ? "white" : "#444444"
+                radius: Theme.r(12); color: Theme.glass
+                border.color: guideButton.hovered || guideButton.activeFocus ? Theme.fg : Theme.edge
                 SpaceField { anchors.fill: parent; anchors.margins: 5; preferences: Preferences; moving: ShellState.motionEnabled; starCount: 16; strength: .35 }
             }
             contentItem: Text {
-                text: guideButton.text; color: "white"
-                font.family: Theme.font; font.pixelSize: 11
+                text: guideButton.text; color: Theme.fg
+                font.family: Theme.font; font.pixelSize: Theme.fs(11)
                 horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
             }
             onClicked: ShellState.overlay = "keybinds"
+        }
+        SpaceSwitch {
+            text: "Moving stars  ·  Super Pause"
+            checked: ShellState.motionEnabled
+            onToggled: {
+                Preferences.starsPaused = !checked;
+                Preferences.save();
+            }
         }
         SpaceSwitch {
             text: "Eco mode"
@@ -66,7 +136,7 @@ ScrollView {
         }
         Text {
             text: Preferences.status || "Eco saves the current brightness and effects, then restores them when disabled."
-            color: Theme.muted; font.family: Theme.font; font.pixelSize: 10
+            color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(10)
             wrapMode: Text.Wrap; Layout.fillWidth: true
         }
         Repeater {
@@ -74,7 +144,6 @@ ScrollView {
                 {key: "ecoPauseStars", label: "Eco: freeze star animation"},
                 {key: "ecoDisableBlur", label: "Eco: disable compositor blur"},
                 {key: "ecoDisableAnimations", label: "Eco: disable window animations"},
-                {key: "focusComet", label: "Yellow focus trail"},
                 {key: "warpMode", label: "Warp speed (desktop stars)"},
                 {key: "thermalSpeed", label: "Desktop stars speed up with CPU temp and fans"}
             ]
@@ -94,7 +163,7 @@ ScrollView {
             text: !ThermalState.available ? "Reading sensors…"
                 : Math.round(ThermalState.temp) + " °C" + (ThermalState.hasFan ? "  ·  fan " + Math.round(ThermalState.fan) + " rpm" : "  ·  no fan sensor")
                   + "  →  " + (0.5 + ThermalState.heat * 3.5).toFixed(1) + "× speed"
-            color: Theme.muted; font.family: Theme.font; font.pixelSize: 10
+            color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(10)
             Layout.fillWidth: true
         }
         Repeater {
@@ -107,21 +176,21 @@ ScrollView {
                 id: setting
                 required property var modelData
                 Layout.fillWidth: true
-                Text { text: setting.modelData.label + "  " + Preferences[setting.modelData.key]; color: "white"; font.family: Theme.font; font.pixelSize: 10 }
+                Text { text: setting.modelData.label + "  " + Preferences[setting.modelData.key]; color: Theme.fg; font.family: Theme.font; font.pixelSize: Theme.fs(10) }
                 Slider {
                     id: slider
                     Layout.fillWidth: true
                     implicitHeight: 28
                     background: Rectangle {
                         x: slider.leftPadding; y: (slider.height-height)/2
-                        width: slider.availableWidth; height: 3; radius: 2; color: "#303030"
-                        Rectangle { width: slider.visualPosition * parent.width; height: parent.height; radius: 2; color: "#cccccc" }
+                        width: slider.availableWidth; height: 3; radius: Theme.r(2); color: Theme.fill
+                        Rectangle { width: slider.visualPosition * parent.width; height: parent.height; radius: Theme.r(2); color: Theme.accentFill }
                     }
                     handle: Rectangle {
                         x: slider.leftPadding + slider.visualPosition * (slider.availableWidth-width)
                         y: (slider.height-height)/2
-                        width: 12; height: 12; radius: 6
-                        color: slider.pressed ? "white" : "#cccccc"
+                        width: 12; height: 12; radius: Theme.r(6)
+                        color: slider.pressed ? Theme.fg : Theme.accentFill
                     }
                     from: setting.modelData.min; to: setting.modelData.max; stepSize: setting.modelData.step
                     value: Preferences[setting.modelData.key]
@@ -130,7 +199,7 @@ ScrollView {
                 }
             }
         }
-        Text { text: "DEVICE SETTINGS"; color: "white"; font.family: Theme.font; font.bold: true; Layout.topMargin: 12 }
+        Text { text: "DEVICE SETTINGS"; color: Theme.fg; font.family: Theme.font; font.bold: true; Layout.topMargin: 12 }
         GridLayout {
             columns: 2; Layout.fillWidth: true
             columnSpacing: 10; rowSpacing: 10
@@ -150,9 +219,9 @@ ScrollView {
                     implicitHeight: 46
                     hoverEnabled: true
                     background: Rectangle {
-                        radius: 12
-                        color: deviceButton.down ? "#ee000000" : deviceButton.hovered ? "#d8000000" : "#b0000000"
-                        border.color: deviceButton.hovered || deviceButton.activeFocus ? "#cccccc" : "#444444"
+                        radius: Theme.r(12)
+                        color: deviceButton.down ? Theme.glassDown : deviceButton.hovered ? Theme.glassHover : Theme.glass
+                        border.color: deviceButton.hovered || deviceButton.activeFocus ? Theme.accentFill : Theme.edge
                         Behavior on border.color { ColorAnimation { duration: 120 } }
                         SpaceField {
                             anchors.fill: parent; anchors.margins: 5
@@ -162,7 +231,7 @@ ScrollView {
                     }
                     contentItem: Text {
                         text: deviceButton.text
-                        color: "white"; font.family: Theme.font; font.pixelSize: 10
+                        color: Theme.fg; font.family: Theme.font; font.pixelSize: Theme.fs(10)
                         horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
                     }
@@ -174,8 +243,8 @@ ScrollView {
             }
         }
         Text {
-            text: "Manual lock: Super + Escape. Type your password and press Enter on the star screen.\nLid close suspends. Automatic idle locking is disabled."
-            color: Theme.muted; font.family: Theme.font; font.pixelSize: 10
+            text: "Manual lock: Super + Escape. Type your password and press Enter on the star screen.\nLid close locks before suspending. Automatic idle locking is disabled."
+            color: Theme.muted; font.family: Theme.font; font.pixelSize: Theme.fs(10)
             wrapMode: Text.Wrap; Layout.fillWidth: true
         }
     }

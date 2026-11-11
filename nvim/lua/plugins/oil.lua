@@ -20,6 +20,17 @@ return {
           end,
         },
         use_default_keymaps = true,
+        keymaps = {
+          -- In the file-tree sidebar, files open in the main window.
+          ["<CR>"] = { callback = function() require("core.oil_sidebar").select() end, desc = "Open" },
+          ["<Tab>"] = { callback = function() require("core.oil_sidebar").to_tree() end, desc = "Back to file tree" },
+          -- Keep the global meaning: <C-s> saves (applies changes), <C-h>/<C-l> move windows.
+          ["<C-s>"] = { callback = function() require("oil").save() end, desc = "Apply changes" },
+          ["<C-h>"] = false,
+          ["<C-l>"] = false,
+          ["gr"] = "actions.refresh",
+          ["gv"] = { "actions.select", opts = { vertical = true } },
+        },
         buf_options = {
           buflisted = false,
           bufhidden = "hide",

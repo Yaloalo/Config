@@ -6,20 +6,28 @@ hl.bind(mod .. " + R", hl.dsp.exec_cmd(shell .. "toggleLauncher"), { description
 hl.bind(mod .. " + G", hl.dsp.exec_cmd(shell .. "toggleKeybinds"), { description = "Shortcut atlas" })
 hl.bind(mod .. " + SHIFT + Escape", hl.dsp.exec_cmd(shell .. "togglePower"), { description = "Power menu" })
 hl.bind(mod .. " + I", hl.dsp.exec_cmd(shell .. "togglePower"), { description = "Power menu" })
-hl.bind(mod .. " + B", hl.dsp.exec_cmd(shell .. "toggleMotion"), { description = "Pause star motion" })
+hl.bind(mod .. " + B", hl.dsp.exec_cmd("bash /home/yaloalo/.config/scripts/toggle-blur.sh"), { description = "Toggle blur" })
 hl.bind(mod .. " + Pause", hl.dsp.exec_cmd(shell .. "toggleMotion"), { description = "Pause star motion" })
+hl.bind(mod .. " + U", hl.dsp.exec_cmd(shell .. "toggleBar"), { description = "Toggle top bar" })
 hl.bind(mod .. " + comma", hl.dsp.exec_cmd(shell .. "toggleSettings"), { description = "Settings" })
-hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("qs -p /home/yaloalo/.config/quickshell/blackhole/lock.qml -d"), { description = "Manual lock" })
+hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("qs -p /home/yaloalo/.config/quickshell/blackhole/lock.qml -n -d"), { description = "Manual lock" })
 hl.bind(mod .. " + M", hl.dsp.exec_cmd("uwsm app -- python3 /home/yaloalo/.config/scripts/space-displays.py"), { description = "Arrange displays" })
 
 -- Applications.
 hl.bind(mod .. " + T", hl.dsp.exec_cmd("uwsm app -- wezterm"), { description = "Terminal" })
 hl.bind(mod .. " + O", hl.dsp.exec_cmd("uwsm app -- wezterm start --always-new-process -- yazi"), { description = "Open files" })
 hl.bind(mod .. " + A", hl.dsp.exec_cmd("uwsm app -- wezterm start --always-new-process -- yazi"), { description = "Files" })
+hl.bind(mod .. " + SHIFT + A", hl.dsp.exec_cmd("uwsm app -- wezterm start --always-new-process --class ai-launcher -- /home/yaloalo/.local/bin/ai"), { description = "AI agents: project → agent" })
 hl.bind(mod .. " + SHIFT + B", hl.dsp.exec_cmd("uwsm app -- firefox"), { description = "Browser" })
 hl.bind(mod .. " + N", hl.dsp.exec_cmd("uwsm app -- wezterm start --always-new-process -- nvim"), { description = "Editor" })
 hl.bind(mod .. " + P", hl.dsp.exec_cmd("/home/yaloalo/.config/hypr/screenshot-area.sh"), { description = "Area screenshot" })
 hl.bind(mod .. " + S", hl.dsp.exec_cmd("/home/yaloalo/.config/scripts/system-info.sh"), { description = "System information" })
+
+-- Dictation (local speech-to-text, ~/projects/inprogress/ai/bin/dictate): press to
+-- start, press again to stop; the text goes to the clipboard.
+hl.bind(mod .. " + V", hl.dsp.exec_cmd("/home/yaloalo/.local/bin/dictate"), { description = "Dictate to clipboard" })
+hl.bind(mod .. " + SHIFT + V", hl.dsp.exec_cmd("/home/yaloalo/.local/bin/dictate --paste"), { description = "Dictate and paste" })
+hl.bind(mod .. " + CTRL + V", hl.dsp.exec_cmd("/home/yaloalo/.local/bin/dictate --cancel"), { description = "Cancel dictation" })
 
 -- Window management.
 hl.bind(mod .. " + SHIFT + C", hl.dsp.window.close(), { description = "Close window" })
@@ -27,6 +35,7 @@ hl.bind(mod .. " + SHIFT + F", hl.dsp.window.float({ action = "toggle" }), { des
 hl.bind(mod .. " + F", hl.dsp.window.close(), { description = "Close window" })
 hl.bind(mod .. " + X", hl.dsp.window.float({ action = "toggle" }), { description = "Toggle floating" })
 hl.bind(mod .. " + Y", hl.dsp.window.fullscreen({ mode = 1 }), { description = "Fake fullscreen" })
+hl.bind(mod .. " + SHIFT + Y", hl.dsp.window.fullscreen({ mode = 0 }), { description = "Real fullscreen" })
 
 local directions = { h = "left", j = "down", k = "up", l = "right" }
 for key, direction in pairs(directions) do
@@ -53,7 +62,10 @@ hl.bind(mod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 
 -- Hardware keys.
-hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("systemctl suspend"), { locked = true, description = "Suspend on lid close" })
+-- logind suspends on lid close (also when docked, see system/logind.conf.d);
+-- Hyprland only blanks every output right away so HDMI goes dark immediately.
+hl.bind("switch:on:Lid Switch", hl.dsp.dpms({ action = "off" }), { locked = true, description = "Screens off on lid close" })
+hl.bind("switch:off:Lid Switch", hl.dsp.dpms({ action = "on" }), { locked = true, description = "Screens on on lid open" })
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { locked = true, repeating = true })
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), { locked = true })

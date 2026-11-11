@@ -6,9 +6,7 @@ for key, direction in pairs({ h = "h", j = "j", k = "k", l = "l" }) do
   map("n", "<leader>v" .. key, "<C-w>" .. direction, { desc = "Focus window " .. key })
 end
 
--- track whether diagnostics are currently shown
-local diagnostics_on = false
-vim.diagnostic.enable(false)
+map("n", "<leader>uw", "<cmd>setlocal wrap!<CR>", { desc = "Toggle line wrap" })
 
 --Mode navigation
 vim.keymap.set("v", "<C-c>", "<Esc>")

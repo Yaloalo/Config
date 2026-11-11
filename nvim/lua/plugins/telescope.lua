@@ -1,7 +1,6 @@
 return {
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.8",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
@@ -56,23 +55,52 @@ return {
         builtin.find_files(opts)
       end
 
+      local function grep_args()
+        local args = vim.list_extend({}, tconfig.values.vimgrep_arguments)
+        if not respect_gitignore then
+          table.insert(args, "--no-ignore-vcs")
+        end
+        return args
+      end
+
       local function launch_live_grep()
-        local args = vim.tbl_flatten({
-          tconfig.values.vimgrep_arguments,
-          (respect_gitignore and {} or { "--no-ignore-vcs" }),
-        })
+        local args = grep_args()
         last_picker_fn = launch_live_grep
         builtin.live_grep({ vimgrep_arguments = args })
       end
 
       local function launch_grep_string()
         local word = vim.fn.expand("<cword>")
-        local args = vim.tbl_flatten({
-          tconfig.values.vimgrep_arguments,
-          (respect_gitignore and {} or { "--no-ignore-vcs" }),
-        })
+        local args = grep_args()
         last_picker_fn = launch_grep_string
         builtin.grep_string({ search = word, vimgrep_arguments = args })
+      end
+
+      -- Every Markdown heading in the repo, fuzzy-filterable.
+      local function launch_headings()
+        last_picker_fn = launch_headings
+        builtin.grep_string({
+          prompt_title = "Headings",
+          search = "^#{1,6}\\s",
+          use_regex = true,
+          glob_pattern = "*.md",
+          vimgrep_arguments = grep_args(),
+        })
+      end
+
+      -- Notes that link to the current file (by file name, with or without .md).
+      local function launch_backlinks()
+        local name = vim.fn.expand("%:t:r")
+        if name == "" then
+          return notify("Backlinks: buffer has no file name", vim.log.levels.WARN)
+        end
+        last_picker_fn = launch_backlinks
+        builtin.grep_string({
+          prompt_title = "Backlinks → " .. name,
+          search = name,
+          glob_pattern = "*.md",
+          vimgrep_arguments = grep_args(),
+        })
       end
 
       local function launch_file_browser()
@@ -216,7 +244,31 @@ return {
       vim.keymap.set("n", "<leader>ss", launch_grep_string, { desc = " Grep String" })
       vim.keymap.set("n", "<leader>sb", launch_file_browser, { desc = " File Browser" })
       vim.keymap.set("n", "<leader>sc", launch_git_commits, { desc = " Git Commits" })
-      vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "󰌌 Search Keymaps" })
+      vim.keymap.set("n", "<leader>sh", launch_headings, { desc = "󰉫 Headings (all notes)" })
+      vim.keymap.set("n", "<leader>sB", launch_backlinks, { desc = "󰌹 Backlinks to this note" })
+      vim.keymap.set("n", "<leader>so", function()
+        telescope.load_extension("aerial")
+        telescope.extensions.aerial.aerial()
+      end, { desc = "󰉫 Outline (this note)" })
+      vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = " Open buffers" })
+      -- Every documented mapping (core + plugins), scrollable and filterable.
+      local function keybind_menu()
+        builtin.keymaps({
+          prompt_title = "Keybindings",
+          modes = { "n", "x" },
+          show_plug = false,
+          filter = function(map)
+            return map.desc ~= nil and map.desc ~= ""
+          end,
+          layout_strategy = "vertical",
+          layout_config = { width = 0.8, height = 0.9 },
+          previewer = false,
+        })
+      end
+      vim.keymap.set("n", "<leader>?", function()
+        require("core.keymenu").open()
+      end, { desc = "󰌌 Keybinding menu (by plugin)" })
+      vim.keymap.set("n", "<leader>sk", keybind_menu, { desc = "󰌌 Search all keymaps (flat)" })
       vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "󰑎 Resume Last Search" })
 
       -- ─── Standalone Search Neovim Config ──────────────────────────────────

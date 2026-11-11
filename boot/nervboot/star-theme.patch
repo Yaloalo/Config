@@ -1,0 +1,1001 @@
+From d800b49cd85027459625586130db67e611752d9f Mon Sep 17 00:00:00 2001
+From: Lennart Friebel <yaloalo@pm.me>
+Date: Tue, 13 Oct 2026 18:17:51 +0200
+Subject: [PATCH] Add star theme (theme star|eva in nerv.conf)
+
+---
+ assets/fonts/OFL-JetBrainsMono.txt |  93 +++++++++
+ assets/fonts/mono.ttf              | Bin 0 -> 18876 bytes
+ src/config.rs                      |   4 +
+ src/text.rs                        |  15 +-
+ src/ui.rs                          | 300 +++++++++++++++++++++--------
+ 5 files changed, 329 insertions(+), 83 deletions(-)
+ create mode 100644 assets/fonts/OFL-JetBrainsMono.txt
+ create mode 100644 assets/fonts/mono.ttf
+
+diff --git a/assets/fonts/OFL-JetBrainsMono.txt b/assets/fonts/OFL-JetBrainsMono.txt
+new file mode 100644
+index 0000000..8bee414
+--- /dev/null
++++ b/assets/fonts/OFL-JetBrainsMono.txt
+@@ -0,0 +1,93 @@
++Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)
++
++This Font Software is licensed under the SIL Open Font License, Version 1.1.
++This license is copied below, and is also available with a FAQ at:
++https://scripts.sil.org/OFL
++
++
++-----------------------------------------------------------
++SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
++-----------------------------------------------------------
++
++PREAMBLE
++The goals of the Open Font License (OFL) are to stimulate worldwide
++development of collaborative font projects, to support the font creation
++efforts of academic and linguistic communities, and to provide a free and
++open framework in which fonts may be shared and improved in partnership
++with others.
++
++The OFL allows the licensed fonts to be used, studied, modified and
++redistributed freely as long as they are not sold by themselves. The
++fonts, including any derivative works, can be bundled, embedded, 
++redistributed and/or sold with any software provided that any reserved
++names are not used by derivative works. The fonts and derivatives,
++however, cannot be released under any other type of license. The
++requirement for fonts to remain under this license does not apply
++to any document created using the fonts or their derivatives.
++
++DEFINITIONS
++"Font Software" refers to the set of files released by the Copyright
++Holder(s) under this license and clearly marked as such. This may
++include source files, build scripts and documentation.
++
++"Reserved Font Name" refers to any names specified as such after the
++copyright statement(s).
++
++"Original Version" refers to the collection of Font Software components as
++distributed by the Copyright Holder(s).
++
++"Modified Version" refers to any derivative made by adding to, deleting,
++or substituting -- in part or in whole -- any of the components of the
++Original Version, by changing formats or by porting the Font Software to a
++new environment.
++
++"Author" refers to any designer, engineer, programmer, technical
++writer or other person who contributed to the Font Software.
++
++PERMISSION & CONDITIONS
++Permission is hereby granted, free of charge, to any person obtaining
++a copy of the Font Software, to use, study, copy, merge, embed, modify,
++redistribute, and sell modified and unmodified copies of the Font
++Software, subject to the following conditions:
++
++1) Neither the Font Software nor any of its individual components,
++in Original or Modified Versions, may be sold by itself.
++
++2) Original or Modified Versions of the Font Software may be bundled,
++redistributed and/or sold with any software, provided that each copy
++contains the above copyright notice and this license. These can be
++included either as stand-alone text files, human-readable headers or
++in the appropriate machine-readable metadata fields within text or
++binary files as long as those fields can be easily viewed by the user.
++
++3) No Modified Version of the Font Software may use the Reserved Font
++Name(s) unless explicit written permission is granted by the corresponding
++Copyright Holder. This restriction only applies to the primary font name as
++presented to the users.
++
++4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
++Software shall not be used to promote, endorse or advertise any
++Modified Version, except to acknowledge the contribution(s) of the
++Copyright Holder(s) and the Author(s) or with their explicit written
++permission.
++
++5) The Font Software, modified or unmodified, in part or in whole,
++must be distributed entirely under this license, and must not be
++distributed under any other license. The requirement for fonts to
++remain under this license does not apply to any document created
++using the Font Software.
++
++TERMINATION
++This license becomes null and void if any of the above conditions are
++not met.
++
++DISCLAIMER
++THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
++MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
++OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
++COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
++DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
++OTHER DEALINGS IN THE FONT SOFTWARE.
+diff --git a/assets/fonts/mono.ttf b/assets/fonts/mono.ttf
+new file mode 100644
+index 0000000000000000000000000000000000000000..428b892b0e048a1a7e4fc0b902fad29bb2d50314
+GIT binary patch
+literal 18876
+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%0DJe=xfd=jwn*RT0d<q>C
+zF7V#K8xY~3#?HvX%*M<DDy5iN7??AWh8oz|SQ9xISy`P}{iGe#p$geR6)+x^kq)BZ
+zPNS5ll9(c>(<r8>0v_Hn2M=$7mOYpnLuSy}*hNu2aL&lV+uO0W)-B!AAk@MZ;gePF
+z*4FN!rU_1#(Pqr?2tWP*&v1*8g|Uut88bTrXpoSPfpa4R;|@l?4W`<lT6_z`SH>lb
+zPZ_wu^U;h942+SW%mm7(j0}N{43M-B%BHH2pajo$GU}MPxR{taJAVa}rr>2h3@Qxi
+zOeRb@3_1+b4icKGDhe{v;(T13tc*Mio(v2OWx_&?oMPJM>gHx<=4xu{>gJ$17d16g
+z@OlMyGc$8@adtK~b}=z=adzkw%tlv7UR@CxJE3fu96<|lR@M+URta;V9GPq(I~fr@
+z9!FP49wi<gC7yJ{SRoS;76En*e+@P%J}GnI+FD_ADLyGS4Sx-G0TvNc!C1pMK^rM4
+zYavjo0!24yo<^EMp26M0g`Jg&nV*A+iIJHpgO8Jmk%x<kft!&b9W<z8;VZz)#LaEV
+z?Z?0%FDEO*Ak82xB`E>wzzKsEeLyg$ytc8qvMB@`vm2Wmvm1*lgR!zXXt|NOa<F=M
+zl2T%hx|{j}bvGoo(E_CfmmIe^Ub=J%N-+w9+UVZ@Co%Cd+c7XRh&zaYBC8ct<dq?p
+zY>dW?-i*od|K{c~ulW<gz{o&Y4=bZFBjdV%bK@D4A(|K%8Fv2fV0_B#!63-MwwaxQ
+z(MX#W6fGuZ=AwK|pa}^vamJ_pbLaLu#2XvOJ5(r~nYCrs8HI5EkXrvOesv-IAjcK|
+z?_it{HG>;uhPbI66KF_QP2CjIj4O7GGd7NM?4LWgBAh>@&Tor<Z3urj#4wNv-v1{t
+z{$#deP+_oju##qE1hr$B8CaN@Suz=z7(gqo(ivD87+51gv(TUxJ}W4NDl3W#3kh&@
+za<DO|FseWsGv?-IYRbx>45hBFW@Zc;*k%(K7Xu|Oc6K&!H}_0L20K5ihGTKDqXsKK
+zdq#w=uD%HiKPzaZ5i387iN0=Lxc?GU{Q!N_CH~<7+S*I3-Pzgwtd?kN2Y_4~4~-o)
+z&@4VDsMQNv55~yM#F)vz%)r9H%#zLka%dz20|RR!8zU<NYajyygBpXXqMD+PB52VF
+zcqkR*Kyx)UxQoTape|Ha0y~*aIbK)aoL!RB%GlV7Q<B|WUsu;UQkO%LL))>o)<K6u
+zl0!GrIuGPPOMgxdH%pKM)xAuiPB-yZ2f6m_|4EF8nC%$Y!K0-N44@g{bOt77W~Ol1
+zq#+ZtKX_o69on)2jbee8;hg<Cdv+f4nt(rF!2X{0e-dLi+$1IjMg}IvbOzAiBB%xi
+zckCF@O#%-}8w*aGJ^O2305ea(pAe9ndKi@$&oCA-Ff+(GNMqFDNXcB-R8h2t(ScDZ
+z0PKPQMkOW=V)X?u?ttlIU{qp?AV!~{siG)T1Xvp*gU$arOfvtUGcYr#ZDdPv!SB+I
+zYz!{qri!9Aj1N-0z5oAb=x1EVc#`QBgBnBRGzJDXhR7_C&wnzmV~hvaX_5|NpiB*^
+z(Ljq8!POV2)xyYZ%*@Ehk;cxrj#1~|6$WMokN+i10?cU)$_!czMhsRC<{DDM0xV37
+zM(Wa>EDTKAN*s(V%nZyv42(>Stqe>IOs$|kb1SG(4JtI08I(n2L_kCMtfp#e>c%2s
+z;)0Nc5$2}GqGDp=$|h>+qL4)q?4ryfV&bN3Y>;lEx;mq9TsBjbwVAYcU~-5}a0+9T
+zp{|B!KxV{D16>`%nTBTiIy^ni9GPK;cI=F79O5~i0T~=E%^Vp)`qu0}c*XO)f^s;U
+znYQUV@jYcX`}>*0#z4oBkA;De!I2@JNu0@)ft$hCdxK&?go79}BO?oF9tl+Zva*7^
+z2G*>8(hkxLOpL5d;RtC4CMNJYGA364NC!T&)qSd<g>aC8Em1~>{re;K?~gwmaQJY*
+zVNeWYGITJ$W8!1rW?<XQ1}d%0)y>t-#m&Xp#o5*8829!X_f0gO*k{t)Vba@Y+&j@^
+zVy{Ub0~13i!zw0b##ao?4D1Y`^@a>AjObYj+-UP>VPRlkVP^qN{K6U}pk&Ny3Yvmn
+z_b-TX9pkKkfDe!q9m?Ry#LN`Tz{9|{nG5V1Q&mVMscOn98p>!UtjNKsB>3+X<2uLi
+z8JxUKOne+Oqpqibe1fc(8KhTL)l^lK6;hG1GBJa!`gaOq0Hc}X^_1%n6L>jiGB7f@
+zG5lf@Vm!_u&5!{~-QFAY0wNrwL9KKaMh2El21aIPaEpLB2{c*5$Q&f?pvk}lT4>AC
+zz{beR$jrzJ?xaCgv%*v}Ff%d-K_W$(L0UywNJSY`;(_vqIk=f9$82l_sri+a^q4{O
+zj&2@SszyrEaw7Vn?$%J&e>ZD)DRp%zb2m3D4+sO~=K#hK@S0B^26d3D9b`Db-Aa&D
+zD>D-lBO@rigQk?g>sdgS3WJvY!WNkXY!2BNSir%{%)-Z6%oxJh_OFVONko;4OI76G
+zKL!R?2EPBlnY@_pgWKuy47v=~3^O4iqr=0<!o|qI&ccw%z|O$Q!Oocp9#jYAVGCbA
+zMh*_<L|!&-*vya#7UiH7kYGLFzBxB&u?AQpTOuzb8=DiGU!;S!zMi6jun?%BZ)T!r
+zt#7TNrl6~+D<vT$FDwsj`h(ZN@pFo43oEIao2r32ZsMXMY|M<tjG%reXhcB?vX}tW
+z6bH+Ln(4?R_iSP_9lRMCy&W998NJUie)9Uq=Om}BEGMU|%;@Cc&FJIc;O*@or>rb5
+ztIVj(IKk7-5wuXu(a!T<0cepl;}sQoM|l-6@lPEg>#7VBR)(*}dBVWQAnG8*$IHXb
+z&ceXX;00<BiZZf^YcqnHdV<P=Y;5f8rmCz=23rKgm;zWt__l!(7vszYd@}5Rr!i%5
+z%J3}8e)N!mkwJvPh{=yBiGdf?XW?OF0F8YyF*1P)ItJ!8(877fa0bW%U`7T|oyN<+
+zD<UY&$|k9;YHnt(XsQTmeHsfhGjh$7lKN-Cc$i0$YhLE<J4Pp!SOZu^cu)O%`R_R>
+zF=_n&23|=7b~`r*3o{cV13RQKD+zYHD66U|s1++{ENEtC&SdcK_rJf}_(WI&n8XAa
+z9kU)j%3j1H!^xEOcN&K@AIL;51|udHu-mm9)IrTn&^REdxMpBxXhW)xL4*1Jf+9i!
+zENoKRs>;m5#-OILqNt*nIHO<2o!go7xFmTP5C5}}k}_hHWE4NeE5aJUs>Hy=p!?s4
+z$$;qzgF1sLgSUf+BqKX$0F0S|osF42larB+fr*uk329^i)JBO1t;w-v@YB>_WH8Xv
+zFx50wQ<0Yy7Zu>+WM@!kR0l1{VO3H?UT+9meF)CTpc#0`hzDd^6*K~Zl=@sl>s%+)
+z6*Y%>d4{_=Xqs^{g$6{WWXI+yt7&PescC6#ac_=b3~8U;T=egwUvz|fiC3V4j9X|_
+zNyfi5DaGE5dWPDiI{F4WCEA7zObn9$zcZyXJz-E`FkqPNz^S1qC(Xjn0UA+~3W#tp
+zL5x2#aIiCSfV>GC3k6N~v2lWy@c42uva>TJLO2Y5(hi1rwXwxBu(4S}HE}{l(IOpW
+z)l?Z7v^7-?)C?5lWo5)fgar9`*uia3Zs_tQQxh|Db<n5^xH|`1cPK7yZp<#Otj-Qv
+z$7F7<4w?=U6%o50krw46W0v4+9;_c>s-vnedpJ6!e`0c?wo<T~rG`nZoW8j=XL^KX
+zKmv=3ySaOWL8zsXy`Gx7>Yt(wdmGHOGy{#D7FZiw8e20kFf#oAKZ!9Cf8RmSSnz)o
+zqzl0Kua~Lwzce!^12?Qh1!p5%eL+x(iaZwb?~0<Dnxdkb8dIl|ET{;PRbpWL=f%|e
+zUxrzbftf)bTuNi_!+_0FHx~c5w>Tw_skNu)|9^%>Os$M1%z_N;3^_~@pm7}r28KMw
+z9SnI4?F?)TOiWXlzcKVOFt8@@@qk7U89>0Cp`GCzBdB*1!?=R+660?s9i|wjDyFSW
+z&zLosW0}`7zh!Y}$zYkma)gzS)rYl)bp@LuTPNE^c1!jy_B|Z>9O)dz95XqVa$MkK
+z<kaQt<-Ecr!d1ofkXwhlnR_?)YaVf)B%TF4=XrkfhVwS?9^~WYv*l~$yT&if-@<>H
+z|C@lEK(xRjfv<wvf>Q;T2%ZvB5GoSt5n3*EQs|Yiqwoyjy~2-#|A|P6n2Lmm#EVpk
+zREazlRS>liO&4tyT_XBlOkeD(*gtV&@fh)5@jnt1BvwdVl6Wui1L}V!-^<^l!&>9{
+zZN4(_Grs_N`TmQvN(i0N^3(EP0n=ZW1O`wmlL;isz`zv25XBV1V8j%`5X%(75Cg?2
+zOc4z6Oc4wbQ1MKr2nJoKToY3Sg9lU}NFJmo0ICioZVr_LnJK~)!Jxqu!Jy0(!4S$6
+z!Qc!v1EepUDS{z{DS`o{9>fQk15$&G6PY3y<d`BDY@qr;>Oty2dJCXt>O<`_V~Svq
+zhx!G?2Kfu*E)ea*6v5yI#okO23=T{Y3_(m03{Ft?Ev5*DOH2_AH<=<B&O+^b$P~c<
+z@+(Mg3sVGx3e+DU{UE%PDT1MxDS`pS289(!-!!HOh90H}29Uj=um!ohpDBXjCn$|V
+z!_AQ?f&mns$o>Sm4Wx$;8eXt)<AR2}BvS;#e+Gtsy$lThyqF>w7J>2}^PhiLKr#5!
+z@_#hbUyukSPN8HT0}E3G;{;HDn5he7KZ7@fW{hJnVg!u}Gca&M)HZ;60SpYFonT-A
+zFDC{Dh64-=ijyIBF#ll$?aBh}H)8<rO#rE70}aZ9yI`PIAk1L<MHpBZZh`h=F(@#w
+zFfcIaGgvY>FhnsVFk~`hF;p?sF>GhJt{|eIq@boa`Tu{gN&^Nf21kZyhD3%ehHQpv
+zunJ+YiV0v9><kS54=^zN-}Qg@|2+&0|0n)$d*Jjy{ee6<)q~t@!@$7c26i|DxYYn<
+zg2kd3+!!Jlycwbyk{L1?A{qP`{29C$Vi=qlLKqwwd>EV=To@7<;uzu?+!-<$f*5=m
+zf*Fz+!WnWI0vNIw0vQq+(iu`1QW?@17&b8IC~RN|jc|=rQ1ITtz!&Jffh{;HVuOkF
+z293ysG=;9vhz(4ti90zMI2e+Xm6N0u6*n+MZeVa$cG<+h$l#pdq`QGpXM;jQn(hWB
+z9c4vjMcoa|ItnS9nMFhyoSZiZJ1Zn4IBjGSadz6M%Iv&>$vLD#VFQoy1}10c#FPyz
+z0Tr8=n3$XsoHi(?$|!<FH}Q!wI>{((U~*P=+9b><?401Fyn!JgA~kZ87$Zof?gkc}
+z4b0jbM4cl*_H7Vzc7`gDR!C9Ua3Ej<i(1qs4MtvP*JRfXY_1WC8<<rigQ6o8l@+DC
+zA`~_R1VkuqaEO#v*kA!-Swu!EY=o#zOxd6j5TOX=DQqwR$s2%F9tem~NK@$QN>tdu
+z6%dgit*}7>B*z6}nSoel3DOCXk&)6Hm{d3LI45sl2#VOi;0;o&xPix6+Ixc>NR^y-
+z;tm0ZWRQv-tPDw!ktvCh8yK}CBcVQsR7lw%=B(@#sk?zyN5NHL1B+^6ioynV=YWU}
+z?8;6XIFy~F6%`{lFed13U;_vD24-!Al#T33P6{ANkawja&IgejSQA{6H?V3cDs13z
+zR_Idb+Q6v2(STKT1B+T<L_&acVo+p+a-?FU!Ul)nhz*R|(x7mGIz@K_yUqqqXYEZ4
+zOps{i(AmJL?4+!)fkD|RaRXCQ+6Knt4U7pJ*tK*waOx<4T+8R2yn}@yNdXjJ8ypfM
+zK}r%_z^>)e*~H1m;Oy$8r3g<r+&ZWUi3ef|qqgz}2ImbdstF3NUCN1|NCgKrgES~Y
+zHYiAMaDWHc24+>|L>Gt^yg0OPPzi|GzyQ((^%}A!K2Z8scG}F#!@%qs5TPiotQe`K
+zsJnq*XCo7n>xPs>7u^j4IvW@h6cje_J9~kArm%ru*(q{^0Eib9p|C*!9AAPu3L6B#
+zfugX3g(101IdOxabAm!wg2DztWhZ6b4MIBJArTu{Qd}ZcHt?n@SLkjK*6|LE@D7Fu
+zN-IXHY!C*Ei|A}*5ONNU*eE3Ayn!*%X@j6PD9deNQgzzM4<ZDZRGl_3iYY5>U{(!?
+z*a*sp8(37Gy1EoV)(U7TDsNy+gt4U|@*pits)-u}v=k#Z@H@M25O8)+*uaDuSqdAl
+zM&U*V24Q8F4UEnk80<DNGBSd*y{HbuMg}I=kcbUJ%1#Qd8~Bu+Ht;HMU`=pRNZ2kR
+z!N?%UAk5(8<OB)<5oM<hjENgXIJ7r(YfCFd>TVFz*~lQOt-C>7XCotsmeASA1fnH%
+zHZp@~DV>chAX-{yBP)oO(b>obqGfe9vV&+josAqIT3%-(Cy3V8QHF*82DSw6kO*Z3
+zy$y`9pxmOnK?g}v3@%v+k<>+!RD(+vK_nG)7&h>0<MihS#>A}<uY&xE>_0`FjSLFf
+zx*L>qHZp=}Wu1*oAX-IdBQuCr)!E1bqSbUZvVv%JosDcDT0>_eJBZfQ*~kH+wRARe
+zf@nP*1siZi($`T)*dURh;H<oXF~J#BID;~w9w^Nk=xor}-k`6gyTMRLLBU-CM{Fu5
+zS}21GcDyR26(e;w7{Q`=BOjY9D8+3s)Y{0(DC!zv5DAV&W2E50rN%@@!4&LrQym7V
+z8duC>VgsW#*0cu_XAs*0uKrx?lr1)zFp7fwYNn%Lqu`FihZ`826D@Q%nCs|?+vskv
+zAf$8yqjR!_?gmSpjZ6$;stS4v?w~Sm1Cy#}SC_l8yK<sJM3OY9)KzxcWWmTNDx#&k
+z!AfTXgV+XfWv2}+svB5T!OAxBFgR`CcGgbq(o<GYu<5eU-C&KXOhFH<P+<d`vJ*_T
+z!iI!^2!#y}ff1Wo6j&9cH?yd*N<}(>N?I;wg)U{V4rRB54Q$Tn*)>671EV&iR$_5Z
+zNKxLv>YSJo5V3*9IZ=88t8+r+24+=sJ&DQ+3L99|l-&|7q?I>tIlF;sEG}oTEeQ(P
+zEKvs8qP&64IRO+Itg49{STRi9z@nB2s;xkdU{*~?ftI8QyCQWr*ucU<K|x^ys~R*c
+zlx-|@H`v0ZHgG9BDJUqoDZ6iA)K&(?q8&^Q>={T%Z(s<C&{MEcRs`3#Ob|f@kh`E!
+zv4Kr>1FNbhD0{%#E|5sXOnC{)(AZK2C3$<8Z3-K>oS{xsNB}i(&;t?{#SS{k3VNVW
+zblV{A91$QL6d9pl6REe+fKfzScY`B}Y>;#SimVfgEKD!5dFVQvbv9UOBP)Puf?4RI
+zv%y-sOF_W~l*YO&a4X%w=B&5DKwEc%E7;4RWUK}W`NR!8%1)4!3QEq(3N{LQ$`()$
+zx#?`=Vo`MhrGAhWRah8-tRtMH-LWMwQ2HV@6>nftbpw@SHp&*#ib&~2F%s%dcb$z4
+zR@$&o@zB}GV6CkPiZhTyp}v6!fv3&}22n`1-^2jQ;lg?w%(Qejc;OKD*4fCwC?dSU
+zTuXO@kIn{5E!_>ipip#GR?t&$>rzgHg_fTVC_!)V)z;nMud|7P!A)CtLx9dE21XDg
+zP-hb(SR_bi6C+q87^KEsTX#bUNDYV)3Q_}Ngn`t67~wjb85kIxwRJZ{=xheH!L@Za
+zMCxp2gos7yY-VHx%SMCLF@n^^fYgCmu^@F|Rvbtjm=zDQ(^Xq{LjuT75F-&}Cy0>*
+zvJ=Ee2C4DT*4>Z-QUhY7g4BQ*X&^NqMmoqo1{ZDJ4H+Q&z^qJ=ePC7=$UZPD8>EgA
+zq%H@f4$R60sROg}K<dD(e4UL9Ht+~60P{9DXzOk$gfJbobvG1&0v)7mgOj%IhGLzK
+zj5gX}H6;)xNKGkN4M+l{rc7regDu?Daxf39qXNPN>8OM-LCULiHZs~mjI4$*K?-Uh
+zOpt<FosA53aP#WGJg|B75GF`@1B3}u-l(&Y(GFr>6NCv;&<tUM6tw7UWUz;u*9zu=
+z&1-`&LCV`9Opx*posEq45c4`AOpt;u2ot2BTW1qDxMjP6O?ndx6SHfCvZAzNWTcb!
+z29DGX%qjsDunJw5!Fvb8iJ*v$jEsGe8yF$QX2C`VcBgF&43371tPENpjsuS$iyMm>
+zhZ=_jJ1ZAdD2U06$&O8rO`a7j#N)J2_<-O6-UFNm*c=#G8Mw7JG6*{DV{m{&kl0QJ
+zW(EeAjVg>Cfe{-VIwC;)6qk(}ApQ;x28aNIOQiHhb&$|5js^xs7Ke`H5U@%Hmq-wB
+z;0a*zV6tG-V3T5H<<r{1_`h`nOYcS|2A9pODQpZbpp#s{jRzu$D26D80EPgjTcCY5
+z3=IE$n4W+}!~g&I@56vBcZ*34F8hQ@51%|UCzAnK-krf66ab9Y|En1t{+BU8`OJ2V
+zb<EC;pfN3WhA7a;9t&s;V-I*7f{}%jfssLmVGmTCiGh#d29(XrV8ieX%4T8EVN`;$
+zSs6kY{h(|%1}(-#49*Ps3<V683`Go?4CxFR3?&Q-3`PtFV64Cp!jQp`%AmmD#gNKS
+z!r;VE#E{64$&klT%%H&F%aG5I$B@sUz!1Pt#E{RB#gNL74A$?+P|8rkkin48Py|+~
+z0XDaUp@5;7!HPkjL7yR=Arq{klp%>hk0F^MpCOk)AB!#6#9;PnVo{H9RS-ieLpnn#
+zLk>eCLlJ`!gC2u1g8_pHgEfN}gA<rU_YuroT?SOW`2CKmHjE(^?B`5y*nmP3VXp#1
+z2}21(8bcyDbn+Q8z#$0=Zw-br215ot1`7r~1``H726F~o22+L<22+M425i2><x<GF
+z76Svr|5VWacJLS#YT{;OVEq4|fgdabS~LifWdfxK2GGouDuXHmBZE4F8CV`P{>8;0
+w!yw1N=;G!R!oUF@;{xr@1L*>dsWUKeF{m+UFff7T`En9V@)#u0RDsn30PDD9RR910
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/config.rs b/src/config.rs
+index 38480f7..3ae11e8 100644
+--- a/src/config.rs
++++ b/src/config.rs
+@@ -25,6 +25,8 @@ pub struct Config {
+     pub default: usize,
+     pub resolution: Option<(usize, usize)>,
+     pub host: String,
++    /// `theme star` swaps the NERV look for the deep-space one.
++    pub star: bool,
+     pub entries: Vec<Entry>,
+     pub notes: Vec<String>,
+ }
+@@ -39,6 +41,7 @@ pub fn load() -> Config {
+         default: 0,
+         resolution: None,
+         host: String::from("LOCAL"),
++        star: false,
+         entries: Vec::new(),
+         notes: Vec::new(),
+     };
+@@ -69,6 +72,7 @@ pub fn load() -> Config {
+                 "timeout" => cfg.timeout = val.parse().unwrap_or(cfg.timeout),
+                 "default" => cfg.default = val.parse().unwrap_or(0),
+                 "host" => cfg.host = val.to_string(),
++                "theme" => cfg.star = val == "star",
+                 "bls" => bls = yes,
+                 "uki" => uki = yes,
+                 "via-systemd-boot" => via_sd = if val == "auto" { None } else { Some(yes) },
+diff --git a/src/text.rs b/src/text.rs
+index 6ac4d56..d6ba17c 100644
+--- a/src/text.rs
++++ b/src/text.rs
+@@ -5,11 +5,13 @@ use fontdue::{Font, FontSettings};
+ 
+ static MINCHO: &[u8] = include_bytes!("../assets/fonts/mincho.ttf");
+ static BARLOW: &[u8] = include_bytes!("../assets/fonts/barlow.ttf");
++static MONO: &[u8] = include_bytes!("../assets/fonts/mono.ttf");
+ 
+ #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug)]
+ pub enum Face {
+     Mincho = 0,
+     Sans = 1,
++    Mono = 2,
+ }
+ 
+ #[derive(Clone, Copy)]
+@@ -56,23 +58,26 @@ struct Glyph {
+ type Key = (u8, char, u32, u32);
+ 
+ pub struct Type {
+-    fonts: [Font; 2],
++    fonts: [Font; 3],
+     cache: BTreeMap<Key, Glyph>,
+ }
+ 
+ impl Type {
+     pub fn new() -> Self {
+         let load = |b: &[u8]| Font::from_bytes(b, FontSettings::default()).expect("font parse");
+-        Type { fonts: [load(MINCHO), load(BARLOW)], cache: BTreeMap::new() }
++        Type { fonts: [load(MINCHO), load(BARLOW), load(MONO)], cache: BTreeMap::new() }
+     }
+ 
+     fn face_for(&self, face: Face, ch: char) -> usize {
+         let f = face as usize;
+         if self.fonts[f].lookup_glyph_index(ch) != 0 || ch == ' ' {
+-            f
+-        } else {
+-            1 - f
++            return f;
+         }
++        // Fall back to Barlow for symbols, then Mincho for kanji.
++        [Face::Sans as usize, Face::Mincho as usize]
++            .into_iter()
++            .find(|&i| self.fonts[i].lookup_glyph_index(ch) != 0)
++            .unwrap_or(f)
+     }
+ 
+     fn glyph(&mut self, face: Face, ch: char, px: f32, squash: f32) -> &Glyph {
+diff --git a/src/ui.rs b/src/ui.rs
+index 1f12529..5aaf036 100644
+--- a/src/ui.rs
++++ b/src/ui.rs
+@@ -6,14 +6,41 @@ use alloc::format;
+ use alloc::string::{String, ToString};
+ use alloc::vec::Vec;
+ 
+-pub const VOID: Rgb = Rgb::hex(0x000000);
+-pub const GRID: Rgb = Rgb::hex(0x1a0b04);
+-pub const LINE: Rgb = Rgb::hex(0x5c2508);
+-pub const AMBER: Rgb = Rgb::hex(0xb35a12);
+-pub const ORANGE: Rgb = Rgb::hex(0xff7e1a);
+-pub const RED: Rgb = Rgb::hex(0xf0141e);
+-pub const WHITE: Rgb = Rgb::hex(0xfff1e2);
+-pub const GREEN: Rgb = Rgb::hex(0x3ce07c);
++/// Colour roles. Eva is the original NERV palette; star mirrors the
++/// deep-space desktop (quickshell/blackhole/Theme.qml): white on black.
++#[derive(Clone, Copy)]
++pub struct Palette {
++    pub void: Rgb,
++    pub grid: Rgb,
++    pub line: Rgb,
++    pub amber: Rgb,
++    pub orange: Rgb,
++    pub red: Rgb,
++    pub white: Rgb,
++    pub green: Rgb,
++}
++
++pub const EVA: Palette = Palette {
++    void: Rgb::hex(0x000000),
++    grid: Rgb::hex(0x1a0b04),
++    line: Rgb::hex(0x5c2508),
++    amber: Rgb::hex(0xb35a12),
++    orange: Rgb::hex(0xff7e1a),
++    red: Rgb::hex(0xf0141e),
++    white: Rgb::hex(0xfff1e2),
++    green: Rgb::hex(0x3ce07c),
++};
++
++pub const STAR: Palette = Palette {
++    void: Rgb::hex(0x000000),
++    grid: Rgb::hex(0x0a0f19),
++    line: Rgb::hex(0x505050),
++    amber: Rgb::hex(0x8190a5),
++    orange: Rgb::hex(0xffffff),
++    red: Rgb::hex(0xff607c),
++    white: Rgb::hex(0xf7fbff),
++    green: Rgb::hex(0x79c99e),
++};
+ 
+ pub const INTRO_SECS: f32 = 0.75;
+ pub const ENGAGE_SECS: f32 = 1.1;
+@@ -47,14 +74,10 @@ pub struct Scene {
+     timeout: u32,
+     scroll: usize,
+     heading_right: f32,
++    p: Palette,
++    star: bool,
+ }
+ 
+-fn display(px: f32) -> Style {
+-    Style::new(Face::Mincho, px, WHITE).squash(0.68)
+-}
+-fn sans(px: f32, c: Rgb) -> Style {
+-    Style::new(Face::Sans, px, c)
+-}
+ 
+ impl Scene {
+     pub fn new(w: usize, h: usize, ty: &mut Type, cfg: &Config, info: &SysInfo) -> Self {
+@@ -72,11 +95,43 @@ impl Scene {
+             timeout: cfg.timeout,
+             scroll: 0,
+             heading_right: 0.0,
++            p: if cfg.star { STAR } else { EVA },
++            star: cfg.star,
+         };
+         sc.paint_base(ty, cfg, info);
+         sc
+     }
+ 
++    /// Display type: squashed Mincho kanji (eva) or wide-tracked mono (star).
++    fn display(&self, px: f32) -> Style {
++        if self.star {
++            Style::new(Face::Mono, px * 0.42, self.p.white).track(px * 0.03)
++        } else {
++            Style::new(Face::Mincho, px, self.p.white).squash(0.68)
++        }
++    }
++    /// Label type: Barlow Condensed (eva) or JetBrains Mono, a bit smaller (star).
++    fn sans(&self, px: f32, c: Rgb) -> Style {
++        if self.star {
++            Style::new(Face::Mono, px * 0.72, c)
++        } else {
++            Style::new(Face::Sans, px, c)
++        }
++    }
++    /// Star mode has no kanji: each one maps to a short English word.
++    fn word(&self, kanji: &'static str) -> &'static str {
++        if !self.star {
++            return kanji;
++        }
++        match kanji {
++            "起動" => "BOOT",
++            "警告" => "WARN",
++            "自動" => "AUTO",
++            "待機" => "IDLE",
++            other => other,
++        }
++    }
++
+     fn x(&self, v: f32) -> f32 {
+         v * self.sx
+     }
+@@ -116,40 +171,44 @@ impl Scene {
+ 
+     fn paint_base(&mut self, ty: &mut Type, cfg: &Config, info: &SysInfo) {
+         let mut cv = core::mem::replace(&mut self.base, Canvas::new(0, 0));
+-        cv.clear(VOID);
+-        cv.hex_grid(self.z(38.0), GRID);
++        cv.clear(self.p.void);
++        if self.star {
++            self.static_stars(&mut cv);
++        } else {
++            cv.hex_grid(self.z(38.0), self.p.grid);
++        }
+ 
+         let mx = self.mx();
+         let right = self.right();
+ 
+-        let big = display(self.z(250.0));
+-        self.heading_right = ty.draw(&mut cv, mx - self.z(6.0), self.y(276.0), "起動", &big);
++        let big = self.display(self.z(250.0));
++        self.heading_right = ty.draw(&mut cv, mx - self.z(6.0), self.y(276.0), self.word("起動"), &big);
+ 
+         let hx = self.heading_right + self.z(44.0);
+-        ty.draw(&mut cv, hx, self.y(162.0), "BOOT SEQUENCE", &sans(self.z(66.0), ORANGE).track(self.z(3.0)));
+-        ty.draw(&mut cv, hx, self.y(208.0), &format!("HOST  {}", cfg.host.to_uppercase()), &sans(self.z(30.0), AMBER).track(self.z(1.5)));
++        ty.draw(&mut cv, hx, self.y(162.0), if self.star { "DEEP FIELD" } else { "BOOT SEQUENCE" }, &self.sans(self.z(66.0), self.p.orange).track(self.z(3.0)));
++        ty.draw(&mut cv, hx, self.y(208.0), &format!("HOST  {}", cfg.host.to_uppercase()), &self.sans(self.z(30.0), self.p.amber).track(self.z(1.5)));
+ 
+         let ry = self.y(304.0) as i32;
+-        cv.fill(mx as i32, ry, (right - mx) as i32, self.z(3.0).max(2.0) as i32, ORANGE);
++        cv.fill(mx as i32, ry, (right - mx) as i32, self.z(3.0).max(2.0) as i32, self.p.orange);
+         let step = self.z(24.0);
+         let mut i = 0;
+         let mut tx = mx;
+         while tx <= right {
+             let len = if i % 5 == 0 { self.z(16.0) } else { self.z(7.0) };
+-            cv.fill(tx as i32, ry + self.z(6.0) as i32, self.z(2.0).max(1.0) as i32, len as i32, if i % 5 == 0 { AMBER } else { LINE });
++            cv.fill(tx as i32, ry + self.z(6.0) as i32, self.z(2.0).max(1.0) as i32, len as i32, if i % 5 == 0 { self.p.amber } else { self.p.line });
+             tx += step;
+             i += 1;
+         }
+ 
+         let sl = self.side_left();
+         let top = self.list_top();
+-        cv.brackets(sl as i32, top as i32, (right - sl) as i32, self.z(214.0) as i32, self.z(26.0) as i32, self.z(3.0).max(2.0) as i32, AMBER);
+-        let cap = sans(self.z(24.0), AMBER).track(self.z(2.0));
++        cv.brackets(sl as i32, top as i32, (right - sl) as i32, self.z(214.0) as i32, self.z(26.0) as i32, self.z(3.0).max(2.0) as i32, self.p.amber);
++        let cap = self.sans(self.z(24.0), self.p.amber).track(self.z(2.0));
+         ty.draw(&mut cv, sl + self.z(28.0), top + self.z(46.0), "TARGET", &cap);
+         ty.draw(&mut cv, sl + self.z(28.0), top + self.z(136.0), "OPTIONS", &cap);
+ 
+-        let label = sans(self.z(24.0), AMBER).track(self.z(1.5));
+-        let value = sans(self.z(28.0), WHITE.dim(0.85));
++        let label = self.sans(self.z(24.0), self.p.amber).track(self.z(1.5));
++        let value = self.sans(self.z(28.0), self.p.white.dim(0.85));
+         let secure = match info.secure_boot {
+             Some(true) => "on",
+             Some(false) => "off",
+@@ -170,11 +229,11 @@ impl Scene {
+             ty.draw(&mut cv, vx, by, &fitted, &value);
+         }
+ 
+-        let legend = sans(self.z(24.0), AMBER).track(self.z(1.0));
++        let legend = self.sans(self.z(24.0), self.p.amber).track(self.z(1.0));
+         let mut lx = mx;
+         for (k, v) in [("↑ ↓", "SELECT"), ("ENTER", "BOOT"), ("1–9", "QUICK BOOT"), ("ESC", "HOLD"), ("F2", "FIRMWARE")] {
+             let ly = self.y(1040.0);
+-            lx = ty.draw(&mut cv, lx, ly, k, &legend.color(ORANGE)) + self.z(10.0);
++            lx = ty.draw(&mut cv, lx, ly, k, &legend.color(self.p.orange)) + self.z(10.0);
+             lx = ty.draw(&mut cv, lx, ly, v, &legend) + self.z(38.0);
+         }
+ 
+@@ -184,9 +243,14 @@ impl Scene {
+     pub fn render(&mut self, ty: &mut Type, f: &Frame) {
+         let mut cv = core::mem::replace(&mut self.back, Canvas::new(0, 0));
+         cv.copy_from(&self.base);
++        if self.star {
++            self.drift_stars(&mut cv, f);
++        }
+ 
+         let urgent = matches!(f.countdown, Some(c) if c <= 3.0) || matches!(f.phase, Phase::Engage(_));
+-        self.hazard_band(&mut cv, f, urgent);
++        if !self.star {
++            self.hazard_band(&mut cv, f, urgent);
++        }
+         self.status_line(&mut cv, ty, f);
+         self.clock(&mut cv, ty, f);
+         self.list(&mut cv, ty, f);
+@@ -200,7 +264,9 @@ impl Scene {
+             Phase::Engage(e) => self.engage(&mut cv, ty, f, e),
+             Phase::Idle => {}
+         }
+-        cv.scanlines(3, 214);
++        if !self.star {
++            cv.scanlines(3, 214);
++        }
+         self.back = cv;
+     }
+ 
+@@ -208,19 +274,19 @@ impl Scene {
+         let h = self.z(16.0) as i32;
+         let period = self.z(22.0) as i32;
+         let phase = if urgent { (f.t * 240.0) as i32 } else { 0 };
+-        let (a, b) = if urgent { (RED, VOID) } else { (ORANGE, VOID) };
++        let (a, b) = if urgent { (self.p.red, self.p.void) } else { (self.p.orange, self.p.void) };
+         cv.hazard(0, 0, self.w as i32, h, period, a, b, phase);
+     }
+ 
+     fn status_line(&self, cv: &mut Canvas, ty: &mut Type, f: &Frame) {
+         let hx = self.heading_right + self.z(44.0);
+-        let st = sans(self.z(30.0), AMBER).track(self.z(1.5));
++        let st = self.sans(self.z(30.0), self.p.amber).track(self.z(1.5));
+         let max = self.x(1250.0) - hx;
+         let (text, color) = match (f.phase, f.message, f.countdown) {
+-            (Phase::Engage(_), _, _) => (String::from("ENGAGING"), RED),
+-            (_, Some(m), _) => (m.to_string(), RED),
+-            (_, _, Some(_)) => (String::from("AUTO BOOT ARMED"), ORANGE),
+-            _ => (String::from("STANDING BY"), AMBER),
++            (Phase::Engage(_), _, _) => (String::from("ENGAGING"), self.p.red),
++            (_, Some(m), _) => (m.to_string(), self.p.red),
++            (_, _, Some(_)) => (String::from("AUTO BOOT ARMED"), self.p.orange),
++            _ => (String::from("STANDING BY"), self.p.amber),
+         };
+         let fitted = ty.fit(&text, &st, max);
+         ty.draw(cv, hx, self.y(252.0), &fitted, &st.color(color));
+@@ -229,18 +295,18 @@ impl Scene {
+     fn clock(&self, cv: &mut Canvas, ty: &mut Type, f: &Frame) {
+         let Some((h, m, s)) = f.clock else { return };
+         let right = self.right();
+-        let big = sans(self.z(112.0), ORANGE).tabular();
++        let big = self.sans(self.z(112.0), self.p.orange).tabular();
+         let colon_on = libm::fmodf(f.t, 1.0) < 0.5;
+         let parts = [format!("{:02}", h), String::from(":"), format!("{:02}", m), String::from(":"), format!("{:02}", s)];
+         let widths: Vec<f32> = parts.iter().map(|p| ty.measure(p, &big)).collect();
+         let total: f32 = widths.iter().sum::<f32>() + self.z(6.0) * 4.0;
+         let mut x = right - total;
+         for (p, w) in parts.iter().zip(widths.iter()) {
+-            let c = if p == ":" && !colon_on { LINE } else { ORANGE };
++            let c = if p == ":" && !colon_on { self.p.line } else { self.p.orange };
+             ty.draw(cv, x, self.y(196.0), p, &big.color(c));
+             x += w + self.z(6.0);
+         }
+-        ty.draw_right(cv, right, self.y(246.0), f.date, &sans(self.z(30.0), AMBER).track(self.z(2.0)));
++        ty.draw_right(cv, right, self.y(246.0), f.date, &self.sans(self.z(30.0), self.p.amber).track(self.z(2.0)));
+     }
+ 
+     fn list(&mut self, cv: &mut Canvas, ty: &mut Type, f: &Frame) {
+@@ -251,8 +317,8 @@ impl Scene {
+         let top = self.list_top();
+ 
+         if self.entries.is_empty() {
+-            ty.draw(cv, mx, top + self.z(110.0), "NO ENTRIES", &display(self.z(110.0)).color(WHITE.dim(0.5)));
+-            let st = sans(self.z(30.0), AMBER);
++            ty.draw(cv, mx, top + self.z(110.0), "NO ENTRIES", &self.display(self.z(110.0)).color(self.p.white.dim(0.5)));
++            let st = self.sans(self.z(30.0), self.p.amber);
+             ty.draw(cv, mx, top + self.z(170.0), "Add entry lines to \\EFI\\nerv\\nerv.conf,", &st);
+             ty.draw(cv, mx, top + self.z(210.0), "or put Boot Loader Spec files in \\loader\\entries.", &st);
+             return;
+@@ -273,25 +339,25 @@ impl Scene {
+             let y0 = top + row as f32 * (rh + gap);
+             let sel = idx == f.selected;
+             let (fg, sub, num_bg, num_fg) = if sel {
+-                let fill = if engage_flash { WHITE } else { ORANGE };
++                let fill = if engage_flash { self.p.white } else { self.p.orange };
+                 cv.poly(&[(mx, y0), (lr - chamfer, y0), (lr, y0 + chamfer), (lr, y0 + rh), (mx, y0 + rh)], fill);
+-                (VOID, VOID.mix(fill, 0.25), VOID, fill)
++                (self.p.void, self.p.void.mix(fill, 0.25), self.p.void, fill)
+             } else {
+-                cv.fill(mx as i32, (y0 + rh) as i32 - 2, (lr - mx) as i32, 2, LINE);
+-                (WHITE.dim(0.78), AMBER, LINE.dim(0.55), AMBER)
++                cv.fill(mx as i32, (y0 + rh) as i32 - 2, (lr - mx) as i32, 2, self.p.line);
++                (self.p.white.dim(0.78), self.p.amber, self.p.line.dim(0.55), self.p.amber)
+             };
+ 
+             let nw = self.z(78.0);
+             cv.fill(mx as i32, y0 as i32, nw as i32, rh as i32, num_bg);
+             let num = format!("{}", idx + 1);
+-            let ns = sans(self.z(50.0), num_fg).tabular();
++            let ns = self.sans(self.z(50.0), num_fg).tabular();
+             let ncap = ty.cap_height(&ns);
+             ty.draw_center(cv, mx + nw / 2.0, y0 + rh / 2.0 + ncap / 2.0, &num, &ns);
+ 
+-            let name_st = display(self.z(74.0)).color(fg);
++            let name_st = self.display(self.z(74.0)).color(fg);
+             let cap = ty.cap_height(&name_st);
+             let base = y0 + rh / 2.0 + cap / 2.0;
+-            let sub_st = sans(self.z(28.0), sub).track(self.z(1.0));
++            let sub_st = self.sans(self.z(28.0), sub).track(self.z(1.0));
+             let sub_w = ty.measure(&e.subtitle, &sub_st);
+             let name_x = mx + nw + self.z(28.0);
+             let name_max = lr - self.z(40.0) - sub_w - name_x - self.z(24.0);
+@@ -300,12 +366,12 @@ impl Scene {
+             ty.draw_right(cv, lr - self.z(40.0), base, &e.subtitle, &sub_st);
+ 
+             if sel && libm::fmodf(f.t * 2.4, 1.0) < 0.55 {
+-                cv.fill((mx - self.z(30.0)) as i32, y0 as i32, self.z(14.0) as i32, rh as i32, RED);
++                cv.fill((mx - self.z(30.0)) as i32, y0 as i32, self.z(14.0) as i32, rh as i32, self.p.red);
+             }
+         }
+ 
+         if self.entries.len() > vis {
+-            let st = sans(self.z(24.0), AMBER).track(self.z(1.5));
++            let st = self.sans(self.z(24.0), self.p.amber).track(self.z(1.5));
+             let txt = format!("{}–{} OF {}", self.scroll + 1, (self.scroll + vis).min(self.entries.len()), self.entries.len());
+             ty.draw_right(cv, lr, self.list_bottom() + self.z(30.0), &txt, &st);
+         }
+@@ -332,13 +398,13 @@ impl Scene {
+             Action::Reboot => (String::from("Cold reboot"), String::new()),
+             Action::PowerOff => (String::from("Power off"), String::new()),
+         };
+-        let vs = sans(self.z(32.0), WHITE);
++        let vs = self.sans(self.z(32.0), self.p.white);
+         let t = ty.fit(&target, &vs, max);
+         ty.draw(cv, sl, top + self.z(90.0), &t, &vs);
+ 
+-        let os = sans(self.z(25.0), WHITE.dim(0.75));
++        let os = self.sans(self.z(25.0), self.p.white.dim(0.75));
+         if opts.is_empty() {
+-            ty.draw(cv, sl, top + self.z(176.0), "none", &os.color(LINE.mix(AMBER, 0.5)));
++            ty.draw(cv, sl, top + self.z(176.0), "none", &os.color(self.p.line.mix(self.p.amber, 0.5)));
+         } else {
+             for (i, line) in wrap(ty, &opts, &os, max, 2).iter().enumerate() {
+                 ty.draw(cv, sl, top + self.z(176.0) + i as f32 * self.z(28.0), line, &os);
+@@ -364,10 +430,10 @@ impl Scene {
+                 let step = (tick + (h >> 8) % period) / period;
+                 let on = hash(i ^ step.wrapping_mul(0x9E37_79B9)) % 100 < 52;
+                 let color = match (urgent, h % 100) {
+-                    (true, _) => RED,
+-                    (_, 0..=11) => RED,
+-                    (_, 12..=19) => GREEN,
+-                    _ => ORANGE,
++                    (true, _) => self.p.red,
++                    (_, 0..=11) => self.p.red,
++                    (_, 12..=19) => self.p.green,
++                    _ => self.p.orange,
+                 };
+                 let x = left + c as f32 * (lw + gap);
+                 let y = top + r as f32 * (lh + gap);
+@@ -379,8 +445,8 @@ impl Scene {
+     fn countdown(&self, cv: &mut Canvas, ty: &mut Type, f: &Frame) {
+         let mx = self.mx();
+         let lr = self.list_right();
+-        let label = sans(self.z(26.0), AMBER).track(self.z(2.0));
+-        let big = sans(self.z(92.0), ORANGE).tabular();
++        let label = self.sans(self.z(26.0), self.p.amber).track(self.z(2.0));
++        let big = self.sans(self.z(92.0), self.p.orange).tabular();
+         let base = self.y(990.0);
+         let armed = f.countdown.is_some();
+         let urgent = matches!(f.countdown, Some(c) if c <= 3.0);
+@@ -389,11 +455,11 @@ impl Scene {
+         let cell = ty.measure("0", &big);
+         if let Some(c) = f.countdown {
+             let secs = format!("{:02}", libm::ceilf(c.max(0.0)) as u32);
+-            ty.draw(cv, mx, base, &secs, &big.color(if urgent { RED } else { ORANGE }));
++            ty.draw(cv, mx, base, &secs, &big.color(if urgent { self.p.red } else { self.p.orange }));
+         } else {
+             let cap = ty.cap_height(&big);
+             for i in 0..2 {
+-                cv.fill((mx + i as f32 * cell + cell * 0.14) as i32, (base - cap / 2.0) as i32, (cell * 0.72) as i32, self.z(9.0) as i32, LINE);
++                cv.fill((mx + i as f32 * cell + cell * 0.14) as i32, (base - cap / 2.0) as i32, (cell * 0.72) as i32, self.z(9.0) as i32, self.p.line);
+             }
+         }
+ 
+@@ -408,9 +474,9 @@ impl Scene {
+         let by = base - bh;
+         for i in 0..segs {
+             let c = if armed && i < lit {
+-                if urgent { RED } else { ORANGE }
++                if urgent { self.p.red } else { self.p.orange }
+             } else {
+-                LINE.dim(0.6)
++                self.p.line.dim(0.6)
+             };
+             cv.fill((bx + i as f32 * (sw + sg)) as i32, by as i32, sw as i32, bh as i32, c);
+         }
+@@ -424,37 +490,111 @@ impl Scene {
+         let blink = libm::fmodf(f.t * 4.0, 1.0) < 0.5;
+         let name = self.entries.get(f.selected).map(|e| e.title.as_str()).unwrap_or("");
+         let (kanji, caption, fill, fg) = match (f.phase, f.countdown) {
+-            (Phase::Engage(_), _) => ("起動", format!("ENGAGING  {}", name), Some(RED), VOID),
+-            (_, Some(c)) if c <= 3.0 => ("警告", format!("BOOTING  {}", name), if blink { Some(RED) } else { None }, if blink { VOID } else { RED }),
+-            (_, Some(_)) => ("自動", String::from("AUTO BOOT ARMED"), None, ORANGE),
+-            _ => ("待機", String::from("WAITING FOR INPUT"), None, AMBER),
++            (Phase::Engage(_), _) => ("起動", format!("ENGAGING  {}", name), Some(self.p.red), self.p.void),
++            (_, Some(c)) if c <= 3.0 => ("警告", format!("BOOTING  {}", name), if blink { Some(self.p.red) } else { None }, if blink { self.p.void } else { self.p.red }),
++            (_, Some(_)) => ("自動", String::from("AUTO BOOT ARMED"), None, self.p.orange),
++            _ => ("待機", String::from("WAITING FOR INPUT"), None, self.p.amber),
+         };
+         match fill {
+             Some(c) => cv.fill(x, y, w, h, c),
+             None => cv.frame(x, y, w, h, self.z(3.0).max(2.0) as i32, fg.dim(0.8)),
+         }
+-        let ks = display(self.z(70.0)).color(fg);
++        let ks = self.display(self.z(70.0)).color(fg);
+         let cap = ty.cap_height(&ks);
+         let kx = x as f32 + self.z(26.0);
+         let base = y as f32 + h as f32 / 2.0 + cap / 2.0;
+-        let end = ty.draw(cv, kx, base, kanji, &ks);
+-        let cs = sans(self.z(30.0), fg).track(self.z(2.0));
++        // Star mode drops the word: the caption already says it.
++        let end = if self.star { kx - self.z(26.0) } else { ty.draw(cv, kx, base, kanji, &ks) };
++        let cs = self.sans(self.z(30.0), fg).track(self.z(2.0));
+         let ccap = ty.cap_height(&cs);
+         let max = (x + w) as f32 - end - self.z(52.0);
+         let fitted = ty.fit(&caption, &cs, max);
+         ty.draw(cv, end + self.z(26.0), y as f32 + h as f32 / 2.0 + ccap / 2.0, &fitted, &cs);
+     }
+ 
++    /// Star mode backdrop: a fixed sprinkle of dim stars baked into the base.
++    fn static_stars(&self, cv: &mut Canvas) {
++        let n = (self.w * self.h / 7000).max(150) as u32;
++        for i in 0..n {
++            let h = hash(i.wrapping_mul(0x9E37_79B9) ^ 0x51ed);
++            let x = (h % self.w as u32) as i32;
++            let y = (hash(h) % self.h as u32) as i32;
++            let b = 36 + hash(h ^ 0x5bd1) % 120;
++            let c = Rgb::hex(b << 16 | b << 8 | b);
++            cv.put(x, y, c);
++            if hash(h ^ 0x77) % 11 == 0 {
++                cv.put(x + 1, y, c);
++                cv.put(x, y + 1, c);
++                cv.put(x + 1, y + 1, c);
++            }
++        }
++    }
++
++    /// Star position for drift and warp: the desktop SpaceField projection.
++    /// Returns (x, y, depth) at `travel`, or None once it has left the screen.
++    fn star_at(&self, i: u32, travel: f32) -> (f32, f32, f32) {
++        let u = |salt: u32| (hash(i.wrapping_mul(2_654_435_761) ^ salt) % 10_000) as f32 / 10_000.0;
++        let depth = 0.15 + libm::fmodf(u(3) + 1.0 - libm::fmodf(travel, 1.0), 1.0) * 1.85;
++        let x = self.w as f32 / 2.0 + (u(1) - 0.5) * self.w as f32 / depth;
++        let y = self.h as f32 / 2.0 + (u(2) - 0.5) * self.h as f32 / depth;
++        (x, y, depth)
++    }
++
++    /// Star mode foreground: stars drifting outward, drawn only onto empty
++    /// black pixels so they pass behind every panel and line of text.
++    fn drift_stars(&self, cv: &mut Canvas, f: &Frame) {
++        let travel = f.t / 46.0;
++        for i in 0..240u32 {
++            let (x, y, depth) = self.star_at(i, travel);
++            let fade = ((depth - 0.15) * 4.0).min(1.0) * ((2.0 - depth) * 3.0).min(1.0);
++            let b = (fade.clamp(0.0, 1.0) * (110.0 + (hash(i) % 140) as f32)) as u32;
++            if b < 8 {
++                continue;
++            }
++            let c = Rgb::hex(b << 16 | b << 8 | b);
++            let size = if depth < 0.6 { 2 } else { 1 };
++            for dx in 0..size {
++                for dy in 0..size {
++                    let (px, py) = (x as i32 + dx, y as i32 + dy);
++                    if px >= 0 && py >= 0 && (px as usize) < cv.w && (py as usize) < cv.h && cv.px[py as usize * cv.w + px as usize] == self.p.void.0 {
++                        cv.put(px, py, c);
++                    }
++                }
++            }
++        }
++    }
++
++    /// Star mode engage: the field stretches into hyperspace streaks.
++    fn warp(&self, cv: &mut Canvas, ty: &mut Type, f: &Frame, e: f32) {
++        let k = ((e - 0.4) / 0.7).clamp(0.0, 1.0);
++        let travel = f.t / 46.0 + k * k * 1.6;
++        let stretch = 0.05 + k * 0.6;
++        for i in 0..320u32 {
++            let (x, y, depth) = self.star_at(i, travel);
++            let (cx, cy) = (self.w as f32 / 2.0, self.h as f32 / 2.0);
++            // Tail = the same star a little further back in depth.
++            let back = depth + stretch;
++            let tx = cx + (x - cx) * depth / back;
++            let ty_ = cy + (y - cy) * depth / back;
++            let b = 120 + hash(i) % 136;
++            cv.line(tx as i32, ty_ as i32, x as i32, y as i32, Rgb::hex(b << 16 | b << 8 | b));
++        }
++        let name = self.entries.get(f.selected).map(|e| e.title.as_str()).unwrap_or("");
++        let st = self.sans(self.z(40.0), self.p.white).track(self.z(6.0));
++        let cy = self.h as f32 / 2.0;
++        ty.draw_center(cv, self.w as f32 / 2.0, cy + self.z(14.0), name, &st);
++    }
++
+     fn intro_wipe(&self, cv: &mut Canvas, p: f32) {
+         let e = 1.0 - libm::powf(1.0 - p.clamp(0.0, 1.0), 3.0);
+         let edge = (e * (self.w as f32 + self.z(120.0))) as i32;
+-        cv.fill(edge, 0, self.w as i32 - edge, self.h as i32, VOID);
++        cv.fill(edge, 0, self.w as i32 - edge, self.h as i32, self.p.void);
+         let glow = self.z(120.0) as i32;
+         for i in 0..glow {
+             let a = 1.0 - i as f32 / glow as f32;
+-            cv.fill_alpha(edge - i, 0, 1, self.h as i32, ORANGE, a * a * 0.45);
++            cv.fill_alpha(edge - i, 0, 1, self.h as i32, self.p.orange, a * a * 0.45);
+         }
+-        cv.fill(edge - 2, 0, self.z(4.0).max(2.0) as i32, self.h as i32, WHITE);
++        cv.fill(edge - 2, 0, self.z(4.0).max(2.0) as i32, self.h as i32, self.p.white);
+     }
+ 
+     fn engage(&self, cv: &mut Canvas, ty: &mut Type, f: &Frame, e: f32) {
+@@ -463,19 +603,23 @@ impl Scene {
+         }
+         let k = ((e - 0.4) / 0.3).clamp(0.0, 1.0);
+         let fade = ((e - 0.4) / 0.12).clamp(0.0, 1.0);
+-        cv.fill_alpha(0, 0, self.w as i32, self.h as i32, VOID, 0.5 + 0.47 * fade);
++        cv.fill_alpha(0, 0, self.w as i32, self.h as i32, self.p.void, 0.5 + 0.47 * fade);
++        if self.star {
++            self.warp(cv, ty, f, e);
++            return;
++        }
+         let cx = self.w as f32 / 2.0;
+         let cy = self.h as f32 / 2.0;
+-        let big = display(self.z(400.0)).color(RED);
++        let big = self.display(self.z(400.0)).color(self.p.red);
+         let cap = ty.cap_height(&big);
+-        ty.draw_center(cv, cx, cy + cap / 2.0 - self.z(30.0), "起動", &big);
++        ty.draw_center(cv, cx, cy + cap / 2.0 - self.z(30.0), self.word("起動"), &big);
+         let reach = (self.w as f32 / 2.0) * (1.0 - libm::powf(1.0 - k, 3.0));
+         let t = self.z(4.0).max(2.0) as i32;
+         for dy in [-cap / 2.0 - self.z(60.0), cap / 2.0 + self.z(10.0)] {
+-            cv.fill((cx - reach) as i32, (cy + dy) as i32, (reach * 2.0) as i32, t, RED);
++            cv.fill((cx - reach) as i32, (cy + dy) as i32, (reach * 2.0) as i32, t, self.p.red);
+         }
+         let name = self.entries.get(f.selected).map(|e| e.title.as_str()).unwrap_or("");
+-        let st = sans(self.z(40.0), WHITE).track(self.z(6.0));
++        let st = self.sans(self.z(40.0), self.p.white).track(self.z(6.0));
+         ty.draw_center(cv, cx, cy + cap / 2.0 + self.z(80.0), name, &st);
+     }
+ }
+-- 
+2.55.0
+

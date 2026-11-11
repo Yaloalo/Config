@@ -37,11 +37,31 @@ return {
         },
         sections = {
           lualine_a = { { "mode", fmt = function(mode) return mode:sub(1, 3) end } },
-          lualine_b = { "branch", "diff" },
+          lualine_b = {
+            "branch",
+            -- REMOTE: commits to pull, LOCAL COMMITS: commits to push
+            { function() return require("core.git_sync").statusline_behind() end, color = { fg = palette.red, gui = "bold" } },
+            { function() return require("core.git_sync").statusline_ahead() end, color = { fg = palette.blue } },
+            -- UNCOMMITTED: files with uncommitted changes in the repo
+            { function() return require("core.git_sync").statusline_repo() end, color = { fg = palette.ice } },
+            "diff",
+          },
           lualine_c = {
             { "filename", path = 1, symbols = { modified = " ●", readonly = " 󰌾", unnamed = "[No Name]" } },
+            -- FILE: UNCOMMITTED / FILE: NEW (not tracked yet)
+            { function() return require("core.git_sync").statusline_file() end, color = { fg = palette.ice } },
           },
-          lualine_x = { "diagnostics", "filetype" },
+          lualine_x = {
+            {
+              function() return require("arrow.statusline").text_for_statusline_with_icons() end,
+              cond = function() return package.loaded["arrow"] ~= nil end,
+            },
+            {
+              function() return vim.fn.wordcount().words .. " words" end,
+              cond = function() return vim.bo.filetype == "markdown" end,
+            },
+            "filetype",
+          },
           lualine_y = { "progress" },
           lualine_z = { "location" },
         },
@@ -53,7 +73,7 @@ return {
           lualine_y = {},
           lualine_z = {},
         },
-        extensions = { "oil", "quickfix" },
+        extensions = { "oil", "quickfix", "neo-tree", "aerial", "lazy" },
       })
     end,
   },

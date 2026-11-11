@@ -18,22 +18,15 @@ api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
--- Fortune on start
-api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if vim.fn.argc() == 0 then
-      vim.schedule(function()
-        vim.cmd("silent !fortune | cowsay")
-      end)
-    end
-  end,
-})
-
 api.nvim_create_autocmd("WinNew", {
   pattern = "*",
   callback = function()
-    if vim.fn.winnr('$') == 2 and vim.fn.win_gettype() == "" then
-      vim.cmd("wincmd =")
-    end
+    -- Deferred so sidebars (file tree, outline) have set 'winfixwidth' first
+    -- and keep their width.
+    vim.schedule(function()
+      if vim.fn.winnr('$') == 2 and vim.fn.win_gettype() == "" then
+        vim.cmd("wincmd =")
+      end
+    end)
   end,
 })

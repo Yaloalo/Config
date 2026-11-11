@@ -6,7 +6,7 @@ return {
     enabled = true,
     allow_scroll_move = true,
     disable_on_mouse = true,
-    skip_filetypes = { "help", "gitcommit", "neo-tree", "TelescopePrompt" },
+    skip_filetypes = { "help", "gitcommit", "neo-tree", "aerial", "TelescopePrompt" },
   },
   keys = {
     { "<leader>t", function() require("stay-centered").toggle() end, desc = "Toggle stay-centered.nvim" },

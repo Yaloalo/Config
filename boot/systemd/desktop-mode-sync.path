@@ -1,0 +1,11 @@
+# Installed to /etc/systemd/system/ by scripts/desktop-mode-install.sh, which
+# fills in @MODE_FILE@ (the user's ~/.local/state/desktop-mode).
+[Unit]
+Description=Watch the desktop mode file (star / eva)
+
+[Path]
+PathChanged=@MODE_FILE@
+Unit=desktop-mode-sync.service
+
+[Install]
+WantedBy=multi-user.target

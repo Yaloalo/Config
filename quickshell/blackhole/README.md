@@ -8,15 +8,17 @@ black-hole assets are retained but are not loaded by the desktop.
 - Super R: applications (arrows select; Enter opens the highlighted result).
 - Super G: shortcut guide (H/J/K/L or arrows; `/` searches; Escape backs out).
 - Super comma: settings. Super Shift Escape: session/power.
-- Super Escape: manual lock. Type the login password and press Enter. The lock
-  intentionally shows no input, errors, dots, clock, or authentication feedback.
-  Escape clears the invisible input. Failed authentication stays locked.
+- Super Escape: manual lock. Type the login password and press Enter. In star
+  mode the lock intentionally shows no input, errors, dots, clock, or
+  authentication feedback. In eva mode it is a NERV console (封鎖, PILOT ABSENT)
+  that shows typed blocks and plays the MAGI vote before unlocking. Escape
+  clears the input. Failed authentication stays locked.
 - Super T / Shift B / A / N: terminal/browser/files/Neovim (Super O also opens files).
 - Super F: close; Super X: floating; Super Y: fake fullscreen. New aliases
   Super Shift C (close) and Super Shift F (floating) remain available.
 - Super H/J/K/L: focus; add Shift to swap. E/W/Q keep their scratchpad/laptop/
   external-workspace meanings; Shift sends a window there.
-- Super B or Super Pause: freeze/resume stars. Super I also opens power.
+- Super B: toggle blur. Super Pause: freeze/resume stars. Super I also opens power.
 - WezTerm: Ctrl Shift T/W creates a tab/closes a pane; S/D stacks/divides panes;
   H/J/K/L focuses panes; B/O changes opacity; R/E edits scrollback; Alt F searches;
   P opens the command palette. Ctrl PageUp/PageDown switches tabs, adding Shift
@@ -38,8 +40,11 @@ black-glass GTK styling, retaining upstream dragging and apply/revert behavior.
 No global GTK theme or installed package files are changed. The settings page contains
 data-driven control and device-action lists. Add a control there and a property
 to `Preferences.qml` plus its `fields` list to persist it in `preferences.json`.
-`SpaceField.qml` is independent of the desktop shell so the lock process can use
-it without loading desktop panels or services.
+`common/` (a symlink to `quickshell/common`, imported as `qs.common`) holds
+what the desktop, lock screen and login screen share: `Mode` (star / eva, from
+`~/.local/state/desktop-mode`), `SpaceField`, and the NERV widgets. `Theme.qml`
+maps every colour, font size and radius to both modes; use its tokens and
+`Theme.fs()` / `Theme.r()` instead of literals.
 
 Wi-Fi: select a network, enter its password if needed, choose Connect
 automatically, then Connect (or Enter). Saved profiles reuse their credentials;
@@ -62,17 +67,21 @@ Wi-Fi are never silently disabled. Star speed 1 includes the requested 10%
 longer animation cycle; density and speed are independently adjustable.
 Desktop-only star options (menus and the bar keep the normal drift): "Warp
 speed" ramps to 12x speed and stretches stars into radial streaks, easing off
-while stars are frozen (Super B or eco). "Desktop stars speed up with CPU temp
+while stars are frozen (Super Pause or eco). "Desktop stars speed up with CPU temp
 and fans" polls the k10temp/coretemp sensor and the fastest fan every 3 s (only
 while enabled) and scales star speed from 0.5x (45 °C, fans idle) to 4x
 (85 °C, 5500 rpm); it stacks with warp and the star speed slider.
 
-The persistent window border is monochrome. `FocusComet.qml` draws a separate
-input-transparent yellow trail for one 1.05-second lap, fading to zero. It is
-disabled in eco mode or with the focus-trail setting.
+The persistent window border is monochrome.
 
-Automatic locking is disabled; closing the lid suspends using the detected
-`Lid Switch` binding. Suspending does not lock unless you manually lock first.
+Tiled windows use Hyprland's scrolling layout: a single window fills the
+workspace, and each new window opens as a column to the right. Extra columns
+scroll horizontally instead of switching to top/bottom splits.
+
+Idle locking is disabled. Closing the lid suspends using the detected `Lid Switch`
+binding. Hypridle locks the session before any suspend (lid, power menu, or
+`systemctl suspend`) and waits for the lock surface to appear. Super Escape
+opens the same lock without suspending.
 The locker uses the existing `hyprlock` PAM policy and Wayland session-lock
 protocol, in a separate Quickshell process. For a nonlocking visual preview:
 

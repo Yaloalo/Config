@@ -3,7 +3,8 @@ hl.on("hyprland.start", function()
     -- org.freedesktop.Notifications before the space-shell starts.
     hl.exec_cmd("pkill -x mako")
     hl.exec_cmd("qs -c blackhole -n -d")
-    -- Idle locking is intentionally disabled; manual lock and lid sleep are binds.
+    -- Handle lock-before-suspend (including lid close); no idle timers configured.
+    hl.exec_cmd("hypridle")
 
     -- Local activity tracking, kept from the existing setup.
     hl.exec_cmd("/home/yaloalo/git/activewatcher/.venv/bin/activewatcher server --host 127.0.0.1 --port 8712")

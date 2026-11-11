@@ -1,0 +1,8 @@
+# Installed to /etc/systemd/system/ by scripts/desktop-mode-install.sh.
+[Unit]
+Description=Apply the desktop mode to boot menu, splash and login screen
+RequiresMountsFor=/boot
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/desktop-mode/desktop-mode-sync @MODE_FILE@

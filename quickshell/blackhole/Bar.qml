@@ -7,6 +7,7 @@ import Quickshell.Services.Pipewire
 import Quickshell.Services.UPower
 import Quickshell.Wayland
 import QtQuick
+import qs.common
 import QtQuick.Layouts
 
 Scope {
@@ -32,6 +33,7 @@ Scope {
             readonly property var monitor: Hyprland.monitorFor(modelData)
             property bool terminalVisible: false
             screen: modelData
+            visible: ShellState.barVisible
             color: "transparent"
             implicitHeight: 36
             exclusiveZone: 36
@@ -61,7 +63,7 @@ Scope {
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: 4
-                radius: 9
+                radius: Theme.r(9)
                 color: Theme.surface
                 border.color: Theme.outline
                 SpaceField { preferences: Preferences; moving: ShellState.motionEnabled; anchors.fill: parent; starCount: 90; strength: 0.4 }
@@ -71,7 +73,7 @@ Scope {
                     spacing: 12
                     Text {
                         text: window.modelData.name + " / " + (window.terminalVisible ? "E" : (window.monitor?.activeWorkspace?.name ?? ""))
-                        color: "white"; font.family: Theme.font; font.pixelSize: 10
+                        color: Theme.fg; font.family: Theme.font; font.pixelSize: Theme.fs(10)
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     Repeater {
@@ -81,9 +83,9 @@ Scope {
                             required property string modelData
                             readonly property bool active: modelData === "E" ? window.terminalVisible
                                 : !window.terminalVisible && window.monitor?.activeWorkspace?.id === (modelData === "W" ? 10 : 11)
-                            width: 22; height: 22; radius: 6
-                            color: active ? "white" : "transparent"
-                            Text { anchors.centerIn: parent; text: chip.modelData; color: chip.active ? "black" : Theme.muted; font.pixelSize: 10; font.family: Theme.font }
+                            width: 22; height: 22; radius: Theme.r(6)
+                            color: active ? Theme.fg : "transparent"
+                            Text { anchors.centerIn: parent; text: chip.modelData; color: chip.active ? Theme.onFg : Theme.muted; font.pixelSize: Theme.fs(10); font.family: Theme.font }
                             TapHandler {
                                 onTapped: Hyprland.dispatch(chip.modelData === "E" ? 'hl.dsp.workspace.toggle_special("term")'
                                     : "hl.dsp.focus({ workspace = " + (chip.modelData === "W" ? 10 : 11) + " })")
@@ -94,7 +96,7 @@ Scope {
                 Text {
                     anchors.centerIn: parent
                     text: Qt.formatDateTime(clock.date, "ddd dd MMM  HH:mm")
-                    color: "white"; font.family: Theme.font; font.pixelSize: 10
+                    color: Theme.fg; font.family: Theme.font; font.pixelSize: Theme.fs(10)
                 }
                 Row {
                     anchors.right: parent.right; anchors.rightMargin: 9
@@ -102,25 +104,25 @@ Scope {
                     spacing: 15
                     StatusIcon {
                         kind: "wifi"; width: 20; height: 20
-                        color: root.activeNetwork ? "white" : Theme.muted
+                        color: root.activeNetwork ? Theme.fg : Theme.muted
                         TapHandler { onTapped: ShellState.toggle("wifi") }
                     }
                     Row {
                         spacing: 5
                         StatusIcon { kind: root.muted ? "muted" : "volume"; width: 20; height: 20 }
-                        Text { text: Math.round(root.volume * 100); color: "white"; font.family: Theme.font; font.pixelSize: 10; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: Math.round(root.volume * 100); color: Theme.fg; font.family: Theme.font; font.pixelSize: Theme.fs(10); anchors.verticalCenter: parent.verticalCenter }
                         TapHandler { onTapped: { if (root.sink?.audio) root.sink.audio.muted = !root.sink.audio.muted; } }
                         WheelHandler { onWheel: event => root.setVolume(root.volume + (event.angleDelta.y > 0 ? 0.05 : -0.05)) }
                     }
                     Row {
                         visible: UPower.displayDevice.isLaptopBattery
                         spacing: 5
-                        StatusIcon { kind: "battery"; width: 20; height: 20; level: UPower.displayDevice.percentage; color: level < 0.15 ? Theme.danger : "white" }
-                        Text { text: Math.round(UPower.displayDevice.percentage * 100) + "%"; color: "white"; font.family: Theme.font; font.pixelSize: 10; anchors.verticalCenter: parent.verticalCenter }
+                        StatusIcon { kind: "battery"; width: 20; height: 20; level: UPower.displayDevice.percentage; charging: !UPower.onBattery; color: level < 0.15 && !charging ? Theme.danger : Theme.fg }
+                        Text { text: Math.round(UPower.displayDevice.percentage * 100) + "%"; color: Theme.fg; font.family: Theme.font; font.pixelSize: Theme.fs(10); anchors.verticalCenter: parent.verticalCenter }
                     }
                     StatusIcon {
                         kind: "settings"; width: 20; height: 20
-                        color: Preferences.ecoMode ? Theme.comet : "white"
+                        color: Preferences.ecoMode ? Theme.comet : Theme.fg
                         TapHandler { onTapped: ShellState.toggle("settings") }
                     }
                 }

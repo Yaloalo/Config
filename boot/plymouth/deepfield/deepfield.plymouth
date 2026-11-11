@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=deepfield
+Description=Star-mode boot splash matching the deep-space desktop
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/deepfield
+ScriptFile=/usr/share/plymouth/themes/deepfield/deepfield.script

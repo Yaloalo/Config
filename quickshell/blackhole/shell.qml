@@ -3,13 +3,13 @@
 
 import Quickshell
 import Quickshell.Io
+import qs.common
 
 ShellRoot {
     Background {}
     Bar {}
     Overlay {}
     Notifications {}
-    FocusComet {}
 
     IpcHandler {
         target: "shell"
@@ -20,6 +20,8 @@ ShellRoot {
         function toggleWifi() { ShellState.toggle("wifi"); }
         function toggleSettings() { ShellState.toggle("settings"); }
         function close() { ShellState.close(); }
-        function toggleMotion() { ShellState.motionEnabled = !ShellState.motionEnabled; }
+        function toggleMotion() { ShellState.toggleMotion(); }
+        function toggleBar() { ShellState.toggleBar(); }
+        function toggleMode() { ShellState.setMode(Mode.eva ? "star" : "eva"); }
     }
 }
